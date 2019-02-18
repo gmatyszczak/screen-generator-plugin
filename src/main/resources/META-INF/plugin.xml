@@ -1,0 +1,35 @@
+<idea-plugin>
+    <id>screengenerator.screengenerator</id>
+    <name>Plugin display name here</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <defaultProjectTypeProvider type="Android"/>
+        <projectConfigurable
+                instance="settings.SettingsViewImpl">
+        </projectConfigurable>
+    </extensions>
+
+    <actions>
+        <group id="ScreenGenerator.FileMenu"
+               text="New Screen"
+               description="Screen Generator File Menu">
+            <add-to-group group-id="FileMenu" anchor="last"/>
+            <action id="NewScreenAction"
+                    class="newscreen.NewScreenAction"
+                    text="New Screen"
+                    description="Screen Generator File Menu"/>
+        </group>
+    </actions>
+</idea-plugin>
