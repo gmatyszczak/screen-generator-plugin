@@ -6,9 +6,12 @@ class SettingsPresenter(private val view: SettingsView) {
 
     val screenElements = mutableListOf<ScreenElement>()
     var currentSelectedScreenElement: ScreenElement? = null
+    var isModified = false
 
-    fun onLoadView() {
+    fun onLoadView(settings: Settings) {
+        screenElements.addAll(settings.screenElements)
         view.setUpListeners()
+        view.showScreenElements(settings.screenElements)
     }
 
     fun onAddClick() {
@@ -16,11 +19,13 @@ class SettingsPresenter(private val view: SettingsView) {
         screenElements.add(newScreenElement)
         view.addScreenElement(newScreenElement)
         view.selectLastScreenElement()
+        isModified = true
     }
 
     fun onDeleteClick(index: Int) {
         screenElements.removeAt(index)
         view.removeScreenElement(index)
+        isModified = true
     }
 
     fun onScreenElementSelect(index: Int) {
@@ -41,6 +46,12 @@ class SettingsPresenter(private val view: SettingsView) {
         currentSelectedScreenElement?.let {
             it.name = name
             view.updateScreenElement(screenElements.indexOf(it), it)
+            isModified = true
         }
+    }
+
+    fun onApplySettings() {
+        view.updateComponent(Settings(screenElements.toList()))
+        isModified = false
     }
 }

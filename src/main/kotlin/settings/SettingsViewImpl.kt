@@ -1,28 +1,26 @@
 package settings
 
 import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.project.Project
 import javax.swing.JComponent
 import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class SettingsViewImpl : Configurable, SettingsView {
+class SettingsViewImpl(private val project: Project) : Configurable, SettingsView {
 
     private val panel = SettingsJPanel()
     private val presenter = SettingsPresenter(this)
-    private var isModified = false
     private var nameDocumentListener: DocumentListener? = null
 
-    override fun isModified() = isModified
+    override fun isModified() = presenter.isModified
 
     override fun getDisplayName() = "Screen Generator Plugin"
 
-    override fun apply() {
-        // TODO
-    }
+    override fun apply() = presenter.onApplySettings()
 
     override fun createComponent(): JComponent {
-        presenter.onLoadView()
+        presenter.onLoadView(ScreenGeneratorComponent.getInstance(project).settings)
         return panel
     }
 
@@ -64,6 +62,13 @@ class SettingsViewImpl : Configurable, SettingsView {
     override fun removeScreenElement(index: Int) {
         panel.listModel.remove(index)
     }
+
+    override fun updateComponent(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
+        this.settings = settings
+    }
+
+    override fun showScreenElements(screenElements: List<ScreenElement>) =
+            screenElements.forEach { panel.listModel.addElement(it) }
 
     private fun JTextField.addTextChangeListener(onChange: (String) -> Unit) =
             object : DocumentListener {

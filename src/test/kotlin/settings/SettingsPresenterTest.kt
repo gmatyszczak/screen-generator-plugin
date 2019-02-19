@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
@@ -18,6 +19,8 @@ class SettingsPresenterTest {
 
     private lateinit var presenter: SettingsPresenter
 
+    private val testElement = ScreenElement("Test")
+
     @Before
     fun setUp() {
         presenter = SettingsPresenter(viewMock)
@@ -25,9 +28,13 @@ class SettingsPresenterTest {
 
     @Test
     fun `on load view`() {
-        presenter.onLoadView()
+        val settings = Settings(listOf(testElement))
+
+        presenter.onLoadView(settings)
 
         verify(viewMock).setUpListeners()
+        verify(viewMock).showScreenElements(listOf(testElement))
+        assertEquals(listOf(testElement), presenter.screenElements)
     }
 
     @Test
@@ -39,6 +46,7 @@ class SettingsPresenterTest {
         verify(viewMock).addScreenElement(element)
         verify(viewMock).selectLastScreenElement()
         assertTrue(presenter.screenElements.contains(element))
+        assertTrue(presenter.isModified)
     }
 
     @Test
@@ -50,20 +58,20 @@ class SettingsPresenterTest {
 
         verify(viewMock).removeScreenElement(0)
         assertTrue(presenter.screenElements.isEmpty())
+        assertTrue(presenter.isModified)
     }
 
     @Test
     fun `when index is in bounds on screen element select`() {
         val index = 0
-        val element = ScreenElement("Test")
-        presenter.screenElements.add(element)
+        presenter.screenElements.add(testElement)
 
         presenter.onScreenElementSelect(index)
 
         verify(viewMock).removeCurrentNameChangeListener()
         verify(viewMock).showName("Test")
         verify(viewMock).addNameChangeListener()
-        assertEquals(element, presenter.currentSelectedScreenElement)
+        assertEquals(testElement, presenter.currentSelectedScreenElement)
     }
 
     @Test
@@ -82,18 +90,29 @@ class SettingsPresenterTest {
         presenter.onNameChange("Test")
 
         verifyZeroInteractions(viewMock)
+        assertFalse(presenter.isModified)
     }
 
     @Test
     fun `when current selected screen element is not null on name change`() {
-        val screenElement = ScreenElement("Test")
-        presenter.currentSelectedScreenElement = screenElement
-        presenter.screenElements.add(screenElement)
+        presenter.currentSelectedScreenElement = testElement
+        presenter.screenElements.add(testElement)
 
         presenter.onNameChange("Test Test")
 
-        assertEquals("Test Test", screenElement.name)
-        verify(viewMock).updateScreenElement(0, screenElement)
+        assertEquals("Test Test", testElement.name)
+        verify(viewMock).updateScreenElement(0, testElement)
+        assertTrue(presenter.isModified)
+    }
+
+    @Test
+    fun `on apply`() {
+        presenter.screenElements.add(testElement)
+
+        presenter.onApplySettings()
+
+        verify(viewMock).updateComponent(Settings(listOf(testElement)))
+        assertFalse(presenter.isModified)
     }
 
 }

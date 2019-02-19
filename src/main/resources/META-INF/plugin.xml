@@ -21,6 +21,14 @@
         </projectConfigurable>
     </extensions>
 
+    <project-components>
+        <component>
+            <implementation-class>
+                settings.ScreenGeneratorComponent
+            </implementation-class>
+        </component>
+    </project-components>
+
     <actions>
         <group id="ScreenGenerator.FileMenu"
                text="New Screen"
