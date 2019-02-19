@@ -1,5 +1,6 @@
 package settings
 
+import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Before
@@ -35,6 +36,7 @@ class SettingsPresenterTest {
         verify(viewMock).setUpListeners()
         verify(viewMock).showScreenElements(listOf(testElement))
         assertEquals(listOf(testElement), presenter.screenElements)
+        assertEquals(settings, presenter.initialSettings)
     }
 
     @Test
@@ -106,12 +108,30 @@ class SettingsPresenterTest {
     }
 
     @Test
-    fun `on apply`() {
+    fun `on apply settings`() {
         presenter.screenElements.add(testElement)
 
         presenter.onApplySettings()
 
         verify(viewMock).updateComponent(Settings(listOf(testElement)))
+        assertFalse(presenter.isModified)
+        assertEquals(Settings(listOf(testElement)), presenter.initialSettings)
+    }
+
+    @Test
+    fun `on reset settings`() {
+        presenter.initialSettings = Settings(listOf(testElement))
+
+        presenter.screenElements.add(testElement)
+        presenter.screenElements.add(testElement)
+
+        presenter.onResetSettings()
+
+        inOrder(viewMock) {
+            verify(viewMock).clearScreenElements()
+            verify(viewMock).showScreenElements(listOf(testElement))
+        }
+        assertEquals(listOf(testElement), presenter.screenElements)
         assertFalse(presenter.isModified)
     }
 

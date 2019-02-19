@@ -19,6 +19,8 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun apply() = presenter.onApplySettings()
 
+    override fun reset() = presenter.onResetSettings()
+
     override fun createComponent(): JComponent {
         presenter.onLoadView(ScreenGeneratorComponent.getInstance(project).settings)
         return panel
@@ -69,6 +71,8 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun showScreenElements(screenElements: List<ScreenElement>) =
             screenElements.forEach { panel.listModel.addElement(it) }
+
+    override fun clearScreenElements() = panel.listModel.removeAllElements()
 
     private fun JTextField.addTextChangeListener(onChange: (String) -> Unit) =
             object : DocumentListener {

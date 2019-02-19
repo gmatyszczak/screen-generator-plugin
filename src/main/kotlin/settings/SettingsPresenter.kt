@@ -7,11 +7,18 @@ class SettingsPresenter(private val view: SettingsView) {
     val screenElements = mutableListOf<ScreenElement>()
     var currentSelectedScreenElement: ScreenElement? = null
     var isModified = false
+    lateinit var initialSettings: Settings
 
     fun onLoadView(settings: Settings) {
-        screenElements.addAll(settings.screenElements)
+        initialSettings = settings
+        copyScreenElementsFromInitialSettings()
         view.setUpListeners()
-        view.showScreenElements(settings.screenElements)
+        view.showScreenElements(screenElements)
+    }
+
+    private fun copyScreenElementsFromInitialSettings() {
+        screenElements.clear()
+        initialSettings.screenElements.mapTo(screenElements) { it.copy() }
     }
 
     fun onAddClick() {
@@ -51,7 +58,16 @@ class SettingsPresenter(private val view: SettingsView) {
     }
 
     fun onApplySettings() {
-        view.updateComponent(Settings(screenElements.toList()))
+        initialSettings = Settings(screenElements.toList())
+        copyScreenElementsFromInitialSettings()
+        view.updateComponent(initialSettings)
+        isModified = false
+    }
+
+    fun onResetSettings() {
+        copyScreenElementsFromInitialSettings()
+        view.clearScreenElements()
+        view.showScreenElements(screenElements)
         isModified = false
     }
 }

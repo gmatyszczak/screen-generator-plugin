@@ -11,4 +11,5 @@ interface SettingsView {
     fun removeScreenElement(index: Int)
     fun updateComponent(settings: Settings)
     fun showScreenElements(screenElements: List<ScreenElement>)
+    fun clearScreenElements()
 }
