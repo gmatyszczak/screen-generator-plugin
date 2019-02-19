@@ -1,33 +1,30 @@
 package newscreen
 
-import com.intellij.lang.java.JavaLanguage
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ProjectRootManager
-import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiManager
-import settings.ScreenGeneratorComponent
+import newscreen.files.Directory
+import newscreen.files.File
+import newscreen.files.SourceRoot
+import settings.SettingsRepository
 
 interface FileCreator {
 
-    fun createScreenFiles(screenName: String)
+    fun createScreenFiles(sourceRoot: SourceRoot, packageName: String, screenName: String)
 }
 
-class FileCreatorImpl(private val project: Project) : FileCreator {
+class FileCreatorImpl(private val settingsRepository: SettingsRepository) : FileCreator {
 
-    override fun createScreenFiles(screenName: String) {
-        ApplicationManager.getApplication().runWriteAction {
-            val sourceRoots = ProjectRootManager.getInstance(project).contentSourceRoots.filter {
-                !it.path.contains("build", true)
-                        && !it.path.contains("test", true)
-                        && !it.path.contains("res")
-            }
-            val screenElements = ScreenGeneratorComponent.getInstance(project).settings.screenElements
-            val directory = PsiManager.getInstance(project).findDirectory(sourceRoots[0])
-            screenElements.forEach {
-                val file = PsiFileFactory.getInstance(project).createFileFromText("$screenName${it.name}.kt", JavaLanguage.INSTANCE, "Text")
-                directory!!.add(file)
-            }
+    override fun createScreenFiles(sourceRoot: SourceRoot, packageName: String, screenName: String) {
+        val subdirectory = findSubdirectory(sourceRoot, packageName)
+        settingsRepository.loadScreenElements().forEach {
+            val file = File("$screenName${it.name}", "Test")
+            subdirectory.addFile(file)
         }
+    }
+
+    private fun findSubdirectory(sourceRoot: SourceRoot, packageName: String): Directory {
+        var directory = sourceRoot.directory
+        packageName.split(".").forEach {
+            directory = directory.findSubdirectory(it) ?: directory.createSubdirectory(it)
+        }
+        return directory
     }
 }
