@@ -1,28 +1,20 @@
 package newscreen
 
-import com.intellij.lang.java.JavaLanguage
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiManager
 
-class NewScreenDialog(private val project: Project) : DialogWrapper(true) {
+class NewScreenDialog(project: Project) : DialogWrapper(true), NewScreenView {
 
     private val panel = NewScreenJPanel()
+    private val presenter = NewScreenPresenter(this, FileCreatorImpl(project))
 
     init {
         init()
     }
 
-    override fun doOKAction() {
-        ApplicationManager.getApplication().runWriteAction {
-            val directory = PsiManager.getInstance(project).findDirectory(project.baseDir)
-            val file = PsiFileFactory.getInstance(project).createFileFromText("${panel.nameTextField.text}.kt", JavaLanguage.INSTANCE, "Text")
-            directory!!.add(file)
-            close(DialogWrapper.OK_EXIT_CODE)
-        }
-    }
+    override fun doOKAction() = presenter.onOkClick(panel.nameTextField.text)
 
     override fun createCenterPanel() = panel
+
+    override fun close() = close(DialogWrapper.OK_EXIT_CODE)
 }
