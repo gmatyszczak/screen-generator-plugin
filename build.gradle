@@ -38,6 +38,7 @@ compileTestKotlin {
 intellij {
     version '2018.2.2'
     alternativeIdePath '/Applications/Android Studio.app'
+    plugins 'kotlin'
 }
 patchPluginXml {
     changeNotes """

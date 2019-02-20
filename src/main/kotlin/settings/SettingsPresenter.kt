@@ -25,7 +25,7 @@ class SettingsPresenter(private val view: SettingsView) {
         val newScreenElement = ScreenElement(UNNAMED_ELEMENT)
         screenElements.add(newScreenElement)
         view.addScreenElement(newScreenElement)
-        view.selectLastScreenElement()
+        view.selectScreenElement(screenElements.size - 1)
         isModified = true
     }
 
@@ -69,5 +69,23 @@ class SettingsPresenter(private val view: SettingsView) {
         view.clearScreenElements()
         view.showScreenElements(screenElements)
         isModified = false
+    }
+
+    fun onMoveDownClick(index: Int) = onMoveClick(index, index + 1)
+
+    fun onMoveUpClick(index: Int) = onMoveClick(index, index - 1)
+
+    private fun onMoveClick(index: Int, destinationIndex: Int) {
+        screenElements.swap(index, destinationIndex)
+        view.updateScreenElement(index, screenElements[index])
+        view.updateScreenElement(destinationIndex, screenElements[destinationIndex])
+        view.selectScreenElement(destinationIndex)
+        isModified = true
+    }
+
+    private fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+        val temp = this[index1]
+        this[index1] = this[index2]
+        this[index2] = temp
     }
 }

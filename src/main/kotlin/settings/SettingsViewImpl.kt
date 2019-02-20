@@ -23,25 +23,26 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun createComponent(): JComponent {
         presenter.onLoadView(ScreenGeneratorComponent.getInstance(project).settings)
+        panel.create(project)
         return panel
     }
 
     override fun setUpListeners() {
-        panel.addButton.addActionListener { presenter.onAddClick() }
-        panel.deleteButton.addActionListener {
-            presenter.onDeleteClick(panel.list.selectedIndex)
-        }
+        panel.toolbarDecorator.setAddAction { presenter.onAddClick() }
+        panel.toolbarDecorator.setRemoveAction { presenter.onDeleteClick(panel.list.selectedIndex) }
+        panel.toolbarDecorator.setMoveDownAction { presenter.onMoveDownClick(panel.list.selectedIndex) }
+        panel.toolbarDecorator.setMoveUpAction { presenter.onMoveUpClick(panel.list.selectedIndex) }
         panel.list.addListSelectionListener {
             if (!it.valueIsAdjusting) presenter.onScreenElementSelect(panel.list.selectedIndex)
         }
     }
 
     override fun addScreenElement(screenElement: ScreenElement) {
-        panel.listModel.addElement(screenElement)
+        panel.listModel.add(screenElement)
     }
 
-    override fun selectLastScreenElement() {
-        panel.list.selectedIndex = panel.listModel.size() - 1
+    override fun selectScreenElement(index: Int) {
+        panel.list.selectedIndex = index
     }
 
     override fun showName(name: String) {
@@ -58,7 +59,7 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
     }
 
     override fun updateScreenElement(index: Int, screenElement: ScreenElement) {
-        panel.listModel.set(index, screenElement)
+        panel.listModel.setElementAt(screenElement, index)
     }
 
     override fun removeScreenElement(index: Int) {
@@ -70,9 +71,9 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
     }
 
     override fun showScreenElements(screenElements: List<ScreenElement>) =
-            screenElements.forEach { panel.listModel.addElement(it) }
+            screenElements.forEach { panel.listModel.add(it) }
 
-    override fun clearScreenElements() = panel.listModel.removeAllElements()
+    override fun clearScreenElements() = panel.listModel.removeAll()
 
     private fun JTextField.addTextChangeListener(onChange: (String) -> Unit) =
             object : DocumentListener {

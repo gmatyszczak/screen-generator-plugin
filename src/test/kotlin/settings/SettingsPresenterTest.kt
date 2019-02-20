@@ -21,6 +21,7 @@ class SettingsPresenterTest {
     private lateinit var presenter: SettingsPresenter
 
     private val testElement = ScreenElement("Test")
+    private val unnamedElement = ScreenElement(UNNAMED_ELEMENT)
 
     @Before
     fun setUp() {
@@ -41,20 +42,17 @@ class SettingsPresenterTest {
 
     @Test
     fun `on add click`() {
-        val element = ScreenElement(UNNAMED_ELEMENT)
-
         presenter.onAddClick()
 
-        verify(viewMock).addScreenElement(element)
-        verify(viewMock).selectLastScreenElement()
-        assertTrue(presenter.screenElements.contains(element))
+        verify(viewMock).addScreenElement(unnamedElement)
+        verify(viewMock).selectScreenElement(0)
+        assertTrue(presenter.screenElements.contains(unnamedElement))
         assertTrue(presenter.isModified)
     }
 
     @Test
     fun `on delete click`() {
-        val element = ScreenElement(UNNAMED_ELEMENT)
-        presenter.screenElements.add(element)
+        presenter.screenElements.add(unnamedElement)
 
         presenter.onDeleteClick(0)
 
@@ -135,4 +133,29 @@ class SettingsPresenterTest {
         assertFalse(presenter.isModified)
     }
 
+    @Test
+    fun `on move down click`() {
+        presenter.screenElements.addAll(listOf(testElement, unnamedElement))
+
+        presenter.onMoveDownClick(0)
+
+        assertEquals(listOf(unnamedElement, testElement), presenter.screenElements)
+        assertTrue(presenter.isModified)
+        verify(viewMock).updateScreenElement(0, unnamedElement)
+        verify(viewMock).updateScreenElement(1, testElement)
+        verify(viewMock).selectScreenElement(1)
+    }
+
+    @Test
+    fun `on move up click`() {
+        presenter.screenElements.addAll(listOf(testElement, unnamedElement))
+
+        presenter.onMoveUpClick(1)
+
+        assertEquals(listOf(unnamedElement, testElement), presenter.screenElements)
+        assertTrue(presenter.isModified)
+        verify(viewMock).updateScreenElement(0, unnamedElement)
+        verify(viewMock).updateScreenElement(1, testElement)
+        verify(viewMock).selectScreenElement(0)
+    }
 }

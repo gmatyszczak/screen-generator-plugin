@@ -3,7 +3,7 @@ package settings
 interface SettingsView {
     fun setUpListeners()
     fun addScreenElement(screenElement: ScreenElement)
-    fun selectLastScreenElement()
+    fun selectScreenElement(index: Int)
     fun showName(name: String)
     fun addNameChangeListener()
     fun removeCurrentNameChangeListener()
