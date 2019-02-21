@@ -28,17 +28,19 @@ class FileCreatorImplTest {
     @InjectMocks
     private lateinit var fileCreator: FileCreatorImpl
 
+    private val testTemplate = "data class %name%%screenElement% {}"
+
     @Test
     fun `on create screen files`() {
         whenever(directoryMock.findSubdirectory("com")).thenReturn(directoryMock)
         whenever(directoryMock.findSubdirectory("test")).thenReturn(null)
         whenever(directoryMock.createSubdirectory("test")).thenReturn(directoryMock)
         whenever(sourceRootMock.directory).thenReturn(directoryMock)
-        whenever(settingsRepositoryMock.loadScreenElements()).thenReturn(listOf(ScreenElement("Presenter", ""), ScreenElement("View", "")))
+        whenever(settingsRepositoryMock.loadScreenElements()).thenReturn(listOf(ScreenElement("Presenter", testTemplate), ScreenElement("View", testTemplate)))
 
         fileCreator.createScreenFiles(sourceRootMock, "com.test", "Test")
 
-        verify(directoryMock).addFile(File("TestPresenter", "Test"))
-        verify(directoryMock).addFile(File("TestView", "Test"))
+        verify(directoryMock).addFile(File("TestPresenter", "data class TestPresenter {}"))
+        verify(directoryMock).addFile(File("TestView", "data class TestView {}"))
     }
 }
