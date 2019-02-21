@@ -1,6 +1,10 @@
 package settings
 
-const val UNNAMED_ELEMENT = "Unnamed Element"
+import model.ScreenElement
+
+const val UNNAMED_ELEMENT = "UnnamedElement"
+const val TEMPLATE = "class %name%%screenElement%"
+const val SAMPLE = "Sample"
 
 class SettingsPresenter(private val view: SettingsView) {
 
@@ -22,7 +26,7 @@ class SettingsPresenter(private val view: SettingsView) {
     }
 
     fun onAddClick() {
-        val newScreenElement = ScreenElement(UNNAMED_ELEMENT)
+        val newScreenElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
         screenElements.add(newScreenElement)
         view.addScreenElement(newScreenElement)
         view.selectScreenElement(screenElements.size - 1)
@@ -38,14 +42,18 @@ class SettingsPresenter(private val view: SettingsView) {
     fun onScreenElementSelect(index: Int) {
         if (index in 0 until screenElements.size) {
             val selectedElement = screenElements[index]
-            view.removeCurrentNameChangeListener()
-            view.showName(selectedElement.name)
-            view.addNameChangeListener()
             currentSelectedScreenElement = selectedElement
+            view.removeTextChangeListeners()
+            view.showName(selectedElement.name)
+            view.showTemplate(selectedElement.template)
+            view.showSampleCode(selectedElement.body(SAMPLE))
+            view.addTextChangeListeners()
         } else {
             currentSelectedScreenElement = null
-            view.removeCurrentNameChangeListener()
+            view.removeTextChangeListeners()
             view.showName("")
+            view.showTemplate("")
+            view.showSampleCode("")
         }
     }
 
@@ -53,6 +61,7 @@ class SettingsPresenter(private val view: SettingsView) {
         currentSelectedScreenElement?.let {
             it.name = name
             view.updateScreenElement(screenElements.indexOf(it), it)
+            view.showSampleCode(it.body(SAMPLE))
             isModified = true
         }
     }
@@ -81,6 +90,14 @@ class SettingsPresenter(private val view: SettingsView) {
         view.updateScreenElement(destinationIndex, screenElements[destinationIndex])
         view.selectScreenElement(destinationIndex)
         isModified = true
+    }
+
+    fun onTemplateChange(text: String) {
+        currentSelectedScreenElement?.let {
+            it.template = text
+            view.showSampleCode(it.body(SAMPLE))
+            isModified = true
+        }
     }
 
     private fun <T> MutableList<T>.swap(index1: Int, index2: Int) {

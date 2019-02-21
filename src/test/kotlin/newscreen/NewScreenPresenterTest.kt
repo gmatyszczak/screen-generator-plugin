@@ -2,7 +2,6 @@ package newscreen
 
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import newscreen.files.ProjectStructure
 import newscreen.files.SourceRoot
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +19,10 @@ class NewScreenPresenterTest {
     private lateinit var fileCreatorMock: FileCreator
 
     @Mock
-    private lateinit var projectStructureMock: ProjectStructure
+    private lateinit var sourceRootRepositoryMock: SourceRootRepository
+
+    @Mock
+    private lateinit var packageExtractorMock: PackageExtractor
 
     @Mock
     private lateinit var sourceRootMock: SourceRoot
@@ -29,9 +31,18 @@ class NewScreenPresenterTest {
     private lateinit var presenter: NewScreenPresenter
 
     @Test
+    fun `on load view`() {
+        val packageName = "com.example"
+        whenever(packageExtractorMock.extractFromCurrentPath()).thenReturn(packageName)
+
+        presenter.onLoadView()
+
+        verify(viewMock).showPackage(packageName)
+    }
+
+    @Test
     fun `on ok click`() {
-        whenever(projectStructureMock.findSourceRoots()).thenReturn(listOf(sourceRootMock))
-        whenever(sourceRootMock.path).thenReturn("src")
+        whenever(sourceRootRepositoryMock.findFirstModuleSourceRoot()).thenReturn(sourceRootMock)
         val screenName = "Test"
         val packageName = "com.test"
 

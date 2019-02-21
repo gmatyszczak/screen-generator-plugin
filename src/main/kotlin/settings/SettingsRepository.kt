@@ -1,6 +1,7 @@
 package settings
 
 import com.intellij.openapi.project.Project
+import model.ScreenElement
 
 interface SettingsRepository {
     fun loadScreenElements(): List<ScreenElement>

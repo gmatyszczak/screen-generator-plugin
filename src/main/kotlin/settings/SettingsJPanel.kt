@@ -6,6 +6,7 @@ import com.intellij.ui.LanguageTextField
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
 import com.intellij.util.ui.FormBuilder
+import model.ScreenElement
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import java.awt.BorderLayout
 import java.awt.GridLayout
@@ -13,35 +14,34 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.ListSelectionModel
 
-class SettingsJPanel : JPanel() {
+class SettingsJPanel(project: Project) : JPanel() {
 
     val nameTextField = JTextField()
-    lateinit var fileEditorTextField: LanguageTextField
-    lateinit var fileViewerEditorTextField: LanguageTextField
+    val templateEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false)
+    val sampleEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false).apply {
+        isEnabled = false
+    }
 
     val listModel = CollectionListModel<ScreenElement>()
     val list = JBList<ScreenElement>(listModel).apply {
         selectionMode = ListSelectionModel.SINGLE_SELECTION
     }
-    val toolbarDecorator = ToolbarDecorator.createDecorator(list)
+    val toolbarDecorator: ToolbarDecorator = ToolbarDecorator.createDecorator(list)
 
     init {
         layout = GridLayout(1, 2)
     }
 
-    fun create(project: Project) {
+    fun create() {
         val toolbarPanel = toolbarDecorator.createPanel()
-        fileEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false)
-        fileViewerEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false)
-
 
         val rightPanel = JPanel(BorderLayout()).apply {
             val nameFormPanel = FormBuilder.createFormBuilder()
-                    .addLabeledComponent("Name:", nameTextField)
+                    .addLabeledComponent("Screen Element:", nameTextField)
                     .panel
             val filePanel = JPanel(GridLayout(2, 1)).apply {
-                add(fileEditorTextField)
-                add(fileViewerEditorTextField)
+                add(templateEditorTextField)
+                add(sampleEditorTextField)
             }
 
             add(nameFormPanel, BorderLayout.PAGE_START)

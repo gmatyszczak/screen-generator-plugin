@@ -2,16 +2,17 @@ package settings
 
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
+import model.ScreenElement
+import util.addTextChangeListener
 import javax.swing.JComponent
-import javax.swing.JTextField
-import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 class SettingsViewImpl(private val project: Project) : Configurable, SettingsView {
 
-    private val panel = SettingsJPanel()
+    private val panel = SettingsJPanel(project)
     private val presenter = SettingsPresenter(this)
     private var nameDocumentListener: DocumentListener? = null
+    private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
 
     override fun isModified() = presenter.isModified
 
@@ -23,7 +24,7 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun createComponent(): JComponent {
         presenter.onLoadView(ScreenGeneratorComponent.getInstance(project).settings)
-        panel.create(project)
+        panel.create()
         return panel
     }
 
@@ -49,13 +50,16 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
         panel.nameTextField.text = name
     }
 
-    override fun addNameChangeListener() {
+    override fun addTextChangeListeners() {
         nameDocumentListener = panel.nameTextField.addTextChangeListener(presenter::onNameChange)
+        templateDocumentListener = panel.templateEditorTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 
-    override fun removeCurrentNameChangeListener() {
+    override fun removeTextChangeListeners() {
         nameDocumentListener?.let { panel.nameTextField.document.removeDocumentListener(it) }
+        templateDocumentListener?.let { panel.templateEditorTextField.document.removeDocumentListener(it) }
         nameDocumentListener = null
+        templateDocumentListener = null
     }
 
     override fun updateScreenElement(index: Int, screenElement: ScreenElement) {
@@ -75,10 +79,11 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun clearScreenElements() = panel.listModel.removeAll()
 
-    private fun JTextField.addTextChangeListener(onChange: (String) -> Unit) =
-            object : DocumentListener {
-                override fun changedUpdate(e: DocumentEvent?) = onChange(text)
-                override fun insertUpdate(e: DocumentEvent?) = onChange(text)
-                override fun removeUpdate(e: DocumentEvent?) = onChange(text)
-            }.apply { document.addDocumentListener(this) }
+    override fun showSampleCode(text: String) {
+        panel.sampleEditorTextField.text = text
+    }
+
+    override fun showTemplate(template: String) {
+        panel.templateEditorTextField.text = template
+    }
 }

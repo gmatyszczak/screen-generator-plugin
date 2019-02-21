@@ -3,6 +3,7 @@ package settings
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,8 +21,9 @@ class SettingsPresenterTest {
 
     private lateinit var presenter: SettingsPresenter
 
-    private val testElement = ScreenElement("Test")
-    private val unnamedElement = ScreenElement(UNNAMED_ELEMENT)
+    private val testTemplate = "data class %name%%screenElement% {}"
+    private val testElement = ScreenElement("Test", testTemplate)
+    private val unnamedElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
 
     @Before
     fun setUp() {
@@ -68,9 +70,13 @@ class SettingsPresenterTest {
 
         presenter.onScreenElementSelect(index)
 
-        verify(viewMock).removeCurrentNameChangeListener()
-        verify(viewMock).showName("Test")
-        verify(viewMock).addNameChangeListener()
+        inOrder(viewMock) {
+            verify(viewMock).removeTextChangeListeners()
+            verify(viewMock).showName("Test")
+            verify(viewMock).showTemplate(testTemplate)
+            verify(viewMock).showSampleCode(testElement.body(SAMPLE))
+            verify(viewMock).addTextChangeListeners()
+        }
         assertEquals(testElement, presenter.currentSelectedScreenElement)
     }
 
@@ -80,8 +86,12 @@ class SettingsPresenterTest {
 
         presenter.onScreenElementSelect(index)
 
-        verify(viewMock).removeCurrentNameChangeListener()
-        verify(viewMock).showName("")
+        inOrder(viewMock) {
+            verify(viewMock).removeTextChangeListeners()
+            verify(viewMock).showName("")
+            verify(viewMock).showTemplate("")
+            verify(viewMock).showSampleCode("")
+        }
         assertEquals(null, presenter.currentSelectedScreenElement)
     }
 
@@ -102,6 +112,7 @@ class SettingsPresenterTest {
 
         assertEquals("Test Test", testElement.name)
         verify(viewMock).updateScreenElement(0, testElement)
+        verify(viewMock).showSampleCode(testElement.body(SAMPLE))
         assertTrue(presenter.isModified)
     }
 
@@ -157,5 +168,24 @@ class SettingsPresenterTest {
         verify(viewMock).updateScreenElement(0, unnamedElement)
         verify(viewMock).updateScreenElement(1, testElement)
         verify(viewMock).selectScreenElement(0)
+    }
+
+    @Test
+    fun `when current selected item is null on template change`() {
+        presenter.onTemplateChange("")
+
+        verifyZeroInteractions(viewMock)
+        assertFalse(presenter.isModified)
+    }
+
+    @Test
+    fun `when current selected item is not null on template change`() {
+        presenter.currentSelectedScreenElement = unnamedElement
+
+        presenter.onTemplateChange(testTemplate)
+
+        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE))
+        assertTrue(presenter.isModified)
+        assertEquals(testTemplate, presenter.currentSelectedScreenElement?.template)
     }
 }
