@@ -7,10 +7,10 @@ import util.addTextChangeListener
 import javax.swing.JComponent
 import javax.swing.event.DocumentListener
 
-class SettingsViewImpl(private val project: Project) : Configurable, SettingsView {
+class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     private val panel = SettingsJPanel(project)
-    private val presenter = SettingsPresenter(this)
+    private val presenter = SettingsPresenter(this, SettingsRepositoryImpl(project))
     private var nameDocumentListener: DocumentListener? = null
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
 
@@ -23,7 +23,7 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
     override fun reset() = presenter.onResetSettings()
 
     override fun createComponent(): JComponent {
-        presenter.onLoadView(ScreenGeneratorComponent.getInstance(project).settings)
+        presenter.onLoadView()
         panel.create()
         return panel
     }
@@ -68,10 +68,6 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     override fun removeScreenElement(index: Int) {
         panel.listModel.remove(index)
-    }
-
-    override fun updateComponent(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
-        this.settings = settings
     }
 
     override fun showScreenElements(screenElements: List<ScreenElement>) =

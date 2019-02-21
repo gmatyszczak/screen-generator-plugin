@@ -6,15 +6,16 @@ const val UNNAMED_ELEMENT = "UnnamedElement"
 const val TEMPLATE = "class %name%%screenElement%"
 const val SAMPLE = "Sample"
 
-class SettingsPresenter(private val view: SettingsView) {
+class SettingsPresenter(private val view: SettingsView,
+                        private val settingsRepository: SettingsRepository) {
 
     val screenElements = mutableListOf<ScreenElement>()
     var currentSelectedScreenElement: ScreenElement? = null
     var isModified = false
-    lateinit var initialSettings: Settings
+    lateinit var initialScreenElements: List<ScreenElement>
 
-    fun onLoadView(settings: Settings) {
-        initialSettings = settings
+    fun onLoadView() {
+        initialScreenElements = settingsRepository.loadScreenElements()
         copyScreenElementsFromInitialSettings()
         view.setUpListeners()
         view.showScreenElements(screenElements)
@@ -22,7 +23,7 @@ class SettingsPresenter(private val view: SettingsView) {
 
     private fun copyScreenElementsFromInitialSettings() {
         screenElements.clear()
-        initialSettings.screenElements.mapTo(screenElements) { it.copy() }
+        initialScreenElements.mapTo(screenElements) { it.copy() }
     }
 
     fun onAddClick() {
@@ -67,9 +68,9 @@ class SettingsPresenter(private val view: SettingsView) {
     }
 
     fun onApplySettings() {
-        initialSettings = Settings(screenElements.toList())
+        initialScreenElements = screenElements.toList()
         copyScreenElementsFromInitialSettings()
-        view.updateComponent(initialSettings)
+        settingsRepository.update(initialScreenElements)
         isModified = false
     }
 

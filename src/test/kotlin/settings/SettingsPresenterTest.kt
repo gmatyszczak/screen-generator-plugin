@@ -3,10 +3,11 @@ package settings
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import model.ScreenElement
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import kotlin.test.assertEquals
@@ -19,27 +20,27 @@ class SettingsPresenterTest {
     @Mock
     private lateinit var viewMock: SettingsView
 
+    @Mock
+    private lateinit var settingsRepositoryMock: SettingsRepository
+
+    @InjectMocks
     private lateinit var presenter: SettingsPresenter
 
     private val testTemplate = "data class %name%%screenElement% {}"
     private val testElement = ScreenElement("Test", testTemplate)
     private val unnamedElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
 
-    @Before
-    fun setUp() {
-        presenter = SettingsPresenter(viewMock)
-    }
-
     @Test
     fun `on load view`() {
-        val settings = Settings(listOf(testElement))
+        val screenElements = listOf(testElement)
+        whenever(settingsRepositoryMock.loadScreenElements()).thenReturn(screenElements)
 
-        presenter.onLoadView(settings)
+        presenter.onLoadView()
 
         verify(viewMock).setUpListeners()
-        verify(viewMock).showScreenElements(listOf(testElement))
-        assertEquals(listOf(testElement), presenter.screenElements)
-        assertEquals(settings, presenter.initialSettings)
+        verify(viewMock).showScreenElements(screenElements)
+        assertEquals(screenElements, presenter.screenElements)
+        assertEquals(screenElements, presenter.initialScreenElements)
     }
 
     @Test
@@ -122,14 +123,14 @@ class SettingsPresenterTest {
 
         presenter.onApplySettings()
 
-        verify(viewMock).updateComponent(Settings(listOf(testElement)))
+        verify(settingsRepositoryMock).update(listOf(testElement))
         assertFalse(presenter.isModified)
-        assertEquals(Settings(listOf(testElement)), presenter.initialSettings)
+        assertEquals(listOf(testElement), presenter.initialScreenElements)
     }
 
     @Test
     fun `on reset settings`() {
-        presenter.initialSettings = Settings(listOf(testElement))
+        presenter.initialScreenElements = listOf(testElement)
 
         presenter.screenElements.add(testElement)
         presenter.screenElements.add(testElement)

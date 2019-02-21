@@ -11,7 +11,6 @@ interface SettingsView {
     fun removeTextChangeListeners()
     fun updateScreenElement(index: Int, screenElement: ScreenElement)
     fun removeScreenElement(index: Int)
-    fun updateComponent(settings: Settings)
     fun showScreenElements(screenElements: List<ScreenElement>)
     fun clearScreenElements()
     fun showSampleCode(text: String)
