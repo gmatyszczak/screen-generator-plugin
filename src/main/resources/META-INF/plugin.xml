@@ -16,14 +16,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <defaultProjectTypeProvider type="Android"/>
         <projectConfigurable
-                instance="settings.SettingsViewImpl">
+                instance="ui.settings.SettingsViewImpl">
         </projectConfigurable>
     </extensions>
 
     <project-components>
         <component>
             <implementation-class>
-                settings.ScreenGeneratorComponent
+                data.ScreenGeneratorComponent
             </implementation-class>
         </component>
     </project-components>
@@ -35,7 +35,7 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
             <separator />
             <action id="NewScreenAction"
-                    class="newscreen.NewScreenAction"
+                    class="ui.newscreen.NewScreenAction"
                     text="Screen"
                     description="Screen Generator Plugin"/>
         </group>
