@@ -18,7 +18,8 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         val projectStructure = ProjectStructureImpl(project)
         val sourceRootRepository = SourceRootRepositoryImpl(projectStructure)
         val packageExtractor = PackageExtractorImpl(currentPath, sourceRootRepository)
-        presenter = NewScreenPresenter(this, fileCreator, sourceRootRepository, packageExtractor)
+        val writeActionDispatcher = WriteActionDispatcherImpl()
+        presenter = NewScreenPresenter(this, fileCreator, sourceRootRepository, packageExtractor, writeActionDispatcher)
         init()
     }
 

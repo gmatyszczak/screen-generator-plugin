@@ -1,5 +1,6 @@
 package newscreen
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import newscreen.files.SourceRoot
@@ -27,6 +28,9 @@ class NewScreenPresenterTest {
     @Mock
     private lateinit var sourceRootMock: SourceRoot
 
+    @Mock
+    private lateinit var writeActionDispatcherMock: WriteActionDispatcher
+
     @InjectMocks
     private lateinit var presenter: NewScreenPresenter
 
@@ -42,6 +46,7 @@ class NewScreenPresenterTest {
 
     @Test
     fun `on ok click`() {
+        whenever(writeActionDispatcherMock.dispatch(any())).thenAnswer { (it.arguments[0] as () -> Unit).invoke() }
         whenever(sourceRootRepositoryMock.findFirstModuleSourceRoot()).thenReturn(sourceRootMock)
         val screenName = "Test"
         val packageName = "com.test"

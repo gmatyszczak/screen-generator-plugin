@@ -1,7 +1,6 @@
 package newscreen.files
 
 import com.intellij.lang.java.JavaLanguage
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiFileFactory
@@ -20,7 +19,7 @@ class DirectoryImpl(private val project: Project,
 
     override fun createSubdirectory(name: String) = DirectoryImpl(project, psiDirectory.createSubdirectory(name))
 
-    override fun addFile(file: File) = ApplicationManager.getApplication().runWriteAction {
+    override fun addFile(file: File) {
         val psiFile = PsiFileFactory.getInstance(project).createFileFromText("${file.name}.kt", JavaLanguage.INSTANCE, file.content)
         psiDirectory.add(psiFile)
     }
