@@ -228,4 +228,14 @@ class SettingsPresenterTest {
         assertTrue(presenter.isModified)
         assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
     }
+
+    @Test
+    fun `on file type select`() {
+        presenter.currentSelectedScreenElement = ScreenElement("", "", FileType.KOTLIN)
+
+        presenter.onFileTypeSelect(FileType.LAYOUT_XML)
+
+        assertTrue(presenter.isModified)
+        assertEquals(FileType.LAYOUT_XML, presenter.currentSelectedScreenElement?.fileType)
+    }
 }

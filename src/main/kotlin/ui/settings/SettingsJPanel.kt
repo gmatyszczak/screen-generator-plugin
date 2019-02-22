@@ -31,7 +31,8 @@ class SettingsJPanel(project: Project) : JPanel() {
     val activityTextField = JTextField()
     val fragmentTextField = JTextField()
 
-    val fileTypeComboBoxModel = CollectionComboBoxModel<String>(FileType.values().map { it.displayName })
+    val fileTypeComboBoxModel = CollectionComboBoxModel<FileType>(FileType.values().toList())
+    val fileTypeComboBox = ComboBox<FileType>(fileTypeComboBoxModel)
 
     init {
         layout = BorderLayout()
@@ -47,7 +48,7 @@ class SettingsJPanel(project: Project) : JPanel() {
 
         val screenElementDetailsPanel = panel(LCFlags.fillX, title = "Screen Element Details") {
             row("Screen Element Name:") { nameTextField(growX) }
-            row("File Type:") { ComboBox<String>(fileTypeComboBoxModel)(growX) }
+            row("File Type:") { fileTypeComboBox(growX) }
         }
 
         val templatePanel = panel(LCFlags.fillX, title = "Template") {

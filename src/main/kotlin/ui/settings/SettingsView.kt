@@ -1,5 +1,6 @@
 package ui.settings
 
+import model.FileType
 import model.ScreenElement
 
 interface SettingsView {
@@ -19,4 +20,5 @@ interface SettingsView {
     fun showFragmentBaseClass(text: String)
     fun addBaseClassTextChangeListeners()
     fun removeBaseClassTextChangeListeners()
+    fun showFileType(fileType: FileType)
 }

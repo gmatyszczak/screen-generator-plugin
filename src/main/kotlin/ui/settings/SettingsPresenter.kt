@@ -1,6 +1,7 @@
 package ui.settings
 
 import data.repository.SettingsRepository
+import model.FileType
 import model.ScreenElement
 import model.Settings
 
@@ -57,6 +58,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.showTemplate(selectedElement.template)
             view.showSampleCode(selectedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             view.addTextChangeListeners()
+            view.showFileType(selectedElement.fileType)
         } else {
             currentSelectedScreenElement = null
             view.removeTextChangeListeners()
@@ -128,4 +130,14 @@ class SettingsPresenter(private val view: SettingsView,
         this[index1] = this[index2]
         this[index2] = temp
     }
+
+    fun onFileTypeSelect(fileType: FileType?) {
+        currentSelectedScreenElement?.let {
+            if (fileType != null) {
+                it.fileType = fileType
+                isModified = true
+            }
+        }
+    }
+
 }

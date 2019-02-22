@@ -3,8 +3,10 @@ package ui.settings
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import data.repository.SettingsRepositoryImpl
+import model.FileType
 import model.ScreenElement
 import util.addTextChangeListener
+import java.awt.event.ActionListener
 import javax.swing.JComponent
 import javax.swing.event.DocumentListener
 
@@ -16,6 +18,8 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
     private var activityDocumentListener: DocumentListener? = null
     private var fragmentDocumentListener: DocumentListener? = null
+
+    private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(panel.fileTypeComboBoxModel.selected) }
 
     override fun isModified() = presenter.isModified
 
@@ -56,6 +60,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun addTextChangeListeners() {
         nameDocumentListener = panel.nameTextField.addTextChangeListener(presenter::onNameChange)
         templateDocumentListener = panel.templateEditorTextField.addTextChangeListener(presenter::onTemplateChange)
+        panel.fileTypeComboBox.addActionListener(fileTypeActionListener)
     }
 
     override fun removeTextChangeListeners() {
@@ -63,6 +68,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         templateDocumentListener?.let { panel.templateEditorTextField.document.removeDocumentListener(it) }
         nameDocumentListener = null
         templateDocumentListener = null
+        panel.fileTypeComboBox.removeActionListener(fileTypeActionListener)
     }
 
     override fun updateScreenElement(index: Int, screenElement: ScreenElement) {
@@ -104,5 +110,9 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         activityDocumentListener = null
         fragmentDocumentListener?.let { panel.fragmentTextField.document.removeDocumentListener(it) }
         fragmentDocumentListener = null
+    }
+
+    override fun showFileType(fileType: FileType) {
+        panel.fileTypeComboBox.selectedIndex = fileType.ordinal
     }
 }
