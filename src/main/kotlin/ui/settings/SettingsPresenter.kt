@@ -4,8 +4,6 @@ import data.repository.SettingsRepository
 import model.ScreenElement
 import model.Settings
 
-const val UNNAMED_ELEMENT = "UnnamedElement"
-const val TEMPLATE = "package %packageName%\n\nclass %name%%screenElement%"
 const val SAMPLE_SCREEN_NAME = "Sample"
 const val SAMPLE_PACKAGE_NAME = "com.sample"
 
@@ -37,7 +35,7 @@ class SettingsPresenter(private val view: SettingsView,
     }
 
     fun onAddClick() {
-        val newScreenElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
+        val newScreenElement = ScreenElement.getDefault()
         screenElements.add(newScreenElement)
         view.addScreenElement(newScreenElement)
         view.selectScreenElement(screenElements.size - 1)

@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
+import model.FileType
 import model.ScreenElement
 import model.Settings
 import org.junit.Test
@@ -29,8 +30,8 @@ class SettingsPresenterTest {
     private lateinit var presenter: SettingsPresenter
 
     private val testTemplate = "data class %name%%screenElement% {}"
-    private val testElement = ScreenElement("Test", testTemplate)
-    private val unnamedElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
+    private val testElement = ScreenElement("Test", testTemplate, FileType.KOTLIN)
+    private val unnamedElement = ScreenElement.getDefault()
     private val activityBaseClass = "Activity"
     private val fragmentBaseClass = "Fragment"
 

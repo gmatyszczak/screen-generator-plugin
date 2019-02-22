@@ -3,6 +3,7 @@ package data.file
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
+import model.FileType
 import model.ScreenElement
 import model.Settings
 import org.junit.Test
@@ -34,7 +35,8 @@ class FileCreatorImplTest {
         whenever(directoryMock.findSubdirectory("test")).thenReturn(null)
         whenever(directoryMock.createSubdirectory("test")).thenReturn(directoryMock)
         whenever(sourceRootMock.directory).thenReturn(directoryMock)
-        whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(listOf(ScreenElement("Presenter", testTemplate), ScreenElement("View", testTemplate)), "", ""))
+        val screenElements = listOf(ScreenElement("Presenter", testTemplate, FileType.KOTLIN), ScreenElement("View", testTemplate, FileType.KOTLIN))
+        whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "", ""))
 
         fileCreator.createScreenFiles(sourceRootMock, "com.test", "Test")
 
