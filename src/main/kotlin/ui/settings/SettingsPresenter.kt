@@ -15,18 +15,22 @@ class SettingsPresenter(private val view: SettingsView,
     val screenElements = mutableListOf<ScreenElement>()
     var currentSelectedScreenElement: ScreenElement? = null
     var isModified = false
-    lateinit var initialScreenElements: List<ScreenElement>
+    lateinit var initialSettings: Settings
+    lateinit var currentActivityBaseClass: String
+    lateinit var currentFragmentBaseClass: String
 
     fun onLoadView() {
-        initialScreenElements = settingsRepository.loadSettings().screenElements
-        copyScreenElementsFromInitialSettings()
+        initialSettings = settingsRepository.loadSettings()
+        resetToInitialSettings()
         view.setUpListeners()
         view.showScreenElements(screenElements)
     }
 
-    private fun copyScreenElementsFromInitialSettings() {
+    private fun resetToInitialSettings() {
         screenElements.clear()
-        initialScreenElements.mapTo(screenElements) { it.copy() }
+        initialSettings.screenElements.mapTo(screenElements) { it.copy() }
+        currentActivityBaseClass = initialSettings.activityBaseClass
+        currentFragmentBaseClass = initialSettings.fragmentBaseClass
     }
 
     fun onAddClick() {
@@ -71,14 +75,14 @@ class SettingsPresenter(private val view: SettingsView,
     }
 
     fun onApplySettings() {
-        initialScreenElements = screenElements.toList()
-        copyScreenElementsFromInitialSettings()
-        settingsRepository.update(Settings(initialScreenElements, "", ""))
+        initialSettings = Settings(screenElements.toList(), currentActivityBaseClass, currentFragmentBaseClass)
+        resetToInitialSettings()
+        settingsRepository.update(initialSettings)
         isModified = false
     }
 
     fun onResetSettings() {
-        copyScreenElementsFromInitialSettings()
+        resetToInitialSettings()
         view.clearScreenElements()
         view.showScreenElements(screenElements)
         isModified = false
@@ -102,6 +106,10 @@ class SettingsPresenter(private val view: SettingsView,
             view.showSampleCode(it.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             isModified = true
         }
+    }
+
+    fun onActivityBaseClassChange(text: String) {
+
     }
 
     private fun <T> MutableList<T>.swap(index1: Int, index2: Int) {

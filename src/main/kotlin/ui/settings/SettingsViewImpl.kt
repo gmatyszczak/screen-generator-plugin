@@ -37,6 +37,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         panel.list.addListSelectionListener {
             if (!it.valueIsAdjusting) presenter.onScreenElementSelect(panel.list.selectedIndex)
         }
+        panel.activityTextField.addTextChangeListener(presenter::onActivityBaseClassChange)
     }
 
     override fun addScreenElement(screenElement: ScreenElement) {

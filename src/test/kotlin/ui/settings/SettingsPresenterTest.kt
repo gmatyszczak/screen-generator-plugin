@@ -31,18 +31,23 @@ class SettingsPresenterTest {
     private val testTemplate = "data class %name%%screenElement% {}"
     private val testElement = ScreenElement("Test", testTemplate)
     private val unnamedElement = ScreenElement(UNNAMED_ELEMENT, TEMPLATE)
+    private val activityBaseClass = "Activity"
+    private val fragmentBaseClass = "Fragment"
 
     @Test
     fun `on load view`() {
         val screenElements = listOf(testElement)
-        whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "", ""))
+        val settings = Settings(screenElements, activityBaseClass, fragmentBaseClass)
+        whenever(settingsRepositoryMock.loadSettings()).thenReturn(settings)
 
         presenter.onLoadView()
 
         verify(viewMock).setUpListeners()
         verify(viewMock).showScreenElements(screenElements)
         assertEquals(screenElements, presenter.screenElements)
-        assertEquals(screenElements, presenter.initialScreenElements)
+        assertEquals(settings, presenter.initialSettings)
+        assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
+        assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
     }
 
     @Test
@@ -122,17 +127,21 @@ class SettingsPresenterTest {
     @Test
     fun `on apply settings`() {
         presenter.screenElements.add(testElement)
+        presenter.currentActivityBaseClass = activityBaseClass
+        presenter.currentFragmentBaseClass = fragmentBaseClass
 
         presenter.onApplySettings()
 
-        verify(settingsRepositoryMock).update(Settings(listOf(testElement), "", ""))
+        val settings = Settings(listOf(testElement), activityBaseClass, fragmentBaseClass)
+        verify(settingsRepositoryMock).update(settings)
         assertFalse(presenter.isModified)
-        assertEquals(listOf(testElement), presenter.initialScreenElements)
+        assertEquals(settings, presenter.initialSettings)
     }
 
     @Test
     fun `on reset settings`() {
-        presenter.initialScreenElements = listOf(testElement)
+        val settings = Settings(listOf(testElement), activityBaseClass, fragmentBaseClass)
+        presenter.initialSettings = settings
 
         presenter.screenElements.add(testElement)
         presenter.screenElements.add(testElement)
@@ -144,6 +153,8 @@ class SettingsPresenterTest {
             verify(viewMock).showScreenElements(listOf(testElement))
         }
         assertEquals(listOf(testElement), presenter.screenElements)
+        assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
+        assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
         assertFalse(presenter.isModified)
     }
 
