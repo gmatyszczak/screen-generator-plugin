@@ -3,8 +3,9 @@ package settings
 import model.ScreenElement
 
 const val UNNAMED_ELEMENT = "UnnamedElement"
-const val TEMPLATE = "class %name%%screenElement%"
-const val SAMPLE = "Sample"
+const val TEMPLATE = "package %packageName%\n\nclass %name%%screenElement%"
+const val SAMPLE_SCREEN_NAME = "Sample"
+const val SAMPLE_PACKAGE_NAME = "com.sample"
 
 class SettingsPresenter(private val view: SettingsView,
                         private val settingsRepository: SettingsRepository) {
@@ -47,7 +48,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.removeTextChangeListeners()
             view.showName(selectedElement.name)
             view.showTemplate(selectedElement.template)
-            view.showSampleCode(selectedElement.body(SAMPLE))
+            view.showSampleCode(selectedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             view.addTextChangeListeners()
         } else {
             currentSelectedScreenElement = null
@@ -62,7 +63,7 @@ class SettingsPresenter(private val view: SettingsView,
         currentSelectedScreenElement?.let {
             it.name = name
             view.updateScreenElement(screenElements.indexOf(it), it)
-            view.showSampleCode(it.body(SAMPLE))
+            view.showSampleCode(it.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             isModified = true
         }
     }
@@ -96,7 +97,7 @@ class SettingsPresenter(private val view: SettingsView,
     fun onTemplateChange(text: String) {
         currentSelectedScreenElement?.let {
             it.template = text
-            view.showSampleCode(it.body(SAMPLE))
+            view.showSampleCode(it.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             isModified = true
         }
     }

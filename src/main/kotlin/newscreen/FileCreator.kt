@@ -15,7 +15,7 @@ class FileCreatorImpl(private val settingsRepository: SettingsRepository) : File
     override fun createScreenFiles(sourceRoot: SourceRoot, packageName: String, screenName: String) {
         val subdirectory = findSubdirectory(sourceRoot, packageName)
         settingsRepository.loadScreenElements().forEach {
-            val file = File("$screenName${it.name}", it.body(screenName))
+            val file = File("$screenName${it.name}", it.body(screenName, packageName))
             subdirectory.addFile(file)
         }
     }

@@ -75,7 +75,7 @@ class SettingsPresenterTest {
             verify(viewMock).removeTextChangeListeners()
             verify(viewMock).showName("Test")
             verify(viewMock).showTemplate(testTemplate)
-            verify(viewMock).showSampleCode(testElement.body(SAMPLE))
+            verify(viewMock).showSampleCode(testElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             verify(viewMock).addTextChangeListeners()
         }
         assertEquals(testElement, presenter.currentSelectedScreenElement)
@@ -113,7 +113,7 @@ class SettingsPresenterTest {
 
         assertEquals("Test Test", testElement.name)
         verify(viewMock).updateScreenElement(0, testElement)
-        verify(viewMock).showSampleCode(testElement.body(SAMPLE))
+        verify(viewMock).showSampleCode(testElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
         assertTrue(presenter.isModified)
     }
 
@@ -185,7 +185,7 @@ class SettingsPresenterTest {
 
         presenter.onTemplateChange(testTemplate)
 
-        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE))
+        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
         assertTrue(presenter.isModified)
         assertEquals(testTemplate, presenter.currentSelectedScreenElement?.template)
     }
