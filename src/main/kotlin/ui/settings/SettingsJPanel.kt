@@ -1,13 +1,12 @@
 package ui.settings
 
 import com.intellij.openapi.project.Project
-import com.intellij.ui.CollectionListModel
-import com.intellij.ui.JBSplitter
-import com.intellij.ui.LanguageTextField
-import com.intellij.ui.ToolbarDecorator
+import com.intellij.openapi.ui.ComboBox
+import com.intellij.ui.*
 import com.intellij.ui.components.JBList
 import com.intellij.ui.layout.LCFlags
 import com.intellij.ui.layout.panel
+import model.FileType
 import model.ScreenElement
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import java.awt.BorderLayout
@@ -32,6 +31,8 @@ class SettingsJPanel(project: Project) : JPanel() {
     val activityTextField = JTextField()
     val fragmentTextField = JTextField()
 
+    val fileTypeComboBoxModel = CollectionComboBoxModel<String>(FileType.values().map { it.displayName })
+
     init {
         layout = BorderLayout()
     }
@@ -46,6 +47,7 @@ class SettingsJPanel(project: Project) : JPanel() {
 
         val screenElementDetailsPanel = panel(LCFlags.fillX, title = "Screen Element Details") {
             row("Screen Element Name:") { nameTextField(growX) }
+            row("File Type:") { ComboBox<String>(fileTypeComboBoxModel)(growX) }
         }
 
         val templatePanel = panel(LCFlags.fillX, title = "Template") {
