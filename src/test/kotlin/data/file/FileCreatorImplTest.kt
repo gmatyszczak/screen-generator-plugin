@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
 import model.ScreenElement
+import model.Settings
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -33,7 +34,7 @@ class FileCreatorImplTest {
         whenever(directoryMock.findSubdirectory("test")).thenReturn(null)
         whenever(directoryMock.createSubdirectory("test")).thenReturn(directoryMock)
         whenever(sourceRootMock.directory).thenReturn(directoryMock)
-        whenever(settingsRepositoryMock.loadScreenElements()).thenReturn(listOf(ScreenElement("Presenter", testTemplate), ScreenElement("View", testTemplate)))
+        whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(listOf(ScreenElement("Presenter", testTemplate), ScreenElement("View", testTemplate)), "", ""))
 
         fileCreator.createScreenFiles(sourceRootMock, "com.test", "Test")
 

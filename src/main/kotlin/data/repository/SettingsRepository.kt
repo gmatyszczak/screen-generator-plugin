@@ -2,18 +2,18 @@ package data.repository
 
 import com.intellij.openapi.project.Project
 import data.ScreenGeneratorComponent
-import model.ScreenElement
+import model.Settings
 
 interface SettingsRepository {
-    fun loadScreenElements(): List<ScreenElement>
-    fun update(screenElements: List<ScreenElement>)
+    fun loadSettings(): Settings
+    fun update(settings: Settings)
 }
 
 class SettingsRepositoryImpl(private val project: Project) : SettingsRepository {
 
-    override fun loadScreenElements() = ScreenGeneratorComponent.getInstance(project).screenElements
+    override fun loadSettings() = ScreenGeneratorComponent.getInstance(project).settings
 
-    override fun update(screenElements: List<ScreenElement>) = ScreenGeneratorComponent.getInstance(project).run {
-        this.screenElements = screenElements
+    override fun update(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
+        this.settings = settings
     }
 }

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
 import model.ScreenElement
+import model.Settings
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -34,7 +35,7 @@ class SettingsPresenterTest {
     @Test
     fun `on load view`() {
         val screenElements = listOf(testElement)
-        whenever(settingsRepositoryMock.loadScreenElements()).thenReturn(screenElements)
+        whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "", ""))
 
         presenter.onLoadView()
 
@@ -124,7 +125,7 @@ class SettingsPresenterTest {
 
         presenter.onApplySettings()
 
-        verify(settingsRepositoryMock).update(listOf(testElement))
+        verify(settingsRepositoryMock).update(Settings(listOf(testElement), "", ""))
         assertFalse(presenter.isModified)
         assertEquals(listOf(testElement), presenter.initialScreenElements)
     }

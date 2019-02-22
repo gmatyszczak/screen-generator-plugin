@@ -2,6 +2,7 @@ package ui.settings
 
 import data.repository.SettingsRepository
 import model.ScreenElement
+import model.Settings
 
 const val UNNAMED_ELEMENT = "UnnamedElement"
 const val TEMPLATE = "package %packageName%\n\nclass %name%%screenElement%"
@@ -17,7 +18,7 @@ class SettingsPresenter(private val view: SettingsView,
     lateinit var initialScreenElements: List<ScreenElement>
 
     fun onLoadView() {
-        initialScreenElements = settingsRepository.loadScreenElements()
+        initialScreenElements = settingsRepository.loadSettings().screenElements
         copyScreenElementsFromInitialSettings()
         view.setUpListeners()
         view.showScreenElements(screenElements)
@@ -72,7 +73,7 @@ class SettingsPresenter(private val view: SettingsView,
     fun onApplySettings() {
         initialScreenElements = screenElements.toList()
         copyScreenElementsFromInitialSettings()
-        settingsRepository.update(initialScreenElements)
+        settingsRepository.update(Settings(initialScreenElements, "", ""))
         isModified = false
     }
 
