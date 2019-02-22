@@ -24,6 +24,9 @@ class SettingsPresenter(private val view: SettingsView,
         resetToInitialSettings()
         view.setUpListeners()
         view.showScreenElements(screenElements)
+        view.showActivityBaseClass(currentActivityBaseClass)
+        view.showFragmentBaseClass(currentFragmentBaseClass)
+        view.addBaseClassTextChangeListeners()
     }
 
     private fun resetToInitialSettings() {
@@ -85,6 +88,10 @@ class SettingsPresenter(private val view: SettingsView,
         resetToInitialSettings()
         view.clearScreenElements()
         view.showScreenElements(screenElements)
+        view.removeBaseClassTextChangeListeners()
+        view.showActivityBaseClass(currentActivityBaseClass)
+        view.showFragmentBaseClass(currentFragmentBaseClass)
+        view.addBaseClassTextChangeListeners()
         isModified = false
     }
 
@@ -109,7 +116,13 @@ class SettingsPresenter(private val view: SettingsView,
     }
 
     fun onActivityBaseClassChange(text: String) {
+        currentActivityBaseClass = text
+        isModified = true
+    }
 
+    fun onFragmentBaseClassChange(text: String) {
+        currentFragmentBaseClass = text
+        isModified = true
     }
 
     private fun <T> MutableList<T>.swap(index1: Int, index2: Int) {

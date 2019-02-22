@@ -14,6 +14,8 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     private val presenter = SettingsPresenter(this, SettingsRepositoryImpl(project))
     private var nameDocumentListener: DocumentListener? = null
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
+    private var activityDocumentListener: DocumentListener? = null
+    private var fragmentDocumentListener: DocumentListener? = null
 
     override fun isModified() = presenter.isModified
 
@@ -37,7 +39,6 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         panel.list.addListSelectionListener {
             if (!it.valueIsAdjusting) presenter.onScreenElementSelect(panel.list.selectedIndex)
         }
-        panel.activityTextField.addTextChangeListener(presenter::onActivityBaseClassChange)
     }
 
     override fun addScreenElement(screenElement: ScreenElement) {
@@ -83,5 +84,25 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     override fun showTemplate(template: String) {
         panel.templateEditorTextField.text = template
+    }
+
+    override fun showActivityBaseClass(text: String) {
+        panel.activityTextField.text = text
+    }
+
+    override fun showFragmentBaseClass(text: String) {
+        panel.fragmentTextField.text = text
+    }
+
+    override fun addBaseClassTextChangeListeners() {
+        activityDocumentListener = panel.activityTextField.addTextChangeListener(presenter::onActivityBaseClassChange)
+        fragmentDocumentListener = panel.fragmentTextField.addTextChangeListener(presenter::onFragmentBaseClassChange)
+    }
+
+    override fun removeBaseClassTextChangeListeners() {
+        activityDocumentListener?.let { panel.activityTextField.document.removeDocumentListener(it) }
+        activityDocumentListener = null
+        fragmentDocumentListener?.let { panel.fragmentTextField.document.removeDocumentListener(it) }
+        fragmentDocumentListener = null
     }
 }

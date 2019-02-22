@@ -15,4 +15,8 @@ interface SettingsView {
     fun clearScreenElements()
     fun showSampleCode(text: String)
     fun showTemplate(template: String)
+    fun showActivityBaseClass(text: String)
+    fun showFragmentBaseClass(text: String)
+    fun addBaseClassTextChangeListeners()
+    fun removeBaseClassTextChangeListeners()
 }

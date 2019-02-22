@@ -42,8 +42,13 @@ class SettingsPresenterTest {
 
         presenter.onLoadView()
 
-        verify(viewMock).setUpListeners()
-        verify(viewMock).showScreenElements(screenElements)
+        inOrder(viewMock) {
+            verify(viewMock).setUpListeners()
+            verify(viewMock).showScreenElements(screenElements)
+            verify(viewMock).showActivityBaseClass(activityBaseClass)
+            verify(viewMock).showFragmentBaseClass(fragmentBaseClass)
+            verify(viewMock).addBaseClassTextChangeListeners()
+        }
         assertEquals(screenElements, presenter.screenElements)
         assertEquals(settings, presenter.initialSettings)
         assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
@@ -151,6 +156,10 @@ class SettingsPresenterTest {
         inOrder(viewMock) {
             verify(viewMock).clearScreenElements()
             verify(viewMock).showScreenElements(listOf(testElement))
+            verify(viewMock).removeBaseClassTextChangeListeners()
+            verify(viewMock).showActivityBaseClass(activityBaseClass)
+            verify(viewMock).showFragmentBaseClass(fragmentBaseClass)
+            verify(viewMock).addBaseClassTextChangeListeners()
         }
         assertEquals(listOf(testElement), presenter.screenElements)
         assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
@@ -201,5 +210,21 @@ class SettingsPresenterTest {
         verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
         assertTrue(presenter.isModified)
         assertEquals(testTemplate, presenter.currentSelectedScreenElement?.template)
+    }
+
+    @Test
+    fun `on activity base class change`() {
+        presenter.onActivityBaseClassChange(activityBaseClass)
+
+        assertTrue(presenter.isModified)
+        assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
+    }
+
+    @Test
+    fun `on fragment base class change`() {
+        presenter.onFragmentBaseClassChange(fragmentBaseClass)
+
+        assertTrue(presenter.isModified)
+        assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
     }
 }
