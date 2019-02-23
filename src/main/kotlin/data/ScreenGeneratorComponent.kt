@@ -17,7 +17,7 @@ class ScreenGeneratorComponent(project: Project) : AbstractProjectComponent(proj
         fun getInstance(project: Project): ScreenGeneratorComponent = project.getComponent(ScreenGeneratorComponent::class.java)
     }
 
-    var settings: Settings = Settings(emptyList(), "", "")
+    var settings: Settings = Settings.getDefault()
 
     override fun getState(): Settings? = settings
 

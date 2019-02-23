@@ -56,7 +56,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.removeTextChangeListeners()
             view.showName(selectedElement.name)
             view.showFileType(selectedElement.fileType)
-            handleFileTypeSelection(selectedElement.fileType)
+            handleFileTypeSelection(selectedElement.fileType, false)
             view.showTemplate(selectedElement.template)
             view.showSampleCode(selectedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             view.addTextChangeListeners()
@@ -136,23 +136,25 @@ class SettingsPresenter(private val view: SettingsView,
         currentSelectedScreenElement?.let {
             if (fileType != null) {
                 it.fileType = fileType
-                handleFileTypeSelection(fileType)
+                handleFileTypeSelection(fileType, true)
                 view.showTemplate(fileType.defaultTemplate)
                 isModified = true
             }
         }
     }
 
-    private fun handleFileTypeSelection(fileType: FileType) = when (fileType) {
-        FileType.KOTLIN -> {
-            view.hideXmlTextFields()
-            view.showKotlinTextFields()
-            view.swapToKotlinTemplateListener()
-        }
-        FileType.LAYOUT_XML -> {
-            view.hideKotlinTextFields()
-            view.showXmlTextFields()
-            view.swapToXmlTemplateListener()
+    private fun handleFileTypeSelection(fileType: FileType, swapListener: Boolean) {
+        when (fileType) {
+            FileType.KOTLIN -> {
+                view.hideXmlTextFields()
+                view.showKotlinTextFields()
+                if (swapListener) view.swapToKotlinTemplateListener()
+            }
+            FileType.LAYOUT_XML -> {
+                view.hideKotlinTextFields()
+                view.showXmlTextFields()
+                if (swapListener) view.swapToXmlTemplateListener()
+            }
         }
     }
 }
