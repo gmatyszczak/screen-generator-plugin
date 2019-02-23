@@ -30,14 +30,15 @@ class SettingsPresenterTest {
     private lateinit var presenter: SettingsPresenter
 
     private val testTemplate = "data class %name%%screenElement% {}"
-    private val testElement = ScreenElement("Test", testTemplate, FileType.KOTLIN)
+    private val testElementKotlin = ScreenElement("Test", testTemplate, FileType.KOTLIN)
+    private val testElementXml = ScreenElement("Test", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML)
     private val unnamedElement = ScreenElement.getDefault()
     private val activityBaseClass = "Activity"
     private val fragmentBaseClass = "Fragment"
 
     @Test
     fun `on load view`() {
-        val screenElements = listOf(testElement)
+        val screenElements = listOf(testElementKotlin)
         val settings = Settings(screenElements, activityBaseClass, fragmentBaseClass)
         whenever(settingsRepositoryMock.loadSettings()).thenReturn(settings)
 
@@ -78,20 +79,45 @@ class SettingsPresenterTest {
     }
 
     @Test
-    fun `when index is in bounds on screen element select`() {
+    fun `when index is in bounds and file type kotlin on screen element select`() {
         val index = 0
-        presenter.screenElements.add(testElement)
+        presenter.screenElements.add(testElementKotlin)
 
         presenter.onScreenElementSelect(index)
 
         inOrder(viewMock) {
             verify(viewMock).removeTextChangeListeners()
             verify(viewMock).showName("Test")
+            verify(viewMock).showFileType(FileType.KOTLIN)
+            verify(viewMock).hideXmlTextFields()
+            verify(viewMock).showKotlinTextFields()
+            verify(viewMock).swapToKotlinTemplateListener()
             verify(viewMock).showTemplate(testTemplate)
-            verify(viewMock).showSampleCode(testElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
             verify(viewMock).addTextChangeListeners()
         }
-        assertEquals(testElement, presenter.currentSelectedScreenElement)
+        assertEquals(testElementKotlin, presenter.currentSelectedScreenElement)
+    }
+
+    @Test
+    fun `when index is in bounds and file type xml on screen element select`() {
+        val index = 0
+        presenter.screenElements.add(testElementXml)
+
+        presenter.onScreenElementSelect(index)
+
+        inOrder(viewMock) {
+            verify(viewMock).removeTextChangeListeners()
+            verify(viewMock).showName("Test")
+            verify(viewMock).showFileType(FileType.LAYOUT_XML)
+            verify(viewMock).hideKotlinTextFields()
+            verify(viewMock).showXmlTextFields()
+            verify(viewMock).swapToXmlTemplateListener()
+            verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
+            verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            verify(viewMock).addTextChangeListeners()
+        }
+        assertEquals(testElementXml, presenter.currentSelectedScreenElement)
     }
 
     @Test
@@ -119,26 +145,26 @@ class SettingsPresenterTest {
 
     @Test
     fun `when current selected screen element is not null on name change`() {
-        presenter.currentSelectedScreenElement = testElement
-        presenter.screenElements.add(testElement)
+        presenter.currentSelectedScreenElement = testElementKotlin
+        presenter.screenElements.add(testElementKotlin)
 
         presenter.onNameChange("Test Test")
 
-        assertEquals("Test Test", testElement.name)
-        verify(viewMock).updateScreenElement(0, testElement)
-        verify(viewMock).showSampleCode(testElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+        assertEquals("Test Test", testElementKotlin.name)
+        verify(viewMock).updateScreenElement(0, testElementKotlin)
+        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
         assertTrue(presenter.isModified)
     }
 
     @Test
     fun `on apply settings`() {
-        presenter.screenElements.add(testElement)
+        presenter.screenElements.add(testElementKotlin)
         presenter.currentActivityBaseClass = activityBaseClass
         presenter.currentFragmentBaseClass = fragmentBaseClass
 
         presenter.onApplySettings()
 
-        val settings = Settings(listOf(testElement), activityBaseClass, fragmentBaseClass)
+        val settings = Settings(listOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
         verify(settingsRepositoryMock).update(settings)
         assertFalse(presenter.isModified)
         assertEquals(settings, presenter.initialSettings)
@@ -146,23 +172,23 @@ class SettingsPresenterTest {
 
     @Test
     fun `on reset settings`() {
-        val settings = Settings(listOf(testElement), activityBaseClass, fragmentBaseClass)
+        val settings = Settings(listOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
         presenter.initialSettings = settings
 
-        presenter.screenElements.add(testElement)
-        presenter.screenElements.add(testElement)
+        presenter.screenElements.add(testElementKotlin)
+        presenter.screenElements.add(testElementKotlin)
 
         presenter.onResetSettings()
 
         inOrder(viewMock) {
             verify(viewMock).clearScreenElements()
-            verify(viewMock).showScreenElements(listOf(testElement))
+            verify(viewMock).showScreenElements(listOf(testElementKotlin))
             verify(viewMock).removeBaseClassTextChangeListeners()
             verify(viewMock).showActivityBaseClass(activityBaseClass)
             verify(viewMock).showFragmentBaseClass(fragmentBaseClass)
             verify(viewMock).addBaseClassTextChangeListeners()
         }
-        assertEquals(listOf(testElement), presenter.screenElements)
+        assertEquals(listOf(testElementKotlin), presenter.screenElements)
         assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
         assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
         assertFalse(presenter.isModified)
@@ -170,27 +196,27 @@ class SettingsPresenterTest {
 
     @Test
     fun `on move down click`() {
-        presenter.screenElements.addAll(listOf(testElement, unnamedElement))
+        presenter.screenElements.addAll(listOf(testElementKotlin, unnamedElement))
 
         presenter.onMoveDownClick(0)
 
-        assertEquals(listOf(unnamedElement, testElement), presenter.screenElements)
+        assertEquals(listOf(unnamedElement, testElementKotlin), presenter.screenElements)
         assertTrue(presenter.isModified)
         verify(viewMock).updateScreenElement(0, unnamedElement)
-        verify(viewMock).updateScreenElement(1, testElement)
+        verify(viewMock).updateScreenElement(1, testElementKotlin)
         verify(viewMock).selectScreenElement(1)
     }
 
     @Test
     fun `on move up click`() {
-        presenter.screenElements.addAll(listOf(testElement, unnamedElement))
+        presenter.screenElements.addAll(listOf(testElementKotlin, unnamedElement))
 
         presenter.onMoveUpClick(1)
 
-        assertEquals(listOf(unnamedElement, testElement), presenter.screenElements)
+        assertEquals(listOf(unnamedElement, testElementKotlin), presenter.screenElements)
         assertTrue(presenter.isModified)
         verify(viewMock).updateScreenElement(0, unnamedElement)
-        verify(viewMock).updateScreenElement(1, testElement)
+        verify(viewMock).updateScreenElement(1, testElementKotlin)
         verify(viewMock).selectScreenElement(0)
     }
 
@@ -230,12 +256,30 @@ class SettingsPresenterTest {
     }
 
     @Test
-    fun `on file type select`() {
-        presenter.currentSelectedScreenElement = ScreenElement("", "", FileType.KOTLIN)
+    fun `when file type kotlin on file type select`() {
+        presenter.currentSelectedScreenElement = testElementXml
+
+        presenter.onFileTypeSelect(FileType.KOTLIN)
+
+        assertTrue(presenter.isModified)
+        assertEquals(FileType.KOTLIN, presenter.currentSelectedScreenElement?.fileType)
+        verify(viewMock).hideXmlTextFields()
+        verify(viewMock).showKotlinTextFields()
+        verify(viewMock).swapToKotlinTemplateListener()
+        verify(viewMock).showTemplate(FileType.KOTLIN.defaultTemplate)
+    }
+
+    @Test
+    fun `when file type xml on file type select`() {
+        presenter.currentSelectedScreenElement = testElementKotlin
 
         presenter.onFileTypeSelect(FileType.LAYOUT_XML)
 
         assertTrue(presenter.isModified)
         assertEquals(FileType.LAYOUT_XML, presenter.currentSelectedScreenElement?.fileType)
+        verify(viewMock).hideKotlinTextFields()
+        verify(viewMock).showXmlTextFields()
+        verify(viewMock).swapToXmlTemplateListener()
+        verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
     }
 }

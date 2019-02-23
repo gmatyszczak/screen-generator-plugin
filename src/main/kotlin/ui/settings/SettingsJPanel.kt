@@ -1,5 +1,6 @@
 package ui.settings
 
+import com.intellij.lang.xml.XMLLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.*
@@ -17,9 +18,16 @@ import javax.swing.ListSelectionModel
 class SettingsJPanel(project: Project) : JPanel() {
 
     val nameTextField = JTextField()
-    val templateEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false)
-    val sampleEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false).apply {
+    val kotlinTemplateEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false)
+    val kotlinSampleEditorTextField = LanguageTextField(KotlinLanguage.INSTANCE, project, "", false).apply {
         isEnabled = false
+    }
+    val xmlTemplateEditorTextField = LanguageTextField(XMLLanguage.INSTANCE, project, "", false).apply {
+        isVisible = false
+    }
+    val xmlSampleEditorTextField = LanguageTextField(XMLLanguage.INSTANCE, project, "", false).apply {
+        isEnabled = false
+        isVisible = false
     }
 
     val listModel = CollectionListModel<ScreenElement>()
@@ -52,11 +60,13 @@ class SettingsJPanel(project: Project) : JPanel() {
         }
 
         val templatePanel = panel(LCFlags.fillX, title = "Template") {
-            row { templateEditorTextField(growX, growY, pushY) }
+            row { kotlinTemplateEditorTextField(growX, growY, pushY) }
+            row { xmlTemplateEditorTextField(growX, growY, pushY) }
         }
 
         val samplePanel = panel(LCFlags.fillX, title = "Sample Code") {
-            row { sampleEditorTextField(growX, growY, pushY) }
+            row { kotlinSampleEditorTextField(growX, growY, pushY) }
+            row { xmlSampleEditorTextField(growX, growY, pushY) }
         }
 
         val rightPanel = panel(LCFlags.fillX) {
@@ -71,5 +81,15 @@ class SettingsJPanel(project: Project) : JPanel() {
             firstComponent = toolbarPanel
             secondComponent = rightPanel
         }, BorderLayout.CENTER)
+    }
+
+    fun setXmlTextFieldsVisible(isVisible: Boolean) {
+        xmlTemplateEditorTextField.isVisible = isVisible
+        xmlSampleEditorTextField.isVisible = isVisible
+    }
+
+    fun setKotlinTextFieldsVisible(isVisible: Boolean) {
+        kotlinTemplateEditorTextField.isVisible = isVisible
+        kotlinSampleEditorTextField.isVisible = isVisible
     }
 }

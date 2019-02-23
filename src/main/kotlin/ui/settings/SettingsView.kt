@@ -21,4 +21,10 @@ interface SettingsView {
     fun addBaseClassTextChangeListeners()
     fun removeBaseClassTextChangeListeners()
     fun showFileType(fileType: FileType)
+    fun showXmlTextFields()
+    fun showKotlinTextFields()
+    fun hideXmlTextFields()
+    fun hideKotlinTextFields()
+    fun swapToKotlinTemplateListener()
+    fun swapToXmlTemplateListener()
 }

@@ -21,6 +21,9 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(panel.fileTypeComboBoxModel.selected) }
 
+    private var currentTemplateTextField = panel.kotlinTemplateEditorTextField
+    private var currentSampleTextField = panel.kotlinSampleEditorTextField
+
     override fun isModified() = presenter.isModified
 
     override fun getDisplayName() = "Screen Generator Plugin"
@@ -59,13 +62,13 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     override fun addTextChangeListeners() {
         nameDocumentListener = panel.nameTextField.addTextChangeListener(presenter::onNameChange)
-        templateDocumentListener = panel.templateEditorTextField.addTextChangeListener(presenter::onTemplateChange)
+        templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
         panel.fileTypeComboBox.addActionListener(fileTypeActionListener)
     }
 
     override fun removeTextChangeListeners() {
         nameDocumentListener?.let { panel.nameTextField.document.removeDocumentListener(it) }
-        templateDocumentListener?.let { panel.templateEditorTextField.document.removeDocumentListener(it) }
+        templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
         nameDocumentListener = null
         templateDocumentListener = null
         panel.fileTypeComboBox.removeActionListener(fileTypeActionListener)
@@ -85,11 +88,11 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun clearScreenElements() = panel.listModel.removeAll()
 
     override fun showSampleCode(text: String) {
-        panel.sampleEditorTextField.text = text
+        currentSampleTextField.text = text
     }
 
     override fun showTemplate(template: String) {
-        panel.templateEditorTextField.text = template
+        currentTemplateTextField.text = template
     }
 
     override fun showActivityBaseClass(text: String) {
@@ -114,5 +117,27 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     override fun showFileType(fileType: FileType) {
         panel.fileTypeComboBox.selectedIndex = fileType.ordinal
+    }
+
+    override fun showXmlTextFields() = panel.setXmlTextFieldsVisible(true)
+
+    override fun showKotlinTextFields() = panel.setKotlinTextFieldsVisible(true)
+
+    override fun hideXmlTextFields() = panel.setXmlTextFieldsVisible(false)
+
+    override fun hideKotlinTextFields() = panel.setKotlinTextFieldsVisible(false)
+
+    override fun swapToKotlinTemplateListener() {
+        templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
+        currentTemplateTextField = panel.kotlinTemplateEditorTextField
+        currentSampleTextField = panel.kotlinSampleEditorTextField
+        templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
+    }
+
+    override fun swapToXmlTemplateListener() {
+        templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
+        currentTemplateTextField = panel.xmlTemplateEditorTextField
+        currentSampleTextField = panel.xmlSampleEditorTextField
+        templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 }

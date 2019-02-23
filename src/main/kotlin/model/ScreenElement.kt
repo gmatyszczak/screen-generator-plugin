@@ -3,7 +3,6 @@ package model
 import java.io.Serializable
 
 private const val UNNAMED_ELEMENT = "UnnamedElement"
-private const val TEMPLATE = "package %packageName%\n\nclass %name%%screenElement%"
 
 data class ScreenElement(var name: String, var template: String, var fileType: FileType) : Serializable {
 
@@ -15,6 +14,6 @@ data class ScreenElement(var name: String, var template: String, var fileType: F
                     .replace("%packageName%", packageName)
 
     companion object {
-        fun getDefault() = ScreenElement(UNNAMED_ELEMENT, TEMPLATE, FileType.KOTLIN)
+        fun getDefault() = ScreenElement(UNNAMED_ELEMENT, FileType.KOTLIN.defaultTemplate, FileType.KOTLIN)
     }
 }
