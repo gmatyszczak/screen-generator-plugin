@@ -16,3 +16,5 @@ fun LanguageTextField.addTextChangeListener(onChange: (String) -> Unit) =
         object : com.intellij.openapi.editor.event.DocumentListener {
             override fun documentChanged(event: com.intellij.openapi.editor.event.DocumentEvent?) = onChange(text)
         }.apply { document.addDocumentListener(this) }
+
+fun String.toCamelCase() = replace(Regex("([^_A-Z])([A-Z])"), "$1_$2").toLowerCase()

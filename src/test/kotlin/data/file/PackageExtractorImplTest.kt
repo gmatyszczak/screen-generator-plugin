@@ -22,7 +22,7 @@ class PackageExtractorImplTest {
 
     @Before
     fun setUp() {
-        whenever(sourceRootRepositoryMock.findFirstModuleSourceRoot()).thenReturn(sourceRootMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot()).thenReturn(sourceRootMock)
     }
 
     @Test

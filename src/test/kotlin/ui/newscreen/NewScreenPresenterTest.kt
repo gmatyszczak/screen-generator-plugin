@@ -5,9 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.file.FileCreator
 import data.file.PackageExtractor
-import data.file.SourceRoot
 import data.file.WriteActionDispatcher
-import data.repository.SourceRootRepository
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -24,13 +22,7 @@ class NewScreenPresenterTest {
     private lateinit var fileCreatorMock: FileCreator
 
     @Mock
-    private lateinit var sourceRootRepositoryMock: SourceRootRepository
-
-    @Mock
     private lateinit var packageExtractorMock: PackageExtractor
-
-    @Mock
-    private lateinit var sourceRootMock: SourceRoot
 
     @Mock
     private lateinit var writeActionDispatcherMock: WriteActionDispatcher
@@ -51,13 +43,12 @@ class NewScreenPresenterTest {
     @Test
     fun `on ok click`() {
         whenever(writeActionDispatcherMock.dispatch(any())).thenAnswer { (it.arguments[0] as () -> Unit).invoke() }
-        whenever(sourceRootRepositoryMock.findFirstModuleSourceRoot()).thenReturn(sourceRootMock)
         val screenName = "Test"
         val packageName = "com.test"
 
         presenter.onOkClick(packageName, screenName)
 
-        verify(fileCreatorMock).createScreenFiles(sourceRootMock, packageName, screenName)
+        verify(fileCreatorMock).createScreenFiles(packageName, screenName)
         verify(viewMock).close()
     }
 }

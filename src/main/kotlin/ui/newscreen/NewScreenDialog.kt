@@ -14,12 +14,12 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
     private val presenter: NewScreenPresenter
 
     init {
-        val fileCreator = FileCreatorImpl(SettingsRepositoryImpl(project))
         val projectStructure = ProjectStructureImpl(project)
         val sourceRootRepository = SourceRootRepositoryImpl(projectStructure)
+        val fileCreator = FileCreatorImpl(SettingsRepositoryImpl(project), sourceRootRepository)
         val packageExtractor = PackageExtractorImpl(currentPath, sourceRootRepository)
         val writeActionDispatcher = WriteActionDispatcherImpl()
-        presenter = NewScreenPresenter(this, fileCreator, sourceRootRepository, packageExtractor, writeActionDispatcher)
+        presenter = NewScreenPresenter(this, fileCreator, packageExtractor, writeActionDispatcher)
         init()
     }
 

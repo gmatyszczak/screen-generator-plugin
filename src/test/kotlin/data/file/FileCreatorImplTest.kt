@@ -3,6 +3,7 @@ package data.file
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
+import data.repository.SourceRootRepository
 import model.FileType
 import model.ScreenElement
 import model.Settings
@@ -19,10 +20,19 @@ class FileCreatorImplTest {
     private lateinit var settingsRepositoryMock: SettingsRepository
 
     @Mock
-    private lateinit var sourceRootMock: SourceRoot
+    private lateinit var codeSourceRootMock: SourceRoot
 
     @Mock
-    private lateinit var directoryMock: Directory
+    private lateinit var resourcesSourceRootMock: SourceRoot
+
+    @Mock
+    private lateinit var codeDirectoryMock: Directory
+
+    @Mock
+    private lateinit var resourcesDirectoryMock: Directory
+
+    @Mock
+    private lateinit var sourceRootRepositoryMock: SourceRootRepository
 
     @InjectMocks
     private lateinit var fileCreator: FileCreatorImpl
@@ -31,16 +41,22 @@ class FileCreatorImplTest {
 
     @Test
     fun `on create screen files`() {
-        whenever(directoryMock.findSubdirectory("com")).thenReturn(directoryMock)
-        whenever(directoryMock.findSubdirectory("test")).thenReturn(null)
-        whenever(directoryMock.createSubdirectory("test")).thenReturn(directoryMock)
-        whenever(sourceRootMock.directory).thenReturn(directoryMock)
-        val screenElements = listOf(ScreenElement("Presenter", testTemplate, FileType.KOTLIN), ScreenElement("View", testTemplate, FileType.KOTLIN))
+        whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
+        whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
+        whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot()).thenReturn(codeSourceRootMock)
+        whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
+        whenever(sourceRootRepositoryMock.findResourcesSourceRoot()).thenReturn(resourcesSourceRootMock)
+        whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
+        whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
+        whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
+
+        val screenElements = listOf(ScreenElement("Presenter", testTemplate, FileType.KOTLIN), ScreenElement("View", testTemplate, FileType.LAYOUT_XML))
         whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "", ""))
 
-        fileCreator.createScreenFiles(sourceRootMock, "com.test", "Test")
+        fileCreator.createScreenFiles("com.test", "Test")
 
-        verify(directoryMock).addFile(File("TestPresenter", "data class TestPresenter {}"))
-        verify(directoryMock).addFile(File("TestView", "data class TestView {}"))
+        verify(codeDirectoryMock).addFile(File("TestPresenter", "data class TestPresenter {}", FileType.KOTLIN))
+        verify(resourcesDirectoryMock).addFile(File("test", "data class TestView {}", FileType.LAYOUT_XML))
     }
 }

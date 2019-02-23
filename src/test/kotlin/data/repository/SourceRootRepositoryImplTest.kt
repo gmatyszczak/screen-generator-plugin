@@ -32,14 +32,25 @@ class SourceRootRepositoryImplTest {
     private lateinit var sourceRootRepository: SourceRootRepositoryImpl
 
     @Test
-    fun `on find first module source root`() {
+    fun `on find code source root`() {
         whenever(sourceRootBuildMock.path).thenReturn("build")
         whenever(sourceRootTestMock.path).thenReturn("test")
         whenever(sourceRootResMock.path).thenReturn("res")
         whenever(sourceRootSrcMock.path).thenReturn("src")
         whenever(projectStructureMock.findSourceRoots()).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootResMock, sourceRootSrcMock))
 
-        assertEquals(sourceRootSrcMock, sourceRootRepository.findFirstModuleSourceRoot())
+        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot())
+    }
+
+    @Test
+    fun `on find resources source root`() {
+        whenever(sourceRootBuildMock.path).thenReturn("build")
+        whenever(sourceRootTestMock.path).thenReturn("test")
+        whenever(sourceRootResMock.path).thenReturn("res")
+        whenever(sourceRootSrcMock.path).thenReturn("src")
+        whenever(projectStructureMock.findSourceRoots()).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootSrcMock, sourceRootResMock))
+
+        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot())
     }
 
 }
