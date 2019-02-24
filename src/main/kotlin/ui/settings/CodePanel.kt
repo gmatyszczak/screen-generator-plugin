@@ -28,7 +28,7 @@ class CodePanel(private val project: Project) : JPanel() {
         layout = GridLayout(2, 1)
     }
 
-    fun create() {
+    fun create(onHelpClick: () -> Unit) {
         val templatePanel = panel(LCFlags.fillX, title = "Code Template") {
             row { kotlinTemplateTextField(growX, growY, pushY) }
             row { xmlTemplateTextField(growX, growY, pushY) }
@@ -36,6 +36,9 @@ class CodePanel(private val project: Project) : JPanel() {
         val samplePanel = panel(LCFlags.fillX, title = "Sample Code") {
             row { kotlinSampleTextField(growX, growY, pushY) }
             row { xmlSampleTextField(growX, growY, pushY) }
+            row {
+                right { link("Help", action = onHelpClick) }
+            }
         }
         add(templatePanel)
         add(samplePanel)

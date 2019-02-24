@@ -31,7 +31,7 @@ class SettingsPanel(project: Project) : JPanel() {
 
     val fileTypeComboBox = ComboBox<FileType>(FileType.values())
     val fileNameTextField = JTextField()
-    val fileNameSampleLabel = JLabel()
+    val fileNameSampleLabel = JLabel().apply { isEnabled = false }
 
     val codePanel = CodePanel(project)
 
@@ -41,14 +41,14 @@ class SettingsPanel(project: Project) : JPanel() {
 
     fun create(onHelpClick: () -> Unit) {
         val screenElementsPanel = createScreenElementsPanel()
-        val androidComponentsPanel = createAndroidComponentsPanel(onHelpClick)
+        val androidComponentsPanel = createAndroidComponentsPanel()
         val screenElementDetailsPanel = createScreenElementDetailsPanel()
 
         val rightPanel = createSplitterRightPanel(androidComponentsPanel, screenElementDetailsPanel)
         val leftPanel = createSplitterLeftPanel(screenElementsPanel)
 
         addSplitter(leftPanel, rightPanel)
-        addCodePanel()
+        addCodePanel(onHelpClick)
     }
 
     private fun createScreenElementsPanel(): JPanel {
@@ -57,13 +57,10 @@ class SettingsPanel(project: Project) : JPanel() {
         }
     }
 
-    private fun createAndroidComponentsPanel(onHelpClick: () -> Unit): JPanel {
+    private fun createAndroidComponentsPanel(): JPanel {
         return panel(LCFlags.fillX, title = "Android Components") {
             row("Activity Base Class:") { activityTextField() }
             row("Fragment Base Class:") { fragmentTextField() }
-            row {
-                link("Help", action = onHelpClick)
-            }
         }
     }
 
@@ -79,7 +76,7 @@ class SettingsPanel(project: Project) : JPanel() {
     }
 
     private fun addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
-        add(JBSplitter(0.3f).apply {
+        add(JBSplitter(0.2f).apply {
             firstComponent = leftPanel
             secondComponent = rightPanel
         }, BorderLayout.PAGE_START)
@@ -98,8 +95,8 @@ class SettingsPanel(project: Project) : JPanel() {
         }
     }
 
-    private fun addCodePanel() {
-        codePanel.create()
+    private fun addCodePanel(onHelpClick: () -> Unit) {
+        codePanel.create(onHelpClick)
         add(codePanel, BorderLayout.CENTER)
     }
 }
