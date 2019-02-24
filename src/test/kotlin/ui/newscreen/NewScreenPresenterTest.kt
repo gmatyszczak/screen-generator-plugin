@@ -47,7 +47,7 @@ class NewScreenPresenterTest {
         val screenName = "Test"
         val packageName = "com.test"
 
-        presenter.onOkClick(packageName, screenName)
+        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY)
 
         verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY)
         verify(viewMock).close()

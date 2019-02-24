@@ -1,6 +1,8 @@
 package ui.newscreen
 
-import com.intellij.util.ui.FormBuilder
+import com.intellij.openapi.ui.ComboBox
+import com.intellij.ui.layout.panel
+import model.AndroidComponent
 import java.awt.BorderLayout
 import java.awt.Dimension
 import javax.swing.JPanel
@@ -12,13 +14,17 @@ class NewScreenJPanel : JPanel() {
     val nameTextField = JTextField()
     val packageTextField = JTextField()
 
+    val androidComponentComboBox = ComboBox<AndroidComponent>(AndroidComponent.values())
+
     init {
         layout = BorderLayout()
-        val builder = FormBuilder.createFormBuilder()
-                .addLabeledComponent("Package:", packageTextField)
-                .addLabeledComponent("Name:", nameTextField)
-        add(builder.panel, BorderLayout.CENTER)
+        val panel = panel {
+            row("Package:") { packageTextField() }
+            row("Name:") { nameTextField() }
+            row("Android Component:") { androidComponentComboBox() }
+        }
+        add(panel, BorderLayout.CENTER)
     }
 
-    override fun getPreferredSize() = Dimension(300, 110)
+    override fun getPreferredSize() = Dimension(450, 110)
 }
