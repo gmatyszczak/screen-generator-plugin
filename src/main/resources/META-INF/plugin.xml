@@ -1,15 +1,23 @@
 <idea-plugin>
-    <id>screengenerator.screengenerator</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <id>pl.gmat.screengenerator</id>
+    <name>Screen Generator Plugin</name>
+    <vendor email="grzesiek.matyszczak@gmail.com">Grzegorz Matyszczak</vendor>
+
+    <version>0.1</version>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    This plugin helps you automate your everyday development by generating all necessary files for your project's architecture
+    when you are creating a new screen.<br><br>
+    For example, you are using MVP architecture and you are creating the Main screen. You can set up the plugin to generate for you:
+    <ul>
+    <li>MainActivity.kt</li>
+    <li>MainView.kt</li>
+    <li>MainPresenter.kt</li>
+    <li>activity_main.xml</li>
+    </ul>
+    And you can also set what content they should contain!
     ]]></description>
 
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
     <depends>com.intellij.modules.lang</depends>
     <depends>org.jetbrains.kotlin</depends>
 
