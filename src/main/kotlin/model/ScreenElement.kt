@@ -8,10 +8,13 @@ data class ScreenElement(var name: String, var template: String, var fileType: F
 
     override fun toString() = name
 
-    fun body(screenName: String, packageName: String) =
+    fun body(screenName: String, packageName: String, androidComponent: String, androidComponentBaseClass: String) =
             template.replace("%name%", screenName)
                     .replace("%screenElement%", name)
                     .replace("%packageName%", packageName)
+                    .replace("%androidComponentShortName%", androidComponent)
+                    .replace("%androidComponentFullName%", androidComponentBaseClass)
+                    .replace("%androidComponentLongName%", androidComponentBaseClass.substring(androidComponentBaseClass.lastIndexOf(".") + 1))
 
     companion object {
         fun getDefault() = ScreenElement(UNNAMED_ELEMENT, FileType.KOTLIN.defaultTemplate, FileType.KOTLIN)

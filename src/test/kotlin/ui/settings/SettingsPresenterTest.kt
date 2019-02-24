@@ -92,7 +92,7 @@ class SettingsPresenterTest {
             verify(viewMock).hideXmlTextFields()
             verify(viewMock).showKotlinTextFields()
             verify(viewMock).showTemplate(testTemplate)
-            verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
         }
         assertEquals(testElementKotlin, presenter.currentSelectedScreenElement)
@@ -112,7 +112,7 @@ class SettingsPresenterTest {
             verify(viewMock).hideKotlinTextFields()
             verify(viewMock).showXmlTextFields()
             verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
-            verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
         }
         assertEquals(testElementXml, presenter.currentSelectedScreenElement)
@@ -150,7 +150,7 @@ class SettingsPresenterTest {
 
         assertEquals("Test Test", testElementKotlin.name)
         verify(viewMock).updateScreenElement(0, testElementKotlin)
-        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
         assertTrue(presenter.isModified)
     }
 
@@ -232,7 +232,7 @@ class SettingsPresenterTest {
 
         presenter.onTemplateChange(testTemplate)
 
-        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
         assertTrue(presenter.isModified)
         assertEquals(testTemplate, presenter.currentSelectedScreenElement?.template)
     }

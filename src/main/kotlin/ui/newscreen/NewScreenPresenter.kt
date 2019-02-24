@@ -3,6 +3,7 @@ package ui.newscreen
 import data.file.FileCreator
 import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
+import model.AndroidComponent
 
 class NewScreenPresenter(private val view: NewScreenView,
                          private val fileCreator: FileCreator,
@@ -15,7 +16,7 @@ class NewScreenPresenter(private val view: NewScreenView,
 
     fun onOkClick(packageName: String, screenName: String) {
         writeActionDispatcher.dispatch {
-            fileCreator.createScreenFiles(packageName, screenName)
+            fileCreator.createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY)
         }
         view.close()
     }

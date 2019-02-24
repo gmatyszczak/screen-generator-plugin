@@ -5,11 +5,15 @@ import org.junit.Test
 
 class ScreenElementTest {
 
-    private val screenElement = ScreenElement("Presenter", "package %packageName%\n\nclass %name%%screenElement%", FileType.LAYOUT_XML)
+    private val template = "package %packageName%\n\nimport %androidComponentFullName%\n\nclass %name%%androidComponentShortName% : %androidComponentLongName%"
+    private val screenElement = ScreenElement("Presenter", template, FileType.LAYOUT_XML)
 
     @Test
     fun `on body`() {
-        assertEquals("package com.test\n\nclass TestPresenter", screenElement.body("Test", "com.test"))
+        assertEquals(
+                "package com.test\n\nimport com.example.AppCompatActivity\n\nclass TestActivity : AppCompatActivity",
+                screenElement.body("Test", "com.test", "Activity", "com.example.AppCompatActivity")
+        )
     }
 
     @Test

@@ -7,6 +7,7 @@ import model.Settings
 
 const val SAMPLE_SCREEN_NAME = "Sample"
 const val SAMPLE_PACKAGE_NAME = "com.sample"
+const val SAMPLE_ANDROID_COMPONENT = "Activity"
 
 class SettingsPresenter(private val view: SettingsView,
                         private val settingsRepository: SettingsRepository) {
@@ -58,7 +59,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.showFileType(selectedElement.fileType)
             handleFileTypeSelection(selectedElement.fileType, false)
             view.showTemplate(selectedElement.template)
-            view.showSampleCode(selectedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            updateSampleCode(selectedElement)
             view.addTextChangeListeners()
         } else {
             currentSelectedScreenElement = null
@@ -73,7 +74,7 @@ class SettingsPresenter(private val view: SettingsView,
         currentSelectedScreenElement?.let {
             it.name = name
             view.updateScreenElement(screenElements.indexOf(it), it)
-            view.showSampleCode(it.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            updateSampleCode(it)
             isModified = true
         }
     }
@@ -111,18 +112,23 @@ class SettingsPresenter(private val view: SettingsView,
     fun onTemplateChange(text: String) {
         currentSelectedScreenElement?.let {
             it.template = text
-            view.showSampleCode(it.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME))
+            updateSampleCode(it)
             isModified = true
         }
     }
 
+    private fun updateSampleCode(screenElement: ScreenElement) =
+            view.showSampleCode(screenElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
+
     fun onActivityBaseClassChange(text: String) {
         currentActivityBaseClass = text
+        currentSelectedScreenElement?.let { updateSampleCode(it) }
         isModified = true
     }
 
     fun onFragmentBaseClassChange(text: String) {
         currentFragmentBaseClass = text
+        currentSelectedScreenElement?.let { updateSampleCode(it) }
         isModified = true
     }
 

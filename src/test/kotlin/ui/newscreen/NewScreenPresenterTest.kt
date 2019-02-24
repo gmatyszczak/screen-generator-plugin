@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import data.file.FileCreator
 import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
+import model.AndroidComponent
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -48,7 +49,7 @@ class NewScreenPresenterTest {
 
         presenter.onOkClick(packageName, screenName)
 
-        verify(fileCreatorMock).createScreenFiles(packageName, screenName)
+        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY)
         verify(viewMock).close()
     }
 }
