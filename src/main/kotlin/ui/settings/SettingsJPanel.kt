@@ -44,7 +44,7 @@ class SettingsJPanel(project: Project) : JPanel() {
     val fileTypeComboBoxModel = CollectionComboBoxModel<FileType>(FileType.values().toList())
     val fileTypeComboBox = ComboBox<FileType>(fileTypeComboBoxModel)
     val fileNameTextField = JTextField()
-    val fineNameSampleLabel = JLabel()
+    val fileNameSampleLabel = JLabel()
 
     init {
         layout = BorderLayout()
@@ -64,7 +64,7 @@ class SettingsJPanel(project: Project) : JPanel() {
             row("Screen Element Name:") { nameTextField() }
             row("File Name:") {
                 fileNameTextField()
-                right { fineNameSampleLabel() }
+                right { fileNameSampleLabel() }
             }
             row("File Type:") { fileTypeComboBox() }
         }

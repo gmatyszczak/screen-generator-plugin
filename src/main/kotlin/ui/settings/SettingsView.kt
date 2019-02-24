@@ -27,4 +27,6 @@ interface SettingsView {
     fun hideKotlinTextFields()
     fun swapToKotlinTemplateListener(addListener: Boolean)
     fun swapToXmlTemplateListener(addListener: Boolean)
+    fun showFileNameTemplate(text: String)
+    fun showFileNameSample(text: String)
 }

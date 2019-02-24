@@ -1,6 +1,7 @@
 package ui.settings
 
 import data.repository.SettingsRepository
+import model.AndroidComponent
 import model.FileType
 import model.ScreenElement
 import model.Settings
@@ -57,7 +58,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.removeTextChangeListeners()
             view.showName(selectedElement.name)
             view.showFileType(selectedElement.fileType)
-            handleFileTypeSelection(selectedElement.fileType, false)
+            handleFileTypeSelection(selectedElement, false)
             view.showTemplate(selectedElement.template)
             updateSampleCode(selectedElement)
             view.addTextChangeListeners()
@@ -67,6 +68,8 @@ class SettingsPresenter(private val view: SettingsView,
             view.showName("")
             view.showTemplate("")
             view.showSampleCode("")
+            view.showFileNameTemplate("")
+            view.showFileNameSample("")
         }
     }
 
@@ -142,15 +145,16 @@ class SettingsPresenter(private val view: SettingsView,
         currentSelectedScreenElement?.let {
             if (fileType != null) {
                 it.fileType = fileType
-                handleFileTypeSelection(fileType, true)
+                it.fileNameTemplate = fileType.defaultFileName
+                handleFileTypeSelection(it, true)
                 view.showTemplate(fileType.defaultTemplate)
                 isModified = true
             }
         }
     }
 
-    private fun handleFileTypeSelection(fileType: FileType, addListener: Boolean) {
-        when (fileType) {
+    private fun handleFileTypeSelection(screenElement: ScreenElement, addListener: Boolean) {
+        when (screenElement.fileType) {
             FileType.KOTLIN -> {
                 view.hideXmlTextFields()
                 view.showKotlinTextFields()
@@ -161,6 +165,16 @@ class SettingsPresenter(private val view: SettingsView,
                 view.showXmlTextFields()
                 view.swapToXmlTemplateListener(addListener)
             }
+        }
+        view.showFileNameTemplate(screenElement.fileNameTemplate)
+        view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, AndroidComponent.ACTIVITY.displayName, currentActivityBaseClass))
+    }
+
+    fun onFileNameChange(fileName: String) {
+        currentSelectedScreenElement?.let {
+            it.fileNameTemplate = fileName
+            view.showFileNameSample(it.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
+            isModified = true
         }
     }
 }

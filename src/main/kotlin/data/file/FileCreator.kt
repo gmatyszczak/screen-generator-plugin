@@ -5,7 +5,6 @@ import data.repository.SourceRootRepository
 import model.AndroidComponent
 import model.FileType
 import model.Settings
-import util.toCamelCase
 
 private const val LAYOUT_DIRECTORY = "layout"
 
@@ -24,10 +23,10 @@ class FileCreatorImpl(private val settingsRepository: SettingsRepository,
             val baseClass = getAndroidComponentBaseClass(androidComponent)
             screenElements.forEach {
                 if (it.fileType == FileType.LAYOUT_XML) {
-                    val file = File("${androidComponent.displayName.toLowerCase()}_${screenName.toCamelCase()}", it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
+                    val file = File(it.fileName(screenName, packageName, androidComponent.displayName, baseClass), it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
                     resourcesSubdirectory.addFile(file)
                 } else {
-                    val file = File("$screenName${it.name}", it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
+                    val file = File(it.fileName(screenName, packageName, androidComponent.displayName, baseClass), it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
                     codeSubdirectory.addFile(file)
                 }
             }

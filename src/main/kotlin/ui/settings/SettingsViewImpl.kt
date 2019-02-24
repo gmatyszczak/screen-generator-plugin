@@ -18,6 +18,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
     private var activityDocumentListener: DocumentListener? = null
     private var fragmentDocumentListener: DocumentListener? = null
+    private var fileNametDocumentListener: DocumentListener? = null
 
     private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(panel.fileTypeComboBoxModel.selected) }
 
@@ -63,6 +64,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun addTextChangeListeners() {
         nameDocumentListener = panel.nameTextField.addTextChangeListener(presenter::onNameChange)
         templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
+        fileNametDocumentListener = panel.fileNameTextField.addTextChangeListener(presenter::onFileNameChange)
         panel.fileTypeComboBox.addActionListener(fileTypeActionListener)
     }
 
@@ -71,6 +73,8 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
         nameDocumentListener = null
         templateDocumentListener = null
+        fileNametDocumentListener?.let { panel.fileNameTextField.document.removeDocumentListener(it) }
+        fileNametDocumentListener = null
         panel.fileTypeComboBox.removeActionListener(fileTypeActionListener)
     }
 
@@ -139,5 +143,13 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         currentTemplateTextField = panel.xmlTemplateEditorTextField
         currentSampleTextField = panel.xmlSampleEditorTextField
         if (addListener) templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
+    }
+
+    override fun showFileNameTemplate(text: String) {
+        panel.fileNameTextField.text = text
+    }
+
+    override fun showFileNameSample(text: String) {
+        panel.fileNameSampleLabel.text = text
     }
 }
