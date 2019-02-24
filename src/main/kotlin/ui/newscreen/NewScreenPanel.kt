@@ -9,7 +9,7 @@ import javax.swing.JPanel
 import javax.swing.JTextField
 
 
-class NewScreenJPanel : JPanel() {
+class NewScreenPanel : JPanel() {
 
     val nameTextField = JTextField()
     val packageTextField = JTextField()

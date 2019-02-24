@@ -10,7 +10,7 @@ import javax.swing.JComponent
 
 class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true), NewScreenView {
 
-    private val panel = NewScreenJPanel()
+    private val panel = NewScreenPanel()
 
     private val presenter: NewScreenPresenter
 

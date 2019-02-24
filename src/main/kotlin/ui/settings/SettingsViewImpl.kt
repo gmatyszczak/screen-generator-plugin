@@ -12,18 +12,18 @@ import javax.swing.event.DocumentListener
 
 class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
-    private val panel = SettingsJPanel(project)
+    private val panel = SettingsPanel(project)
     private val presenter = SettingsPresenter(this, SettingsRepositoryImpl(project))
     private var nameDocumentListener: DocumentListener? = null
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
     private var activityDocumentListener: DocumentListener? = null
     private var fragmentDocumentListener: DocumentListener? = null
-    private var fileNametDocumentListener: DocumentListener? = null
+    private var fileNameDocumentListener: DocumentListener? = null
 
     private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(FileType.values()[panel.fileTypeComboBox.selectedIndex]) }
 
-    private var currentTemplateTextField = panel.kotlinTemplateEditorTextField
-    private var currentSampleTextField = panel.kotlinSampleEditorTextField
+    private var currentTemplateTextField = panel.codePanel.kotlinTemplateTextField
+    private var currentSampleTextField = panel.codePanel.kotlinSampleTextField
 
     override fun isModified() = presenter.isModified
 
@@ -39,22 +39,24 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         return panel
     }
 
-    override fun setUpListeners() {
-        panel.toolbarDecorator.setAddAction { presenter.onAddClick() }
-        panel.toolbarDecorator.setRemoveAction { presenter.onDeleteClick(panel.list.selectedIndex) }
-        panel.toolbarDecorator.setMoveDownAction { presenter.onMoveDownClick(panel.list.selectedIndex) }
-        panel.toolbarDecorator.setMoveUpAction { presenter.onMoveUpClick(panel.list.selectedIndex) }
-        panel.list.addListSelectionListener {
-            if (!it.valueIsAdjusting) presenter.onScreenElementSelect(panel.list.selectedIndex)
+    override fun setUpListeners() = panel.run {
+        toolbarDecorator.apply {
+            setAddAction { presenter.onAddClick() }
+            setRemoveAction { presenter.onDeleteClick(panel.screenElementsList.selectedIndex) }
+            setMoveDownAction { presenter.onMoveDownClick(panel.screenElementsList.selectedIndex) }
+            setMoveUpAction { presenter.onMoveUpClick(panel.screenElementsList.selectedIndex) }
+        }
+        screenElementsList.addListSelectionListener {
+            if (!it.valueIsAdjusting) presenter.onScreenElementSelect(screenElementsList.selectedIndex)
         }
     }
 
     override fun addScreenElement(screenElement: ScreenElement) {
-        panel.listModel.add(screenElement)
+        panel.screenElementsListModel.add(screenElement)
     }
 
     override fun selectScreenElement(index: Int) {
-        panel.list.selectedIndex = index
+        panel.screenElementsList.selectedIndex = index
     }
 
     override fun showName(name: String) {
@@ -64,32 +66,29 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun addTextChangeListeners() {
         nameDocumentListener = panel.nameTextField.addTextChangeListener(presenter::onNameChange)
         templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
-        fileNametDocumentListener = panel.fileNameTextField.addTextChangeListener(presenter::onFileNameChange)
+        fileNameDocumentListener = panel.fileNameTextField.addTextChangeListener(presenter::onFileNameChange)
         panel.fileTypeComboBox.addActionListener(fileTypeActionListener)
     }
 
     override fun removeTextChangeListeners() {
         nameDocumentListener?.let { panel.nameTextField.document.removeDocumentListener(it) }
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
+        fileNameDocumentListener?.let { panel.fileNameTextField.document.removeDocumentListener(it) }
         nameDocumentListener = null
         templateDocumentListener = null
-        fileNametDocumentListener?.let { panel.fileNameTextField.document.removeDocumentListener(it) }
-        fileNametDocumentListener = null
+        fileNameDocumentListener = null
         panel.fileTypeComboBox.removeActionListener(fileTypeActionListener)
     }
 
-    override fun updateScreenElement(index: Int, screenElement: ScreenElement) {
-        panel.listModel.setElementAt(screenElement, index)
-    }
+    override fun updateScreenElement(index: Int, screenElement: ScreenElement) =
+            panel.screenElementsListModel.setElementAt(screenElement, index)
 
-    override fun removeScreenElement(index: Int) {
-        panel.listModel.remove(index)
-    }
+    override fun removeScreenElement(index: Int) = panel.screenElementsListModel.remove(index)
 
     override fun showScreenElements(screenElements: List<ScreenElement>) =
-            screenElements.forEach { panel.listModel.add(it) }
+            screenElements.forEach { panel.screenElementsListModel.add(it) }
 
-    override fun clearScreenElements() = panel.listModel.removeAll()
+    override fun clearScreenElements() = panel.screenElementsListModel.removeAll()
 
     override fun showSampleCode(text: String) {
         currentSampleTextField.text = text
@@ -123,25 +122,19 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
         panel.fileTypeComboBox.selectedIndex = fileType.ordinal
     }
 
-    override fun showXmlTextFields() = panel.setXmlTextFieldsVisible(true)
-
-    override fun showKotlinTextFields() = panel.setKotlinTextFieldsVisible(true)
-
-    override fun hideXmlTextFields() = panel.setXmlTextFieldsVisible(false)
-
-    override fun hideKotlinTextFields() = panel.setKotlinTextFieldsVisible(false)
+    override fun showCodeTextFields(fileType: FileType) = panel.codePanel.show(fileType)
 
     override fun swapToKotlinTemplateListener(addListener: Boolean) {
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
-        currentTemplateTextField = panel.kotlinTemplateEditorTextField
-        currentSampleTextField = panel.kotlinSampleEditorTextField
+        currentTemplateTextField = panel.codePanel.kotlinTemplateTextField
+        currentSampleTextField = panel.codePanel.kotlinSampleTextField
         if (addListener) templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 
     override fun swapToXmlTemplateListener(addListener: Boolean) {
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
-        currentTemplateTextField = panel.xmlTemplateEditorTextField
-        currentSampleTextField = panel.xmlSampleEditorTextField
+        currentTemplateTextField = panel.codePanel.xmlTemplateTextField
+        currentSampleTextField = panel.codePanel.xmlSampleTextField
         if (addListener) templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 

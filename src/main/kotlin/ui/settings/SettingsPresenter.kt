@@ -147,17 +147,10 @@ class SettingsPresenter(private val view: SettingsView,
     }
 
     private fun handleFileTypeSelection(screenElement: ScreenElement, addListener: Boolean) {
+        view.showCodeTextFields(screenElement.fileType)
         when (screenElement.fileType) {
-            FileType.KOTLIN -> {
-                view.hideXmlTextFields()
-                view.showKotlinTextFields()
-                view.swapToKotlinTemplateListener(addListener)
-            }
-            FileType.LAYOUT_XML -> {
-                view.hideKotlinTextFields()
-                view.showXmlTextFields()
-                view.swapToXmlTemplateListener(addListener)
-            }
+            FileType.KOTLIN -> view.swapToKotlinTemplateListener(addListener)
+            FileType.LAYOUT_XML -> view.swapToXmlTemplateListener(addListener)
         }
         view.showFileNameTemplate(screenElement.fileNameTemplate)
         view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, AndroidComponent.ACTIVITY.displayName, currentActivityBaseClass))
