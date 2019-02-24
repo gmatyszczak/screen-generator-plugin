@@ -127,17 +127,17 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     override fun hideKotlinTextFields() = panel.setKotlinTextFieldsVisible(false)
 
-    override fun swapToKotlinTemplateListener() {
+    override fun swapToKotlinTemplateListener(addListener: Boolean) {
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
         currentTemplateTextField = panel.kotlinTemplateEditorTextField
         currentSampleTextField = panel.kotlinSampleEditorTextField
-        templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
+        if (addListener) templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 
-    override fun swapToXmlTemplateListener() {
+    override fun swapToXmlTemplateListener(addListener: Boolean) {
         templateDocumentListener?.let { currentTemplateTextField.document.removeDocumentListener(it) }
         currentTemplateTextField = panel.xmlTemplateEditorTextField
         currentSampleTextField = panel.xmlSampleEditorTextField
-        templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
+        if (addListener) templateDocumentListener = currentTemplateTextField.addTextChangeListener(presenter::onTemplateChange)
     }
 }

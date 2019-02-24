@@ -149,17 +149,17 @@ class SettingsPresenter(private val view: SettingsView,
         }
     }
 
-    private fun handleFileTypeSelection(fileType: FileType, swapListener: Boolean) {
+    private fun handleFileTypeSelection(fileType: FileType, addListener: Boolean) {
         when (fileType) {
             FileType.KOTLIN -> {
                 view.hideXmlTextFields()
                 view.showKotlinTextFields()
-                if (swapListener) view.swapToKotlinTemplateListener()
+                view.swapToKotlinTemplateListener(addListener)
             }
             FileType.LAYOUT_XML -> {
                 view.hideKotlinTextFields()
                 view.showXmlTextFields()
-                if (swapListener) view.swapToXmlTemplateListener()
+                view.swapToXmlTemplateListener(addListener)
             }
         }
     }

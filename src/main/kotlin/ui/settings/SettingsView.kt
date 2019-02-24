@@ -25,6 +25,6 @@ interface SettingsView {
     fun showKotlinTextFields()
     fun hideXmlTextFields()
     fun hideKotlinTextFields()
-    fun swapToKotlinTemplateListener()
-    fun swapToXmlTemplateListener()
+    fun swapToKotlinTemplateListener(addListener: Boolean)
+    fun swapToXmlTemplateListener(addListener: Boolean)
 }

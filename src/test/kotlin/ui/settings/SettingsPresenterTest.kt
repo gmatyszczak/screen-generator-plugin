@@ -1,9 +1,6 @@
 package ui.settings
 
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import data.repository.SettingsRepository
 import model.FileType
 import model.ScreenElement
@@ -82,6 +79,7 @@ class SettingsPresenterTest {
     fun `when index is in bounds and file type kotlin on screen element select`() {
         val index = 0
         presenter.screenElements.add(testElementKotlin)
+        presenter.currentActivityBaseClass = activityBaseClass
 
         presenter.onScreenElementSelect(index)
 
@@ -91,10 +89,12 @@ class SettingsPresenterTest {
             verify(viewMock).showFileType(FileType.KOTLIN)
             verify(viewMock).hideXmlTextFields()
             verify(viewMock).showKotlinTextFields()
+            verify(viewMock).swapToKotlinTemplateListener(false)
             verify(viewMock).showTemplate(testTemplate)
             verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
         }
+        verifyNoMoreInteractions(viewMock)
         assertEquals(testElementKotlin, presenter.currentSelectedScreenElement)
     }
 
@@ -102,6 +102,7 @@ class SettingsPresenterTest {
     fun `when index is in bounds and file type xml on screen element select`() {
         val index = 0
         presenter.screenElements.add(testElementXml)
+        presenter.currentActivityBaseClass = activityBaseClass
 
         presenter.onScreenElementSelect(index)
 
@@ -111,10 +112,12 @@ class SettingsPresenterTest {
             verify(viewMock).showFileType(FileType.LAYOUT_XML)
             verify(viewMock).hideKotlinTextFields()
             verify(viewMock).showXmlTextFields()
+            verify(viewMock).swapToXmlTemplateListener(false)
             verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
             verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
         }
+        verifyNoMoreInteractions(viewMock)
         assertEquals(testElementXml, presenter.currentSelectedScreenElement)
     }
 
@@ -145,6 +148,7 @@ class SettingsPresenterTest {
     fun `when current selected screen element is not null on name change`() {
         presenter.currentSelectedScreenElement = testElementKotlin
         presenter.screenElements.add(testElementKotlin)
+        presenter.currentActivityBaseClass = activityBaseClass
 
         presenter.onNameChange("Test Test")
 
@@ -229,6 +233,7 @@ class SettingsPresenterTest {
     @Test
     fun `when current selected item is not null on template change`() {
         presenter.currentSelectedScreenElement = unnamedElement
+        presenter.currentActivityBaseClass = activityBaseClass
 
         presenter.onTemplateChange(testTemplate)
 
@@ -263,7 +268,7 @@ class SettingsPresenterTest {
         assertEquals(FileType.KOTLIN, presenter.currentSelectedScreenElement?.fileType)
         verify(viewMock).hideXmlTextFields()
         verify(viewMock).showKotlinTextFields()
-        verify(viewMock).swapToKotlinTemplateListener()
+        verify(viewMock).swapToKotlinTemplateListener(true)
         verify(viewMock).showTemplate(FileType.KOTLIN.defaultTemplate)
     }
 
@@ -277,7 +282,7 @@ class SettingsPresenterTest {
         assertEquals(FileType.LAYOUT_XML, presenter.currentSelectedScreenElement?.fileType)
         verify(viewMock).hideKotlinTextFields()
         verify(viewMock).showXmlTextFields()
-        verify(viewMock).swapToXmlTemplateListener()
+        verify(viewMock).swapToXmlTemplateListener(true)
         verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
     }
 }
