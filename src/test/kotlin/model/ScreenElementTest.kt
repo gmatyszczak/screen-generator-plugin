@@ -5,7 +5,7 @@ import org.junit.Test
 
 class ScreenElementTest {
 
-    private val template = "package $VARIABLE_PACKAGE_NAME\n\nimport $VARIABLE_ANDROID_COMPONENT_FULL_NAME\n\nclass $VARIABLE_NAME$VARIABLE_ANDROID_COMPONENT_SHORT_NAME : $VARIABLE_ANDROID_COMPONENT_LONG_NAME"
+    private val template = "package ${Variable.PACKAGE_NAME.value}\n\nimport ${Variable.ANDROID_COMPONENT_FULL_CLASS_NAME.value}\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_SHORT_NAME.value} : ${Variable.ANDROID_COMPONENT_CLASS_NAME.value}"
     private val kotlinScreenElement = ScreenElement("Presenter", template, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
     private val xmlScreenElement = ScreenElement("Presenter", template, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
 

@@ -2,7 +2,10 @@ package ui.settings
 
 import com.nhaarman.mockitokotlin2.*
 import data.repository.SettingsRepository
-import model.*
+import model.FileType
+import model.ScreenElement
+import model.Settings
+import model.Variable
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -24,7 +27,7 @@ class SettingsPresenterTest {
     @InjectMocks
     private lateinit var presenter: SettingsPresenter
 
-    private val testTemplate = "data class $VARIABLE_NAME$VARIABLE_SCREEN_ELEMENT {}"
+    private val testTemplate = "data class ${Variable.NAME.value}${Variable.SCREEN_ELEMENT.value} {}"
     private val testElementKotlin = ScreenElement("Test", testTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
     private val testElementXml = ScreenElement("Test", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
     private val unnamedElement = ScreenElement.getDefault()
@@ -299,9 +302,9 @@ class SettingsPresenterTest {
         presenter.currentSelectedScreenElement = testElementKotlin
         presenter.currentActivityBaseClass = activityBaseClass
 
-        presenter.onFileNameChange("${VARIABLE_NAME}Test")
+        presenter.onFileNameChange("${Variable.NAME.value}Test")
 
-        assertEquals("${VARIABLE_NAME}Test", testElementKotlin.fileNameTemplate)
+        assertEquals("${Variable.NAME.value}Test", testElementKotlin.fileNameTemplate)
         assertTrue(presenter.isModified)
         verify(viewMock).showFileNameSample("SampleTest")
     }

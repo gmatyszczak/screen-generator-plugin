@@ -7,9 +7,9 @@ class SettingsTest {
 
     @Test
     fun `on get default`() {
-        val mvpElement = ScreenElement("MVP", "package $VARIABLE_PACKAGE_NAME\n\nimport $VARIABLE_ANDROID_COMPONENT_FULL_NAME\n\nclass $VARIABLE_NAME$VARIABLE_ANDROID_COMPONENT_SHORT_NAME : $VARIABLE_ANDROID_COMPONENT_LONG_NAME", FileType.KOTLIN, "$VARIABLE_NAME$VARIABLE_ANDROID_COMPONENT_SHORT_NAME")
+        val mvpElement = ScreenElement("MVP", "package ${Variable.PACKAGE_NAME.value}\n\nimport ${Variable.ANDROID_COMPONENT_FULL_CLASS_NAME.value}\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_SHORT_NAME.value} : ${Variable.ANDROID_COMPONENT_CLASS_NAME.value}", FileType.KOTLIN, "${Variable.NAME.value}${Variable.ANDROID_COMPONENT_SHORT_NAME.value}")
         val presenterElement = ScreenElement("Presenter", FileType.KOTLIN.defaultTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
-        val viewElement = ScreenElement("View", "package $VARIABLE_PACKAGE_NAME\n\ninterface $VARIABLE_NAME$VARIABLE_SCREEN_ELEMENT", FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
+        val viewElement = ScreenElement("View", "package ${Variable.PACKAGE_NAME.value}\n\ninterface ${Variable.NAME.value}${Variable.SCREEN_ELEMENT.value}", FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
         val layoutElement = ScreenElement("layout", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
         assertEquals(Settings(
                 listOf(
