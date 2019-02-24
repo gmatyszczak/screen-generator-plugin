@@ -163,4 +163,6 @@ class SettingsPresenter(private val view: SettingsView,
             isModified = true
         }
     }
+
+    fun onHelpClick() = view.showHelp()
 }

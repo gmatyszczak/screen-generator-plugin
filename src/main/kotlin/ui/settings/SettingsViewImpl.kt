@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project
 import data.repository.SettingsRepositoryImpl
 import model.FileType
 import model.ScreenElement
+import ui.help.HelpDialog
 import util.addTextChangeListener
 import java.awt.event.ActionListener
 import javax.swing.JComponent
@@ -35,7 +36,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
 
     override fun createComponent(): JComponent {
         presenter.onLoadView()
-        panel.create()
+        panel.create(presenter::onHelpClick)
         return panel
     }
 
@@ -145,4 +146,6 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun showFileNameSample(text: String) {
         panel.fileNameSampleLabel.text = text
     }
+
+    override fun showHelp() = HelpDialog().show()
 }

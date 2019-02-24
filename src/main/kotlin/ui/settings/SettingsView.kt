@@ -26,4 +26,5 @@ interface SettingsView {
     fun swapToXmlTemplateListener(addListener: Boolean)
     fun showFileNameTemplate(text: String)
     fun showFileNameSample(text: String)
+    fun showHelp()
 }

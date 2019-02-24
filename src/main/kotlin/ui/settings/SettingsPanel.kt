@@ -39,9 +39,9 @@ class SettingsPanel(project: Project) : JPanel() {
         layout = BorderLayout()
     }
 
-    fun create() {
+    fun create(onHelpClick: () -> Unit) {
         val screenElementsPanel = createScreenElementsPanel()
-        val androidComponentsPanel = createAndroidComponentsPanel()
+        val androidComponentsPanel = createAndroidComponentsPanel(onHelpClick)
         val screenElementDetailsPanel = createScreenElementDetailsPanel()
 
         val rightPanel = createSplitterRightPanel(androidComponentsPanel, screenElementDetailsPanel)
@@ -57,10 +57,13 @@ class SettingsPanel(project: Project) : JPanel() {
         }
     }
 
-    private fun createAndroidComponentsPanel(): JPanel {
+    private fun createAndroidComponentsPanel(onHelpClick: () -> Unit): JPanel {
         return panel(LCFlags.fillX, title = "Android Components") {
             row("Activity Base Class:") { activityTextField() }
             row("Fragment Base Class:") { fragmentTextField() }
+            row {
+                link("Help", action = onHelpClick)
+            }
         }
     }
 

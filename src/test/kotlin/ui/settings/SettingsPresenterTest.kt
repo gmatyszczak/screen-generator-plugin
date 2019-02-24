@@ -305,4 +305,11 @@ class SettingsPresenterTest {
         assertTrue(presenter.isModified)
         verify(viewMock).showFileNameSample("SampleTest")
     }
+
+    @Test
+    fun `on help click`() {
+        presenter.onHelpClick()
+
+        verify(viewMock).showHelp()
+    }
 }
