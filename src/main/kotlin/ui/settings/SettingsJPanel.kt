@@ -11,6 +11,7 @@ import model.FileType
 import model.ScreenElement
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import java.awt.BorderLayout
+import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.ListSelectionModel
@@ -41,22 +42,26 @@ class SettingsJPanel(project: Project) : JPanel() {
 
     val fileTypeComboBoxModel = CollectionComboBoxModel<FileType>(FileType.values().toList())
     val fileTypeComboBox = ComboBox<FileType>(fileTypeComboBoxModel)
+    val fileNameTextField = JTextField()
 
     init {
         layout = BorderLayout()
     }
 
     fun create() {
-        val toolbarPanel = toolbarDecorator.createPanel()
+        val screenElementsPanel = panel(LCFlags.fillX, title = "Screen Elements") {
+            row { toolbarDecorator.createPanel()(growX, growY, pushY) }
+        }
 
         val androidComponentsPanel = panel(LCFlags.fillX, title = "Android Components") {
-            row("Activity Base Class:") { activityTextField(growX) }
-            row("Fragment Base Class:") { fragmentTextField(growX) }
+            row("Activity Base Class:") { activityTextField() }
+            row("Fragment Base Class:") { fragmentTextField() }
         }
 
         val screenElementDetailsPanel = panel(LCFlags.fillX, title = "Screen Element Details") {
-            row("Screen Element Name:") { nameTextField(growX) }
-            row("File Type:") { fileTypeComboBox(growX) }
+            row("Screen Element Name:") { nameTextField() }
+            row("File Name:") { fileNameTextField() }
+            row("File Type:") { fileTypeComboBox() }
         }
 
         val templatePanel = panel(LCFlags.fillX, title = "Template") {
@@ -72,15 +77,21 @@ class SettingsJPanel(project: Project) : JPanel() {
         val rightPanel = panel(LCFlags.fillX) {
             row { androidComponentsPanel(growX) }
             row { screenElementDetailsPanel(growX) }
-            row { templatePanel(growX, growY, pushY) }
-            row { samplePanel(growX, growY, pushY) }
+        }
+        val leftPanel = panel(LCFlags.fillX) {
+            row { screenElementsPanel(growX, growY, pushY) }
         }
 
-        add(JBSplitter(0.3f).apply
-        {
-            firstComponent = toolbarPanel
+        add(JBSplitter(0.3f).apply {
+            firstComponent = leftPanel
             secondComponent = rightPanel
-        }, BorderLayout.CENTER)
+        }, BorderLayout.PAGE_START)
+
+        val centerPanel = JPanel(GridLayout(2, 1)).apply {
+            add(templatePanel)
+            add(samplePanel)
+        }
+        add(centerPanel, BorderLayout.CENTER)
     }
 
     fun setXmlTextFieldsVisible(isVisible: Boolean) {
