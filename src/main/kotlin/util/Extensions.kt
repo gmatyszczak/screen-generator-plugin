@@ -18,3 +18,9 @@ fun LanguageTextField.addTextChangeListener(onChange: (String) -> Unit) =
         }.apply { document.addDocumentListener(this) }
 
 fun String.toSnakeCase() = replace(Regex("([^_A-Z])([A-Z])"), "$1_$2").toLowerCase()
+
+fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+    val temp = this[index1]
+    this[index1] = this[index2]
+    this[index2] = temp
+}

@@ -3,7 +3,10 @@ package ui.settings
 import com.intellij.lang.xml.XMLLanguage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
-import com.intellij.ui.*
+import com.intellij.ui.CollectionListModel
+import com.intellij.ui.JBSplitter
+import com.intellij.ui.LanguageTextField
+import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
 import com.intellij.ui.layout.LCFlags
 import com.intellij.ui.layout.panel
@@ -41,8 +44,7 @@ class SettingsJPanel(project: Project) : JPanel() {
     val activityTextField = JTextField()
     val fragmentTextField = JTextField()
 
-    val fileTypeComboBoxModel = CollectionComboBoxModel<FileType>(FileType.values().toList())
-    val fileTypeComboBox = ComboBox<FileType>(fileTypeComboBoxModel)
+    val fileTypeComboBox = ComboBox<FileType>(FileType.values())
     val fileNameTextField = JTextField()
     val fileNameSampleLabel = JLabel()
 

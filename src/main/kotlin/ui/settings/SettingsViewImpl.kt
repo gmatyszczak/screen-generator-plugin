@@ -20,7 +20,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     private var fragmentDocumentListener: DocumentListener? = null
     private var fileNametDocumentListener: DocumentListener? = null
 
-    private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(panel.fileTypeComboBoxModel.selected) }
+    private val fileTypeActionListener: ActionListener = ActionListener { presenter.onFileTypeSelect(FileType.values()[panel.fileTypeComboBox.selectedIndex]) }
 
     private var currentTemplateTextField = panel.kotlinTemplateEditorTextField
     private var currentSampleTextField = panel.kotlinSampleEditorTextField

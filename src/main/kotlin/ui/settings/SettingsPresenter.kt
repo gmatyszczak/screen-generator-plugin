@@ -5,6 +5,7 @@ import model.AndroidComponent
 import model.FileType
 import model.ScreenElement
 import model.Settings
+import util.swap
 
 const val SAMPLE_SCREEN_NAME = "Sample"
 const val SAMPLE_PACKAGE_NAME = "com.sample"
@@ -135,21 +136,13 @@ class SettingsPresenter(private val view: SettingsView,
         isModified = true
     }
 
-    private fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
-        val temp = this[index1]
-        this[index1] = this[index2]
-        this[index2] = temp
-    }
-
-    fun onFileTypeSelect(fileType: FileType?) {
+    fun onFileTypeSelect(fileType: FileType) {
         currentSelectedScreenElement?.let {
-            if (fileType != null) {
-                it.fileType = fileType
-                it.fileNameTemplate = fileType.defaultFileName
-                handleFileTypeSelection(it, true)
-                view.showTemplate(fileType.defaultTemplate)
-                isModified = true
-            }
+            it.fileType = fileType
+            it.fileNameTemplate = fileType.defaultFileName
+            handleFileTypeSelection(it, true)
+            view.showTemplate(fileType.defaultTemplate)
+            isModified = true
         }
     }
 
