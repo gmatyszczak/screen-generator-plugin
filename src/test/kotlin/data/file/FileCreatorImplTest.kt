@@ -4,10 +4,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
-import model.AndroidComponent
-import model.FileType
-import model.ScreenElement
-import model.Settings
+import model.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -38,8 +35,11 @@ class FileCreatorImplTest {
     @InjectMocks
     private lateinit var fileCreator: FileCreatorImpl
 
-    private val testKotlinTemplate = "package %packageName%\n\nimport %androidComponentFullName%\n\nclass %name%%androidComponentShortName% : %androidComponentLongName%"
+    private val testKotlinTemplate = "package $VARIABLE_PACKAGE_NAME\n\nimport $VARIABLE_ANDROID_COMPONENT_FULL_NAME\n\nclass $VARIABLE_NAME$VARIABLE_ANDROID_COMPONENT_SHORT_NAME : $VARIABLE_ANDROID_COMPONENT_LONG_NAME"
     private val testXmlTemplate = "<FrameLayout></FrameLayout>"
+    private val screenElements = listOf(
+            ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName),
+            ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName))
 
     @Test
     fun `when android component is activity on create screen files`() {
@@ -52,7 +52,6 @@ class FileCreatorImplTest {
         whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
         whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
         whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
-        val screenElements = listOf(ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN), ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML))
         whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "com.AppCompatActivity", "com.Fragment"))
 
         fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.ACTIVITY)
@@ -72,7 +71,6 @@ class FileCreatorImplTest {
         whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
         whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
         whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
-        val screenElements = listOf(ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN), ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML))
         whenever(settingsRepositoryMock.loadSettings()).thenReturn(Settings(screenElements, "com.AppCompatActivity", "com.Fragment"))
 
         fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.FRAGMENT)

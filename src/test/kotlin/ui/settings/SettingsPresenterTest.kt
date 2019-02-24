@@ -2,9 +2,7 @@ package ui.settings
 
 import com.nhaarman.mockitokotlin2.*
 import data.repository.SettingsRepository
-import model.FileType
-import model.ScreenElement
-import model.Settings
+import model.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -26,9 +24,9 @@ class SettingsPresenterTest {
     @InjectMocks
     private lateinit var presenter: SettingsPresenter
 
-    private val testTemplate = "data class %name%%screenElement% {}"
-    private val testElementKotlin = ScreenElement("Test", testTemplate, FileType.KOTLIN)
-    private val testElementXml = ScreenElement("Test", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML)
+    private val testTemplate = "data class $VARIABLE_NAME$VARIABLE_SCREEN_ELEMENT {}"
+    private val testElementKotlin = ScreenElement("Test", testTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
+    private val testElementXml = ScreenElement("Test", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
     private val unnamedElement = ScreenElement.getDefault()
     private val activityBaseClass = "Activity"
     private val fragmentBaseClass = "Fragment"

@@ -12,6 +12,7 @@ import model.ScreenElement
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import java.awt.BorderLayout
 import java.awt.GridLayout
+import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 import javax.swing.ListSelectionModel
@@ -43,6 +44,7 @@ class SettingsJPanel(project: Project) : JPanel() {
     val fileTypeComboBoxModel = CollectionComboBoxModel<FileType>(FileType.values().toList())
     val fileTypeComboBox = ComboBox<FileType>(fileTypeComboBoxModel)
     val fileNameTextField = JTextField()
+    val fineNameSampleLabel = JLabel()
 
     init {
         layout = BorderLayout()
@@ -60,7 +62,10 @@ class SettingsJPanel(project: Project) : JPanel() {
 
         val screenElementDetailsPanel = panel(LCFlags.fillX, title = "Screen Element Details") {
             row("Screen Element Name:") { nameTextField() }
-            row("File Name:") { fileNameTextField() }
+            row("File Name:") {
+                fileNameTextField()
+                right { fineNameSampleLabel() }
+            }
             row("File Type:") { fileTypeComboBox() }
         }
 
