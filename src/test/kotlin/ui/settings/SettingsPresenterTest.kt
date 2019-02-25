@@ -159,7 +159,8 @@ class SettingsPresenterTest {
 
         assertEquals("Test Test", testElementKotlin.name)
         verify(viewMock).updateScreenElement(0, testElementKotlin)
-        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
+        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
         assertTrue(presenter.isModified)
     }
 
@@ -242,25 +243,34 @@ class SettingsPresenterTest {
 
         presenter.onTemplateChange(testTemplate)
 
-        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
+        verify(viewMock).showSampleCode(unnamedElement.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
         assertTrue(presenter.isModified)
         assertEquals(testTemplate, presenter.currentSelectedScreenElement?.template)
     }
 
     @Test
     fun `on activity base class change`() {
+        presenter.currentSelectedScreenElement = testElementKotlin
+
         presenter.onActivityBaseClassChange(activityBaseClass)
 
         assertTrue(presenter.isModified)
         assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
+        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
     }
 
     @Test
     fun `on fragment base class change`() {
+        presenter.currentSelectedScreenElement = testElementKotlin
+        presenter.currentActivityBaseClass = activityBaseClass
+
         presenter.onFragmentBaseClassChange(fragmentBaseClass)
 
         assertTrue(presenter.isModified)
         assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
+        verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
     }
 
     @Test

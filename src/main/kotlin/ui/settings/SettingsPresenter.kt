@@ -79,9 +79,13 @@ class SettingsPresenter(private val view: SettingsView,
             it.name = name
             view.updateScreenElement(screenElements.indexOf(it), it)
             updateSampleCode(it)
+            updateSampleFileName(it)
             isModified = true
         }
     }
+
+    private fun updateSampleFileName(screenElement: ScreenElement) =
+            view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
 
     fun onApplySettings() {
         initialSettings = Settings(screenElements.toList(), currentActivityBaseClass, currentFragmentBaseClass)
@@ -126,13 +130,19 @@ class SettingsPresenter(private val view: SettingsView,
 
     fun onActivityBaseClassChange(text: String) {
         currentActivityBaseClass = text
-        currentSelectedScreenElement?.let { updateSampleCode(it) }
+        currentSelectedScreenElement?.let {
+            updateSampleCode(it)
+            updateSampleFileName(it)
+        }
         isModified = true
     }
 
     fun onFragmentBaseClassChange(text: String) {
         currentFragmentBaseClass = text
-        currentSelectedScreenElement?.let { updateSampleCode(it) }
+        currentSelectedScreenElement?.let {
+            updateSampleCode(it)
+            updateSampleFileName(it)
+        }
         isModified = true
     }
 
@@ -159,7 +169,7 @@ class SettingsPresenter(private val view: SettingsView,
     fun onFileNameChange(fileName: String) {
         currentSelectedScreenElement?.let {
             it.fileNameTemplate = fileName
-            view.showFileNameSample(it.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
+            updateSampleFileName(it)
             isModified = true
         }
     }
