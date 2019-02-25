@@ -67,6 +67,6 @@ class CodePanel(private val project: Project) : JPanel() {
     fun setCodePanelsEnabled(isEnabled: Boolean) {
         templatePanel.isEnabled = isEnabled
         samplePanel.isEnabled = isEnabled
-        textFieldsMap[currentFileType]?.forEach { it.isEnabled = isEnabled }
+        textFieldsMap[currentFileType]?.get(0)?.isEnabled = isEnabled
     }
 }
