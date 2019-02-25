@@ -3,11 +3,10 @@
     <name>Screen Generator Plugin</name>
     <vendor email="grzesiek.matyszczak@gmail.com">Grzegorz Matyszczak</vendor>
 
-    <version>0.1</version>
-
     <description><![CDATA[
     This plugin helps you automate your everyday development by generating all necessary files for your project's architecture
     when you are creating a new screen.<br><br>
+
     For example, you are using MVP architecture and you are creating the Main screen. You can set up the plugin to generate for you:
     <ul>
     <li>MainActivity.kt</li>
@@ -15,7 +14,10 @@
     <li>MainPresenter.kt</li>
     <li>activity_main.xml</li>
     </ul>
-    And you can also set what content they should contain!
+    And you can also set content of each file!<br><br>
+
+    Plugin is fully open-source, you can find it here: <a href="https://github.com/gmatyszczak/screen-generator-plugin">https://github.com/gmatyszczak/screen-generator-plugin</a>.<br>
+    Feel free to open an issue there if you notice any bug or have any feature request.
     ]]></description>
 
     <depends>com.intellij.modules.lang</depends>
