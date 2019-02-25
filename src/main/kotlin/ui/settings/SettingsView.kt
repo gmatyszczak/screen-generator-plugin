@@ -27,4 +27,5 @@ interface SettingsView {
     fun showFileNameTemplate(text: String)
     fun showFileNameSample(text: String)
     fun showHelp()
+    fun setScreenElementDetailsEnabled(isEnabled: Boolean)
 }

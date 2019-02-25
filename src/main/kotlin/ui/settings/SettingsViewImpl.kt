@@ -37,6 +37,7 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     override fun createComponent(): JComponent {
         presenter.onLoadView()
         panel.create(presenter::onHelpClick)
+        presenter.onViewCreated()
         return panel
     }
 
@@ -148,4 +149,6 @@ class SettingsViewImpl(project: Project) : Configurable, SettingsView {
     }
 
     override fun showHelp() = HelpDialog().show()
+
+    override fun setScreenElementDetailsEnabled(isEnabled: Boolean) = panel.setScreenElementDetailsEnabled(isEnabled)
 }

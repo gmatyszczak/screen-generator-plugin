@@ -56,6 +56,13 @@ class SettingsPresenterTest {
     }
 
     @Test
+    fun `on view created`() {
+        presenter.onViewCreated()
+
+        verify(viewMock).setScreenElementDetailsEnabled(false)
+    }
+
+    @Test
     fun `on add click`() {
         presenter.onAddClick()
 
@@ -95,6 +102,7 @@ class SettingsPresenterTest {
             verify(viewMock).showTemplate(testTemplate)
             verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
+            verify(viewMock).setScreenElementDetailsEnabled(true)
         }
         verifyNoMoreInteractions(viewMock)
         assertEquals(testElementKotlin, presenter.currentSelectedScreenElement)
@@ -119,6 +127,7 @@ class SettingsPresenterTest {
             verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
             verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
+            verify(viewMock).setScreenElementDetailsEnabled(true)
         }
         verifyNoMoreInteractions(viewMock)
         assertEquals(testElementXml, presenter.currentSelectedScreenElement)
@@ -137,6 +146,7 @@ class SettingsPresenterTest {
             verify(viewMock).showSampleCode("")
             verify(viewMock).showFileNameTemplate("")
             verify(viewMock).showFileNameSample("")
+            verify(viewMock).setScreenElementDetailsEnabled(false)
         }
         assertEquals(null, presenter.currentSelectedScreenElement)
     }

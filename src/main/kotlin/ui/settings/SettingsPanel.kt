@@ -35,6 +35,11 @@ class SettingsPanel(project: Project) : JPanel() {
 
     val codePanel = CodePanel(project)
 
+    private lateinit var screenElementDetailsPanel: JPanel
+    private val screenElementNameLabel = JLabel("Screen Element Name:")
+    private val fileNameLabel = JLabel("File Name:")
+    private val fileTypeLabel = JLabel("File Type:")
+
     init {
         layout = BorderLayout()
     }
@@ -42,7 +47,7 @@ class SettingsPanel(project: Project) : JPanel() {
     fun create(onHelpClick: () -> Unit) {
         val screenElementsPanel = createScreenElementsPanel()
         val androidComponentsPanel = createAndroidComponentsPanel()
-        val screenElementDetailsPanel = createScreenElementDetailsPanel()
+        screenElementDetailsPanel = createScreenElementDetailsPanel()
 
         val rightPanel = createSplitterRightPanel(androidComponentsPanel, screenElementDetailsPanel)
         val leftPanel = createSplitterLeftPanel(screenElementsPanel)
@@ -51,29 +56,29 @@ class SettingsPanel(project: Project) : JPanel() {
         addCodePanel(onHelpClick)
     }
 
-    private fun createScreenElementsPanel(): JPanel {
-        return panel(LCFlags.fillX, title = "Screen Elements") {
-            row { toolbarDecorator.createPanel()(growX, growY, pushY) }
-        }
-    }
-
-    private fun createAndroidComponentsPanel(): JPanel {
-        return panel(LCFlags.fillX, title = "Android Components") {
-            row("Activity Base Class:") { activityTextField() }
-            row("Fragment Base Class:") { fragmentTextField() }
-        }
-    }
-
-    private fun createScreenElementDetailsPanel(): JPanel {
-        return panel(LCFlags.fillX, title = "Screen Element Details") {
-            row("Screen Element Name:") { nameTextField() }
-            row("File Name:") {
-                fileNameTextField()
-                right { fileNameSampleLabel() }
+    private fun createScreenElementsPanel() =
+            panel(LCFlags.fillX, title = "Screen Elements") {
+                row { toolbarDecorator.createPanel()(growX, growY, pushY) }
             }
-            row("File Type:") { fileTypeComboBox() }
-        }
-    }
+
+    private fun createAndroidComponentsPanel() =
+            panel(LCFlags.fillX, title = "Android Components") {
+                row("Activity Base Class:") { activityTextField() }
+                row("Fragment Base Class:") { fragmentTextField() }
+            }
+
+    private fun createScreenElementDetailsPanel() =
+            panel(LCFlags.fillX, title = "Screen Element Details") {
+                row(screenElementNameLabel) {
+                    nameTextField() }
+                row(fileNameLabel) {
+                    fileNameTextField()
+                    right { fileNameSampleLabel() }
+                }
+                row(fileTypeLabel) {
+                    fileTypeComboBox()
+                }
+            }
 
     private fun addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
         add(JBSplitter(0.2f).apply {
@@ -82,21 +87,30 @@ class SettingsPanel(project: Project) : JPanel() {
         }, BorderLayout.PAGE_START)
     }
 
-    private fun createSplitterRightPanel(androidComponentsPanel: JPanel, screenElementDetailsPanel: JPanel): JPanel {
-        return panel(LCFlags.fillX) {
-            row { androidComponentsPanel(growX) }
-            row { screenElementDetailsPanel(growX) }
-        }
-    }
+    private fun createSplitterRightPanel(androidComponentsPanel: JPanel, screenElementDetailsPanel: JPanel) =
+            panel(LCFlags.fillX) {
+                row { androidComponentsPanel(growX) }
+                row { screenElementDetailsPanel(growX) }
+            }
 
-    private fun createSplitterLeftPanel(screenElementsPanel: JPanel): JPanel {
-        return panel(LCFlags.fillX) {
-            row { screenElementsPanel(growX, growY, pushY) }
-        }
-    }
+    private fun createSplitterLeftPanel(screenElementsPanel: JPanel) =
+            panel(LCFlags.fillX) {
+                row { screenElementsPanel(growX, growY, pushY) }
+            }
 
     private fun addCodePanel(onHelpClick: () -> Unit) {
         codePanel.create(onHelpClick)
         add(codePanel, BorderLayout.CENTER)
+    }
+
+    fun setScreenElementDetailsEnabled(isEnabled: Boolean) {
+        screenElementDetailsPanel.isEnabled = isEnabled
+        nameTextField.isEnabled = isEnabled
+        fileNameTextField.isEnabled = isEnabled
+        fileTypeComboBox.isEnabled = isEnabled
+        screenElementNameLabel.isEnabled = isEnabled
+        fileNameLabel.isEnabled = isEnabled
+        fileTypeLabel.isEnabled = isEnabled
+        codePanel.setCodePanelsEnabled(isEnabled)
     }
 }

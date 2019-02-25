@@ -31,6 +31,8 @@ class SettingsPresenter(private val view: SettingsView,
         view.addBaseClassTextChangeListeners()
     }
 
+    fun onViewCreated() = view.setScreenElementDetailsEnabled(false)
+
     private fun resetToInitialSettings() {
         screenElements.clear()
         initialSettings.screenElements.mapTo(screenElements) { it.copy() }
@@ -63,6 +65,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.showTemplate(selectedElement.template)
             updateSampleCode(selectedElement)
             view.addTextChangeListeners()
+            view.setScreenElementDetailsEnabled(true)
         } else {
             currentSelectedScreenElement = null
             view.removeTextChangeListeners()
@@ -71,6 +74,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.showSampleCode("")
             view.showFileNameTemplate("")
             view.showFileNameSample("")
+            view.setScreenElementDetailsEnabled(false)
         }
     }
 

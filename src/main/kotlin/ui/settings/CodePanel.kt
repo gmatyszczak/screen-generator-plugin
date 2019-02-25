@@ -23,26 +23,34 @@ class CodePanel(private val project: Project) : JPanel() {
             FileType.LAYOUT_XML to listOf(xmlTemplateTextField, xmlSampleTextField)
     )
     private var currentFileType = FileType.KOTLIN
+    private lateinit var templatePanel: JPanel
+    private lateinit var samplePanel: JPanel
 
     init {
         layout = GridLayout(2, 1)
     }
 
     fun create(onHelpClick: () -> Unit) {
-        val templatePanel = panel(LCFlags.fillX, title = "Code Template") {
-            row { kotlinTemplateTextField(growX, growY, pushY) }
-            row { xmlTemplateTextField(growX, growY, pushY) }
-        }
-        val samplePanel = panel(LCFlags.fillX, title = "Sample Code") {
-            row { kotlinSampleTextField(growX, growY, pushY) }
-            row { xmlSampleTextField(growX, growY, pushY) }
-            row {
-                right { link("Help", action = onHelpClick) }
-            }
-        }
+        templatePanel = createTemplatePanel()
+        samplePanel = createSamplePanel(onHelpClick)
         add(templatePanel)
         add(samplePanel)
     }
+
+    private fun createSamplePanel(onHelpClick: () -> Unit) =
+            panel(LCFlags.fillX, title = "Sample Code") {
+                row { kotlinSampleTextField(growX, growY, pushY) }
+                row { xmlSampleTextField(growX, growY, pushY) }
+                row {
+                    right { link("Help", action = onHelpClick) }
+                }
+            }
+
+    private fun createTemplatePanel() =
+            panel(LCFlags.fillX, title = "Code Template") {
+                row { kotlinTemplateTextField(growX, growY, pushY) }
+                row { xmlTemplateTextField(growX, growY, pushY) }
+            }
 
     fun show(fileType: FileType) {
         textFieldsMap[currentFileType]?.forEach { it.isVisible = false }
@@ -55,4 +63,10 @@ class CodePanel(private val project: Project) : JPanel() {
                 this.isVisible = isVisible
                 this.isEnabled = isEnabled
             }
+
+    fun setCodePanelsEnabled(isEnabled: Boolean) {
+        templatePanel.isEnabled = isEnabled
+        samplePanel.isEnabled = isEnabled
+        textFieldsMap[currentFileType]?.forEach { it.isEnabled = isEnabled }
+    }
 }

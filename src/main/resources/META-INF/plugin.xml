@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>pl.gmat.screengenerator</id>
-    <name>Screen Generator Plugin</name>
+    <name>Screen Generator</name>
     <vendor email="grzesiek.matyszczak@gmail.com">Grzegorz Matyszczak</vendor>
 
     <description><![CDATA[
