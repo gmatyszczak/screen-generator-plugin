@@ -35,7 +35,7 @@ class FileCreatorImplTest {
     @InjectMocks
     private lateinit var fileCreator: FileCreatorImpl
 
-    private val testKotlinTemplate = "package ${Variable.PACKAGE_NAME.value}\n\nimport ${Variable.ANDROID_COMPONENT_FULL_CLASS_NAME.value}\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_SHORT_NAME.value} : ${Variable.ANDROID_COMPONENT_CLASS_NAME.value}"
+    private val testKotlinTemplate = "package ${Variable.PACKAGE_NAME.value}\n\nimport ${Variable.ANDROID_COMPONENT_FULL_CLASS_NAME.value}\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value} : ${Variable.ANDROID_COMPONENT_CLASS_NAME.value}"
     private val testXmlTemplate = "<FrameLayout></FrameLayout>"
     private val screenElements = listOf(
             ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName),
