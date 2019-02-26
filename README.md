@@ -14,6 +14,10 @@ And also you can set dynamically changing content of all files depending on scre
 
 ## How to install?
 
+You can simply install it in Android Studio in Preferences -> Plugins -> Browse repositories and search for Screen Generator.
+
+Here's also link to plugin: [https://plugins.jetbrains.com/plugin/12020-screen-generator](https://plugins.jetbrains.com/plugin/12020-screen-generator)
+
 ## How to use it?
 
 Set up all files that your architecture requires to create a new screen in Preferences -> Other Settings ->  Screen Generator Plugin
