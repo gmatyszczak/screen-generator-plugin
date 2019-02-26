@@ -7,11 +7,10 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
 import model.Settings
-import java.io.Serializable
 
 @State(name = "ScreenGeneratorConfiguration",
         storages = [Storage(value = "screenGeneratorConfiguration.xml")])
-class ScreenGeneratorComponent(project: Project) : AbstractProjectComponent(project), Serializable, PersistentStateComponent<Settings> {
+class ScreenGeneratorComponent(project: Project) : AbstractProjectComponent(project), PersistentStateComponent<Settings> {
 
     companion object {
         fun getInstance(project: Project): ScreenGeneratorComponent = project.getComponent(ScreenGeneratorComponent::class.java)
