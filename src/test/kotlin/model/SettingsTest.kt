@@ -12,7 +12,7 @@ class SettingsTest {
         val viewElement = ScreenElement("View", "package ${Variable.PACKAGE_NAME.value}\n\ninterface ${Variable.NAME.value}${Variable.SCREEN_ELEMENT.value}", FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
         val layoutElement = ScreenElement("layout", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
         assertEquals(Settings(
-                listOf(
+                mutableListOf(
                         mvpElement,
                         presenterElement,
                         viewElement,
@@ -20,6 +20,6 @@ class SettingsTest {
                 ),
                 "androidx.appcompat.app.AppCompatActivity",
                 "androidx.fragment.app.Fragment"
-        ), Settings.getDefault())
+        ), Settings())
     }
 }

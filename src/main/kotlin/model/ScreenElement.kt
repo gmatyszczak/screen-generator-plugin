@@ -5,7 +5,10 @@ import java.io.Serializable
 
 private const val UNNAMED_ELEMENT = "UnnamedElement"
 
-data class ScreenElement(var name: String, var template: String, var fileType: FileType, var fileNameTemplate: String) : Serializable {
+data class ScreenElement(var name: String = "",
+                         var template: String = "",
+                         var fileType: FileType = FileType.KOTLIN,
+                         var fileNameTemplate: String = "") : Serializable {
 
     override fun toString() = name
 

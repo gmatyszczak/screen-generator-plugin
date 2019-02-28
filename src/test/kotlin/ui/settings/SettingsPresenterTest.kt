@@ -36,7 +36,7 @@ class SettingsPresenterTest {
 
     @Test
     fun `on load view`() {
-        val screenElements = listOf(testElementKotlin)
+        val screenElements = mutableListOf(testElementKotlin)
         val settings = Settings(screenElements, activityBaseClass, fragmentBaseClass)
         whenever(settingsRepositoryMock.loadSettings()).thenReturn(settings)
 
@@ -182,7 +182,7 @@ class SettingsPresenterTest {
 
         presenter.onApplySettings()
 
-        val settings = Settings(listOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
+        val settings = Settings(mutableListOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
         verify(settingsRepositoryMock).update(settings)
         assertFalse(presenter.isModified)
         assertEquals(settings, presenter.initialSettings)
@@ -190,7 +190,7 @@ class SettingsPresenterTest {
 
     @Test
     fun `on reset settings`() {
-        val settings = Settings(listOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
+        val settings = Settings(mutableListOf(testElementKotlin), activityBaseClass, fragmentBaseClass)
         presenter.initialSettings = settings
 
         presenter.screenElements.add(testElementKotlin)

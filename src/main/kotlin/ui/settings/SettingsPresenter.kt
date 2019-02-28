@@ -92,7 +92,7 @@ class SettingsPresenter(private val view: SettingsView,
             view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
 
     fun onApplySettings() {
-        initialSettings = Settings(screenElements.toList(), currentActivityBaseClass, currentFragmentBaseClass)
+        initialSettings = Settings(screenElements.toMutableList(), currentActivityBaseClass, currentFragmentBaseClass)
         resetToInitialSettings()
         settingsRepository.update(initialSettings)
         isModified = false

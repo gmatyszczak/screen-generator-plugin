@@ -28,15 +28,8 @@
         <projectConfigurable
                 instance="ui.settings.SettingsViewImpl">
         </projectConfigurable>
+        <projectService serviceInterface="data.ScreenGeneratorComponent" serviceImplementation="data.ScreenGeneratorComponent"/>
     </extensions>
-
-    <project-components>
-        <component>
-            <implementation-class>
-                data.ScreenGeneratorComponent
-            </implementation-class>
-        </component>
-    </project-components>
 
     <actions>
         <group id="ScreenGenerator.FileMenu"

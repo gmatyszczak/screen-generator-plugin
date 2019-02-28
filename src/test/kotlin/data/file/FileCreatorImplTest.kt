@@ -37,7 +37,7 @@ class FileCreatorImplTest {
 
     private val testKotlinTemplate = "package ${Variable.PACKAGE_NAME.value}\n\nimport ${Variable.ANDROID_COMPONENT_FULL_CLASS_NAME.value}\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value} : ${Variable.ANDROID_COMPONENT_CLASS_NAME.value}"
     private val testXmlTemplate = "<FrameLayout></FrameLayout>"
-    private val screenElements = listOf(
+    private val screenElements = mutableListOf(
             ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName),
             ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName))
 
