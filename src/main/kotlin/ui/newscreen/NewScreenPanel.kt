@@ -15,10 +15,12 @@ class NewScreenPanel : JPanel() {
     val packageTextField = JTextField()
 
     val androidComponentComboBox = ComboBox<AndroidComponent>(AndroidComponent.values())
+    val moduleComboBox = ComboBox<String>()
 
     init {
         layout = BorderLayout()
         val panel = panel {
+            row("Module:") { moduleComboBox() }
             row("Package:") { packageTextField() }
             row("Name:") { nameTextField() }
             row("Android Component:") { androidComponentComboBox() }

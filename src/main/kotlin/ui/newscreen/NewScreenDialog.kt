@@ -3,6 +3,7 @@ package ui.newscreen
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import data.file.*
+import data.repository.ModuleRepositoryImpl
 import data.repository.SettingsRepositoryImpl
 import data.repository.SourceRootRepositoryImpl
 import model.AndroidComponent
@@ -20,7 +21,8 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         val fileCreator = FileCreatorImpl(SettingsRepositoryImpl(project), sourceRootRepository)
         val packageExtractor = PackageExtractorImpl(currentPath, sourceRootRepository)
         val writeActionDispatcher = WriteActionDispatcherImpl()
-        presenter = NewScreenPresenter(this, fileCreator, packageExtractor, writeActionDispatcher)
+        val moduleRepository = ModuleRepositoryImpl(projectStructure)
+        presenter = NewScreenPresenter(this, fileCreator, packageExtractor, writeActionDispatcher, moduleRepository, currentPath)
         init()
     }
 
@@ -35,5 +37,11 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
 
     override fun showPackage(packageName: String) {
         panel.packageTextField.text = packageName
+    }
+
+    override fun showModules(modules: List<String>) = modules.forEach { panel.moduleComboBox.addItem(it) }
+
+    override fun selectModule(module: String) {
+        panel.moduleComboBox.selectedItem = module
     }
 }

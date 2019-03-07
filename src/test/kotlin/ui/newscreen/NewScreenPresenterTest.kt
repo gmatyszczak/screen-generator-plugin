@@ -3,13 +3,15 @@ package ui.newscreen
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import data.file.CurrentPath
 import data.file.FileCreator
 import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
+import data.repository.ModuleRepository
 import model.AndroidComponent
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -28,17 +30,29 @@ class NewScreenPresenterTest {
     @Mock
     private lateinit var writeActionDispatcherMock: WriteActionDispatcher
 
-    @InjectMocks
+    @Mock
+    private lateinit var moduleRepositoryMock: ModuleRepository
+
+    private val currentPath = CurrentPath("src", true, "domain")
+
     private lateinit var presenter: NewScreenPresenter
+
+    @Before
+    fun setUp() {
+        presenter = NewScreenPresenter(viewMock, fileCreatorMock, packageExtractorMock, writeActionDispatcherMock, moduleRepositoryMock, currentPath)
+    }
 
     @Test
     fun `on load view`() {
         val packageName = "com.example"
         whenever(packageExtractorMock.extractFromCurrentPath()).thenReturn(packageName)
+        whenever(moduleRepositoryMock.getAllModules()).thenReturn(listOf("app", "domain"))
 
         presenter.onLoadView()
 
         verify(viewMock).showPackage(packageName)
+        verify(viewMock).showModules(listOf("app", "domain"))
+        verify(viewMock).selectModule("domain")
     }
 
     @Test
