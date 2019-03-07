@@ -26,7 +26,12 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         init()
     }
 
-    override fun doOKAction() = presenter.onOkClick(panel.packageTextField.text, panel.nameTextField.text, AndroidComponent.values()[panel.androidComponentComboBox.selectedIndex])
+    override fun doOKAction() =
+            presenter.onOkClick(
+                    panel.packageTextField.text,
+                    panel.nameTextField.text,
+                    AndroidComponent.values()[panel.androidComponentComboBox.selectedIndex],
+                    panel.moduleComboBox.selectedItem as String)
 
     override fun createCenterPanel(): JComponent {
         presenter.onLoadView()

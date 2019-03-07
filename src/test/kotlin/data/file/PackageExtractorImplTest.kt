@@ -18,17 +18,17 @@ class PackageExtractorImplTest {
     @Mock
     private lateinit var sourceRootMock: SourceRoot
 
+    private val moduleName = "app"
+
     private lateinit var packageExtractor: PackageExtractorImpl
 
     @Before
     fun setUp() {
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot()).thenReturn(sourceRootMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot(moduleName)).thenReturn(sourceRootMock)
     }
 
     @Test
     fun `when current path is null on extract from current path`() {
-        whenever(sourceRootMock.path).thenReturn("")
-
         packageExtractor = PackageExtractorImpl(null, sourceRootRepositoryMock)
 
         assertEquals("", packageExtractor.extractFromCurrentPath())
@@ -38,7 +38,7 @@ class PackageExtractorImplTest {
     fun `when current path is equal to source path on extract from current path`() {
         whenever(sourceRootMock.path).thenReturn("src")
 
-        packageExtractor = PackageExtractorImpl(CurrentPath("src", true, "module"), sourceRootRepositoryMock)
+        packageExtractor = PackageExtractorImpl(CurrentPath("src", true, moduleName), sourceRootRepositoryMock)
 
         assertEquals("", packageExtractor.extractFromCurrentPath())
     }
@@ -47,7 +47,7 @@ class PackageExtractorImplTest {
     fun `when current path not contains source root path on extract from current path`() {
         whenever(sourceRootMock.path).thenReturn("src/java")
 
-        packageExtractor = PackageExtractorImpl(CurrentPath("src", false, "module"), sourceRootRepositoryMock)
+        packageExtractor = PackageExtractorImpl(CurrentPath("src", false, moduleName), sourceRootRepositoryMock)
 
         assertEquals("", packageExtractor.extractFromCurrentPath())
     }
@@ -56,7 +56,7 @@ class PackageExtractorImplTest {
     fun `when current path is directory on extract from current path`() {
         whenever(sourceRootMock.path).thenReturn("src")
 
-        packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example", true, "module"), sourceRootRepositoryMock)
+        packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example", true, moduleName), sourceRootRepositoryMock)
 
         assertEquals("com.example", packageExtractor.extractFromCurrentPath())
     }
@@ -65,7 +65,7 @@ class PackageExtractorImplTest {
     fun `when current path is file on extract from current path`() {
         whenever(sourceRootMock.path).thenReturn("src")
 
-        packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example/test.kt", false, "module"), sourceRootRepositoryMock)
+        packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example/test.kt", false, moduleName), sourceRootRepositoryMock)
 
         assertEquals("com.example", packageExtractor.extractFromCurrentPath())
     }

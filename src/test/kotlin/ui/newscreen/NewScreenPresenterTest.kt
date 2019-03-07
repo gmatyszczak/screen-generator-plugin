@@ -33,7 +33,9 @@ class NewScreenPresenterTest {
     @Mock
     private lateinit var moduleRepositoryMock: ModuleRepository
 
-    private val currentPath = CurrentPath("src", true, "domain")
+    private val moduleName = "domain"
+
+    private val currentPath = CurrentPath("src", true, moduleName)
 
     private lateinit var presenter: NewScreenPresenter
 
@@ -61,9 +63,9 @@ class NewScreenPresenterTest {
         val screenName = "Test"
         val packageName = "com.test"
 
-        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY)
+        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY, moduleName)
 
-        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY)
+        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY, moduleName)
         verify(viewMock).close()
     }
 }

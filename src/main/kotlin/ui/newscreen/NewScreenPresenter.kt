@@ -20,9 +20,9 @@ class NewScreenPresenter(private val view: NewScreenView,
         currentPath?.let { view.selectModule(currentPath.module) }
     }
 
-    fun onOkClick(packageName: String, screenName: String, androidComponent: AndroidComponent) {
+    fun onOkClick(packageName: String, screenName: String, androidComponent: AndroidComponent, module: String) {
         writeActionDispatcher.dispatch {
-            fileCreator.createScreenFiles(packageName, screenName, androidComponent)
+            fileCreator.createScreenFiles(packageName, screenName, androidComponent, module)
         }
         view.close()
     }

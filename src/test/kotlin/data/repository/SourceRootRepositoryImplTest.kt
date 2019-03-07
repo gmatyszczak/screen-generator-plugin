@@ -28,6 +28,8 @@ class SourceRootRepositoryImplTest {
     @Mock
     private lateinit var sourceRootSrcMock: SourceRoot
 
+    private val moduleName = "app"
+
     @InjectMocks
     private lateinit var sourceRootRepository: SourceRootRepositoryImpl
 
@@ -37,9 +39,9 @@ class SourceRootRepositoryImplTest {
         whenever(sourceRootTestMock.path).thenReturn("test")
         whenever(sourceRootResMock.path).thenReturn("res")
         whenever(sourceRootSrcMock.path).thenReturn("src")
-        whenever(projectStructureMock.findSourceRoots()).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootResMock, sourceRootSrcMock))
+        whenever(projectStructureMock.findSourceRoots(moduleName)).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootResMock, sourceRootSrcMock))
 
-        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot())
+        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot(moduleName))
     }
 
     @Test
@@ -48,9 +50,9 @@ class SourceRootRepositoryImplTest {
         whenever(sourceRootTestMock.path).thenReturn("test")
         whenever(sourceRootResMock.path).thenReturn("res")
         whenever(sourceRootSrcMock.path).thenReturn("src")
-        whenever(projectStructureMock.findSourceRoots()).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootSrcMock, sourceRootResMock))
+        whenever(projectStructureMock.findSourceRoots(moduleName)).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootSrcMock, sourceRootResMock))
 
-        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot())
+        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(moduleName))
     }
 
 }

@@ -2,18 +2,20 @@ package data.file
 
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.roots.ProjectRootManager
+import org.jetbrains.kotlin.idea.util.sourceRoots
 
 interface ProjectStructure {
 
-    fun findSourceRoots(): List<SourceRoot>
+    fun findSourceRoots(module: String): List<SourceRoot>
     fun getAllModules(): List<String>
     fun getProjectName(): String
 }
 
 class ProjectStructureImpl(private val project: Project) : ProjectStructure {
 
-    override fun findSourceRoots() = ProjectRootManager.getInstance(project).contentSourceRoots.map { SourceRootImpl(project, it) }
+    override fun findSourceRoots(module: String) =
+            ModuleManager.getInstance(project).findModuleByName(module)?.sourceRoots?.map { SourceRootImpl(project, it) }
+                    ?: throw IllegalStateException("$module module doesn't exist!")
 
     override fun getAllModules() = ModuleManager.getInstance(project).modules.map { it.name }
 

@@ -10,15 +10,15 @@ private const val LAYOUT_DIRECTORY = "layout"
 
 interface FileCreator {
 
-    fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent)
+    fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent, module: String)
 }
 
 class FileCreatorImpl(private val settingsRepository: SettingsRepository,
                       private val sourceRootRepository: SourceRootRepository) : FileCreator {
 
-    override fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent) {
-        val codeSubdirectory = findCodeSubdirectory(packageName)
-        val resourcesSubdirectory = findResourcesSubdirectory()
+    override fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent, module: String) {
+        val codeSubdirectory = findCodeSubdirectory(packageName, module)
+        val resourcesSubdirectory = findResourcesSubdirectory(module)
         settingsRepository.loadSettings().apply {
             val baseClass = getAndroidComponentBaseClass(androidComponent)
             screenElements.forEach {
@@ -33,7 +33,7 @@ class FileCreatorImpl(private val settingsRepository: SettingsRepository,
         }
     }
 
-    private fun findCodeSubdirectory(packageName: String): Directory = sourceRootRepository.findCodeSourceRoot().run {
+    private fun findCodeSubdirectory(packageName: String, module: String): Directory = sourceRootRepository.findCodeSourceRoot(module).run {
         var subdirectory = directory
         packageName.split(".").forEach {
             subdirectory = subdirectory.findSubdirectory(it) ?: subdirectory.createSubdirectory(it)
@@ -41,7 +41,7 @@ class FileCreatorImpl(private val settingsRepository: SettingsRepository,
         return subdirectory
     }
 
-    private fun findResourcesSubdirectory() = sourceRootRepository.findResourcesSourceRoot().directory.run {
+    private fun findResourcesSubdirectory(module: String) = sourceRootRepository.findResourcesSourceRoot(module).directory.run {
         findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
     }
 
