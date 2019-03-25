@@ -9,6 +9,7 @@ interface ProjectStructure {
     fun findSourceRoots(module: String): List<SourceRoot>
     fun getAllModules(): List<String>
     fun getProjectName(): String
+    fun getProjectPath(): String
 }
 
 class ProjectStructureImpl(private val project: Project) : ProjectStructure {
@@ -20,4 +21,6 @@ class ProjectStructureImpl(private val project: Project) : ProjectStructure {
     override fun getAllModules() = ModuleManager.getInstance(project).modules.map { it.name }
 
     override fun getProjectName() = project.name
+
+    override fun getProjectPath() = project.basePath ?: ""
 }
