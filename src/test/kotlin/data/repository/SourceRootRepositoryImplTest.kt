@@ -24,10 +24,19 @@ class SourceRootRepositoryImplTest {
     private lateinit var sourceRootTestMock: SourceRoot
 
     @Mock
+    private lateinit var sourceRootAndroidTestMock: SourceRoot
+
+    @Mock
     private lateinit var sourceRootResMock: SourceRoot
 
     @Mock
     private lateinit var sourceRootSrcMock: SourceRoot
+
+    @Mock
+    private lateinit var sourceRootAssetsMock: SourceRoot
+
+    @Mock
+    private lateinit var sourceRootDebugResMock: SourceRoot
 
     private val moduleName = "presentation"
 
@@ -36,11 +45,24 @@ class SourceRootRepositoryImplTest {
 
     @Before
     fun setUp() {
-        whenever(sourceRootBuildMock.path).thenReturn("/User/MyApplication/$moduleName/build")
-        whenever(sourceRootTestMock.path).thenReturn("/User/MyApplication/$moduleName/test")
-        whenever(sourceRootResMock.path).thenReturn("/User/MyApplication/$moduleName/res")
-        whenever(sourceRootSrcMock.path).thenReturn("/User/MyApplication/$moduleName/src")
-        whenever(projectStructureMock.findSourceRoots(moduleName)).thenReturn(listOf(sourceRootBuildMock, sourceRootTestMock, sourceRootResMock, sourceRootSrcMock))
+        whenever(sourceRootBuildMock.path).thenReturn("/User/MyApplication/$moduleName/build/")
+        whenever(sourceRootTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/test")
+        whenever(sourceRootAndroidTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/androidTest")
+        whenever(sourceRootResMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/res")
+        whenever(sourceRootDebugResMock.path).thenReturn("/User/MyApplication/$moduleName/src/debug/res")
+        whenever(sourceRootAssetsMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/assets")
+        whenever(sourceRootSrcMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/java")
+        whenever(projectStructureMock.findSourceRoots(moduleName)).thenReturn(
+                listOf(
+                        sourceRootBuildMock,
+                        sourceRootTestMock,
+                        sourceRootAndroidTestMock,
+                        sourceRootResMock,
+                        sourceRootDebugResMock,
+                        sourceRootAssetsMock,
+                        sourceRootSrcMock
+                )
+        )
         whenever(projectStructureMock.getProjectPath()).thenReturn("/User/MyApplication")
     }
 
