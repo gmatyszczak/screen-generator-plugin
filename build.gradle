@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'screengenerator'
-version '1.0.3'
+version '1.0.4'
 
 apply plugin: 'kotlin'
 
@@ -37,7 +37,7 @@ compileTestKotlin {
 }
 intellij {
     version '2019.2'
-    alternativeIdePath '/Applications/Android Studio.app'
+    alternativeIdePath '/Applications/Android Studio 4.0 Preview.app'
     plugins 'kotlin'
     intellij.updateSinceUntilBuild false
 }
