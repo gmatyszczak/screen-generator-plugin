@@ -3,12 +3,15 @@ package ui.settings
 import com.intellij.lang.Language
 import com.intellij.lang.xml.XMLLanguage
 import com.intellij.openapi.project.Project
+import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.LanguageTextField
-import com.intellij.ui.layout.LCFlags
-import com.intellij.ui.layout.panel
+import com.intellij.ui.components.labels.LinkLabel
 import model.FileType
 import org.jetbrains.kotlin.idea.KotlinLanguage
+import java.awt.FlowLayout
 import java.awt.GridLayout
+import javax.swing.BoxLayout
+import javax.swing.BoxLayout.Y_AXIS
 import javax.swing.JPanel
 
 class CodePanel(private val project: Project) : JPanel() {
@@ -38,18 +41,20 @@ class CodePanel(private val project: Project) : JPanel() {
     }
 
     private fun createSamplePanel(onHelpClick: () -> Unit) =
-            panel(LCFlags.fillX, title = "Sample Code") {
-                row { kotlinSampleTextField(growX, growY, pushY) }
-                row { xmlSampleTextField(growX, growY, pushY) }
-                row {
-                    right { link("Help", action = onHelpClick) }
-                }
+            JPanel().apply {
+                border = IdeBorderFactory.createTitledBorder("Sample Code", false)
+                layout = BoxLayout(this, Y_AXIS)
+                add(kotlinSampleTextField)
+                add(xmlSampleTextField)
+                add(JPanel(FlowLayout(FlowLayout.TRAILING)).apply { add(LinkLabel.create("Help", onHelpClick)) })
             }
 
     private fun createTemplatePanel() =
-            panel(LCFlags.fillX, title = "Code Template") {
-                row { kotlinTemplateTextField(growX, growY, pushY) }
-                row { xmlTemplateTextField(growX, growY, pushY) }
+            JPanel().apply {
+                border = IdeBorderFactory.createTitledBorder("Code Template", false)
+                layout = BoxLayout(this, Y_AXIS)
+                add(kotlinTemplateTextField)
+                add(xmlTemplateTextField)
             }
 
     fun show(fileType: FileType) {
