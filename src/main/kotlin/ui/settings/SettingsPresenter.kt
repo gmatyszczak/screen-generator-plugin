@@ -1,7 +1,6 @@
 package ui.settings
 
 import data.repository.SettingsRepository
-import model.AndroidComponent
 import model.FileType
 import model.ScreenElement
 import model.Settings
@@ -88,8 +87,11 @@ class SettingsPresenter(private val view: SettingsView,
         }
     }
 
-    private fun updateSampleFileName(screenElement: ScreenElement) =
-            view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass))
+    private fun updateSampleFileName(screenElement: ScreenElement) {
+        val fileName = screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, currentActivityBaseClass)
+        val fileExtension = screenElement.fileType.extension
+        view.showFileNameSample("$fileName.$fileExtension")
+    }
 
     fun onApplySettings() {
         initialSettings = Settings(screenElements.toMutableList(), currentActivityBaseClass, currentFragmentBaseClass)
@@ -167,7 +169,7 @@ class SettingsPresenter(private val view: SettingsView,
             FileType.LAYOUT_XML -> view.swapToXmlTemplateListener(addListener)
         }
         view.showFileNameTemplate(screenElement.fileNameTemplate)
-        view.showFileNameSample(screenElement.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, AndroidComponent.ACTIVITY.displayName, currentActivityBaseClass))
+        updateSampleFileName(screenElement)
     }
 
     fun onFileNameChange(fileName: String) {
