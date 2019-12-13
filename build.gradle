@@ -37,7 +37,7 @@ compileTestKotlin {
 }
 intellij {
     version '2019.2'
-    alternativeIdePath '/Applications/Android Studio 4.0 Preview.app'
+    alternativeIdePath '/Applications/Android Studio.app'
     plugins 'kotlin'
     intellij.updateSinceUntilBuild false
 }

@@ -98,7 +98,7 @@ class SettingsPresenterTest {
             verify(viewMock).showCodeTextFields(FileType.KOTLIN)
             verify(viewMock).swapToKotlinTemplateListener(false)
             verify(viewMock).showFileNameTemplate(testElementKotlin.fileNameTemplate)
-            verify(viewMock).showFileNameSample("SampleTest")
+            verify(viewMock).showFileNameSample("SampleTest.kt")
             verify(viewMock).showTemplate(testTemplate)
             verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
@@ -123,7 +123,7 @@ class SettingsPresenterTest {
             verify(viewMock).showCodeTextFields(FileType.LAYOUT_XML)
             verify(viewMock).swapToXmlTemplateListener(false)
             verify(viewMock).showFileNameTemplate(testElementXml.fileNameTemplate)
-            verify(viewMock).showFileNameSample("activity_sample")
+            verify(viewMock).showFileNameSample("activity_sample.xml")
             verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
             verify(viewMock).showSampleCode(testElementXml.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, ""))
             verify(viewMock).addTextChangeListeners()
@@ -170,7 +170,7 @@ class SettingsPresenterTest {
         assertEquals("Test Test", testElementKotlin.name)
         verify(viewMock).updateScreenElement(0, testElementKotlin)
         verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
-        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample("SampleTest Test.kt")
         assertTrue(presenter.isModified)
     }
 
@@ -267,7 +267,7 @@ class SettingsPresenterTest {
         assertTrue(presenter.isModified)
         assertEquals(activityBaseClass, presenter.currentActivityBaseClass)
         verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
-        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample("SampleTest.kt")
     }
 
     @Test
@@ -280,7 +280,7 @@ class SettingsPresenterTest {
         assertTrue(presenter.isModified)
         assertEquals(fragmentBaseClass, presenter.currentFragmentBaseClass)
         verify(viewMock).showSampleCode(testElementKotlin.body(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
-        verify(viewMock).showFileNameSample(testElementKotlin.fileName(SAMPLE_SCREEN_NAME, SAMPLE_PACKAGE_NAME, SAMPLE_ANDROID_COMPONENT, activityBaseClass))
+        verify(viewMock).showFileNameSample("SampleTest.kt")
     }
 
     @Test
@@ -296,7 +296,7 @@ class SettingsPresenterTest {
         verify(viewMock).showCodeTextFields(FileType.KOTLIN)
         verify(viewMock).swapToKotlinTemplateListener(true)
         verify(viewMock).showFileNameTemplate(FileType.KOTLIN.defaultFileName)
-        verify(viewMock).showFileNameSample("SampleTest")
+        verify(viewMock).showFileNameSample("SampleTest.kt")
         verify(viewMock).showTemplate(FileType.KOTLIN.defaultTemplate)
     }
 
@@ -313,7 +313,7 @@ class SettingsPresenterTest {
         verify(viewMock).showCodeTextFields(FileType.LAYOUT_XML)
         verify(viewMock).swapToXmlTemplateListener(true)
         verify(viewMock).showFileNameTemplate(FileType.LAYOUT_XML.defaultFileName)
-        verify(viewMock).showFileNameSample("activity_sample")
+        verify(viewMock).showFileNameSample("activity_sample.xml")
         verify(viewMock).showTemplate(FileType.LAYOUT_XML.defaultTemplate)
     }
 
@@ -326,7 +326,7 @@ class SettingsPresenterTest {
 
         assertEquals("${Variable.NAME.value}Test", testElementKotlin.fileNameTemplate)
         assertTrue(presenter.isModified)
-        verify(viewMock).showFileNameSample("SampleTest")
+        verify(viewMock).showFileNameSample("SampleTest.kt")
     }
 
     @Test
