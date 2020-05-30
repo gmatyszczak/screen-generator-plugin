@@ -4,6 +4,7 @@ import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.ui.LanguageTextField
 import data.repository.SettingsRepositoryImpl
+import model.Category
 import model.FileType
 import model.ScreenElement
 import ui.help.HelpDialog
@@ -16,7 +17,8 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
 
     private var panel: SettingsPanel? = null
     private val presenter = SettingsPresenter(this, SettingsRepositoryImpl(project))
-    private var nameDocumentListener: DocumentListener? = null
+    private var categoryNameDocumentListener: DocumentListener? = null
+    private var screenElementNameDocumentListener: DocumentListener? = null
     private var templateDocumentListener: com.intellij.openapi.editor.event.DocumentListener? = null
     private var activityDocumentListener: DocumentListener? = null
     private var fragmentDocumentListener: DocumentListener? = null
@@ -52,15 +54,48 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
     }
 
     override fun setUpListeners() = onPanel {
-        toolbarDecorator.apply {
-            setAddAction { presenter.onAddClick() }
-            setRemoveAction { presenter.onDeleteClick(screenElementsList.selectedIndex) }
-            setMoveDownAction { presenter.onMoveDownClick(screenElementsList.selectedIndex) }
-            setMoveUpAction { presenter.onMoveUpClick(screenElementsList.selectedIndex) }
+        categoryToolbarDecorator.apply {
+            setAddAction { presenter.onCategoryAddClick() }
+            setRemoveAction { presenter.onCategoryDeleteClick(categoriesList.selectedIndex) }
+            setMoveDownAction { presenter.onCategoryMoveDownClick(categoriesList.selectedIndex) }
+            setMoveUpAction { presenter.onCategoryMoveUpClick(categoriesList.selectedIndex) }
+        }
+        screenElementToolbarDecorator.apply {
+            setAddAction { presenter.onScreenElementAddClick() }
+            setRemoveAction { presenter.onScreenElementDeleteClick(screenElementsList.selectedIndex) }
+            setMoveDownAction { presenter.onScreenElementMoveDownClick(screenElementsList.selectedIndex) }
+            setMoveUpAction { presenter.onScreenElementMoveUpClick(screenElementsList.selectedIndex) }
+        }
+        categoriesList.addListSelectionListener {
+            if (!it.valueIsAdjusting) presenter.onCategorySelect(categoriesList.selectedIndex)
         }
         screenElementsList.addListSelectionListener {
             if (!it.valueIsAdjusting) presenter.onScreenElementSelect(screenElementsList.selectedIndex)
         }
+    }
+
+    override fun addCategory(category: Category) = onPanel {
+        categoriesListModel.add(category)
+    }
+
+    override fun selectCategory(index: Int) = onPanel {
+        categoriesList.selectedIndex = index
+    }
+
+    override fun updateCategory(index: Int, category: Category) = onPanel {
+        categoriesListModel.setElementAt(category, index)
+    }
+
+    override fun removeCategory(index: Int) = onPanel { categoriesListModel.remove(index) }
+
+    override fun showCategories(categories: List<Category>) = onPanel {
+        categories.forEach { categoriesListModel.add(it) }
+    }
+
+    override fun clearCategories() = onPanel { categoriesListModel.removeAll() }
+
+    override fun showCategoryName(name: String) = onPanel {
+        categoryNameTextField.text = name
     }
 
     override fun addScreenElement(screenElement: ScreenElement) = onPanel {
@@ -71,22 +106,25 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
         screenElementsList.selectedIndex = index
     }
 
-    override fun showName(name: String) = onPanel {
-        nameTextField.text = name
+    override fun showScreenElementName(name: String) = onPanel {
+        screenElementNameTextField.text = name
     }
 
     override fun addTextChangeListeners() = onPanel {
-        nameDocumentListener = nameTextField.addTextChangeListener(presenter::onNameChange)
+        categoryNameDocumentListener = categoryNameTextField.addTextChangeListener(presenter::onCategoryNameChange)
+        screenElementNameDocumentListener = screenElementNameTextField.addTextChangeListener(presenter::onScreenElementNameChange)
         templateDocumentListener = currentTemplateTextField?.addTextChangeListener(presenter::onTemplateChange)
         fileNameDocumentListener = fileNameTextField.addTextChangeListener(presenter::onFileNameChange)
         fileTypeComboBox.addActionListener(fileTypeActionListener)
     }
 
     override fun removeTextChangeListeners() = onPanel {
-        nameDocumentListener?.let { nameTextField.document.removeDocumentListener(it) }
+        categoryNameDocumentListener?.let { categoryNameTextField.document.removeDocumentListener(it) }
+        screenElementNameDocumentListener?.let { screenElementNameTextField.document.removeDocumentListener(it) }
         templateDocumentListener?.let { currentTemplateTextField?.document?.removeDocumentListener(it) }
         fileNameDocumentListener?.let { fileNameTextField.document.removeDocumentListener(it) }
-        nameDocumentListener = null
+        categoryNameDocumentListener = null
+        screenElementNameDocumentListener = null
         templateDocumentListener = null
         fileNameDocumentListener = null
         fileTypeComboBox.removeActionListener(fileTypeActionListener)
@@ -99,6 +137,7 @@ class SettingsViewImpl(private val project: Project) : Configurable, SettingsVie
     override fun removeScreenElement(index: Int) = onPanel { screenElementsListModel.remove(index) }
 
     override fun showScreenElements(screenElements: List<ScreenElement>) = onPanel {
+        screenElementsListModel.removeAll()
         screenElements.forEach { screenElementsListModel.add(it) }
     }
 

@@ -1,19 +1,30 @@
 package ui.settings
 
+import model.Category
 import model.FileType
 import model.ScreenElement
 
 interface SettingsView {
     fun setUpListeners()
+
+    fun addCategory(category: Category)
+    fun selectCategory(index: Int)
+    fun updateCategory(index: Int, category: Category)
+    fun removeCategory(index: Int)
+    fun showCategories(categories: List<Category>)
+    fun clearCategories()
+    fun showCategoryName(name: String)
+
     fun addScreenElement(screenElement: ScreenElement)
     fun selectScreenElement(index: Int)
-    fun showName(name: String)
-    fun addTextChangeListeners()
-    fun removeTextChangeListeners()
     fun updateScreenElement(index: Int, screenElement: ScreenElement)
     fun removeScreenElement(index: Int)
     fun showScreenElements(screenElements: List<ScreenElement>)
     fun clearScreenElements()
+    fun showScreenElementName(name: String)
+
+    fun addTextChangeListeners()
+    fun removeTextChangeListeners()
     fun showSampleCode(text: String)
     fun showTemplate(template: String)
     fun showActivityBaseClass(text: String)

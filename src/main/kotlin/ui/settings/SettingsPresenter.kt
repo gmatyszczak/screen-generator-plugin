@@ -1,6 +1,7 @@
 package ui.settings
 
 import data.repository.SettingsRepository
+import model.Category
 import model.FileType
 import model.ScreenElement
 import model.Settings
@@ -10,9 +11,13 @@ const val SAMPLE_SCREEN_NAME = "Sample"
 const val SAMPLE_PACKAGE_NAME = "com.sample"
 const val SAMPLE_ANDROID_COMPONENT = "Activity"
 
-class SettingsPresenter(private val view: SettingsView,
-                        private val settingsRepository: SettingsRepository) {
+class SettingsPresenter(
+        private val view: SettingsView,
+        private val settingsRepository: SettingsRepository
+) {
 
+    val categories = mutableListOf<Category>()
+    var currentSelectedCategory: Category? = null
     val screenElements = mutableListOf<ScreenElement>()
     var currentSelectedScreenElement: ScreenElement? = null
     var isModified = false
@@ -24,7 +29,15 @@ class SettingsPresenter(private val view: SettingsView,
         initialSettings = settingsRepository.loadSettings()
         resetToInitialSettings()
         view.setUpListeners()
-        view.showScreenElements(screenElements)
+        view.showCategories(categories)
+        if (currentSelectedCategory == null) {
+            currentSelectedCategory = categories[0]
+        }
+        currentSelectedCategory?.let {
+            view.showCategoryName(it.name)
+            view.showScreenElements(it.screenElements)
+        }
+
         view.showActivityBaseClass(currentActivityBaseClass)
         view.showFragmentBaseClass(currentFragmentBaseClass)
         view.addBaseClassTextChangeListeners()
@@ -33,57 +46,120 @@ class SettingsPresenter(private val view: SettingsView,
     fun onViewCreated() = view.setScreenElementDetailsEnabled(false)
 
     private fun resetToInitialSettings() {
-        screenElements.clear()
-        initialSettings.screenElements.mapTo(screenElements) { it.copy() }
+        categories.clear()
+        initialSettings.categories.mapTo(categories) { it.copy() }
+        currentSelectedCategory = initialSettings.currentlySelectedCategory
         currentActivityBaseClass = initialSettings.activityBaseClass
         currentFragmentBaseClass = initialSettings.fragmentBaseClass
     }
 
-    fun onAddClick() {
-        val newScreenElement = ScreenElement.getDefault()
-        screenElements.add(newScreenElement)
-        view.addScreenElement(newScreenElement)
-        view.selectScreenElement(screenElements.size - 1)
+    fun onCategoryAddClick() {
+        val newCategory = Category.getDefault()
+        categories.add(newCategory)
+        view.addCategory(newCategory)
+        view.selectCategory(categories.size - 1)
         isModified = true
     }
 
-    fun onDeleteClick(index: Int) {
-        screenElements.removeAt(index)
-        view.removeScreenElement(index)
+    fun onCategoryDeleteClick(index: Int) {
+        categories.removeAt(index)
+        view.removeCategory(index)
         isModified = true
     }
 
-    fun onScreenElementSelect(index: Int) {
-        if (index in 0 until screenElements.size) {
-            val selectedElement = screenElements[index]
-            currentSelectedScreenElement = selectedElement
+    fun onCategorySelect(index: Int) {
+        if (index in 0 until categories.size) {
+            val selectedCategory = categories[index]
+            currentSelectedCategory = selectedCategory
             view.removeTextChangeListeners()
-            view.showName(selectedElement.name)
-            view.showFileType(selectedElement.fileType)
-            handleFileTypeSelection(selectedElement, false)
-            view.showTemplate(selectedElement.template)
-            updateSampleCode(selectedElement)
+            view.showCategoryName(selectedCategory.name)
+            view.showScreenElements(selectedCategory.screenElements)
             view.addTextChangeListeners()
-            view.setScreenElementDetailsEnabled(true)
         } else {
-            currentSelectedScreenElement = null
-            view.removeTextChangeListeners()
-            view.showName("")
-            view.showTemplate("")
-            view.showSampleCode("")
-            view.showFileNameTemplate("")
-            view.showFileNameSample("")
-            view.setScreenElementDetailsEnabled(false)
+            view.showCategoryName("")
+            currentSelectedCategory = null
         }
     }
 
-    fun onNameChange(name: String) {
-        currentSelectedScreenElement?.let {
-            it.name = name
-            view.updateScreenElement(screenElements.indexOf(it), it)
-            updateSampleCode(it)
-            updateSampleFileName(it)
+    fun onCategoryMoveDownClick(index: Int) = onCategoryMoveClick(index, index + 1)
+
+    fun onCategoryMoveUpClick(index: Int) = onCategoryMoveClick(index, index - 1)
+
+    private fun onCategoryMoveClick(index: Int, destinationIndex: Int) {
+        categories.swap(index, destinationIndex)
+        view.updateCategory(index, categories[index])
+        view.updateCategory(destinationIndex, categories[destinationIndex])
+        view.selectCategory(destinationIndex)
+        isModified = true
+    }
+
+    fun onScreenElementAddClick() {
+        val newScreenElement = ScreenElement.getDefault()
+        currentSelectedCategory?.let {
+            it.screenElements.add(newScreenElement)
+            view.addScreenElement(newScreenElement)
+            view.selectScreenElement(it.screenElements.size - 1)
             isModified = true
+        }
+    }
+
+    fun onScreenElementDeleteClick(index: Int) {
+        currentSelectedCategory?.let {
+            it.screenElements.removeAt(index)
+            view.removeScreenElement(index)
+            isModified = true
+        }
+    }
+
+    fun onScreenElementSelect(index: Int) {
+        currentSelectedCategory?.let {
+            if (index in 0 until it.screenElements.size) {
+                val selectedElement = it.screenElements[index]
+                currentSelectedScreenElement = selectedElement
+                view.removeTextChangeListeners()
+                view.showScreenElementName(selectedElement.name)
+                view.showFileType(selectedElement.fileType)
+                handleFileTypeSelection(selectedElement, false)
+                view.showTemplate(selectedElement.template)
+                updateSampleCode(selectedElement)
+                view.addTextChangeListeners()
+                view.setScreenElementDetailsEnabled(true)
+            } else {
+                clearScreenElementData()
+            }
+        } ?: kotlin.run {
+            clearScreenElementData()
+        }
+    }
+
+    private fun clearScreenElementData() {
+        currentSelectedScreenElement = null
+        view.removeTextChangeListeners()
+        view.showScreenElementName("")
+        view.showTemplate("")
+        view.showSampleCode("")
+        view.showFileNameTemplate("")
+        view.showFileNameSample("")
+        view.setScreenElementDetailsEnabled(false)
+    }
+
+    fun onCategoryNameChange(name: String) {
+        currentSelectedCategory?.let {
+            it.name = name
+            view.updateCategory(categories.indexOf(it), it)
+            isModified = true
+        }
+    }
+
+    fun onScreenElementNameChange(name: String) {
+        currentSelectedCategory?.let { selectedCategory ->
+            currentSelectedScreenElement?.let {
+                it.name = name
+                view.updateScreenElement(selectedCategory.screenElements.indexOf(it), it)
+                updateSampleCode(it)
+                updateSampleFileName(it)
+                isModified = true
+            }
         }
     }
 
@@ -94,7 +170,7 @@ class SettingsPresenter(private val view: SettingsView,
     }
 
     fun onApplySettings() {
-        initialSettings = Settings(screenElements.toMutableList(), currentActivityBaseClass, currentFragmentBaseClass)
+        initialSettings = Settings(categories.toMutableList(), categories[0], currentActivityBaseClass, currentFragmentBaseClass)
         resetToInitialSettings()
         settingsRepository.update(initialSettings)
         isModified = false
@@ -102,8 +178,12 @@ class SettingsPresenter(private val view: SettingsView,
 
     fun onResetSettings() {
         resetToInitialSettings()
+        view.clearCategories()
         view.clearScreenElements()
-        view.showScreenElements(screenElements)
+        view.showCategories(categories)
+        currentSelectedCategory?.let {
+            view.showScreenElements(it.screenElements)
+        }
         view.removeBaseClassTextChangeListeners()
         view.showActivityBaseClass(currentActivityBaseClass)
         view.showFragmentBaseClass(currentFragmentBaseClass)
@@ -111,16 +191,18 @@ class SettingsPresenter(private val view: SettingsView,
         isModified = false
     }
 
-    fun onMoveDownClick(index: Int) = onMoveClick(index, index + 1)
+    fun onScreenElementMoveDownClick(index: Int) = onScreenElementMoveClick(index, index + 1)
 
-    fun onMoveUpClick(index: Int) = onMoveClick(index, index - 1)
+    fun onScreenElementMoveUpClick(index: Int) = onScreenElementMoveClick(index, index - 1)
 
-    private fun onMoveClick(index: Int, destinationIndex: Int) {
-        screenElements.swap(index, destinationIndex)
-        view.updateScreenElement(index, screenElements[index])
-        view.updateScreenElement(destinationIndex, screenElements[destinationIndex])
-        view.selectScreenElement(destinationIndex)
-        isModified = true
+    private fun onScreenElementMoveClick(index: Int, destinationIndex: Int) {
+        currentSelectedCategory?.let {
+            it.screenElements.swap(index, destinationIndex)
+            view.updateScreenElement(index, it.screenElements[index])
+            view.updateScreenElement(destinationIndex, it.screenElements[destinationIndex])
+            view.selectScreenElement(destinationIndex)
+            isModified = true
+        }
     }
 
     fun onTemplateChange(text: String) {

@@ -7,6 +7,8 @@ import data.repository.ModuleRepositoryImpl
 import data.repository.SettingsRepositoryImpl
 import data.repository.SourceRootRepositoryImpl
 import model.AndroidComponent
+import model.Category
+import model.Settings
 import javax.swing.JComponent
 
 class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true), NewScreenView {
@@ -18,20 +20,23 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
     init {
         val projectStructure = ProjectStructureImpl(project)
         val sourceRootRepository = SourceRootRepositoryImpl(projectStructure)
+        val settingsImpl = SettingsRepositoryImpl(project)
         val fileCreator = FileCreatorImpl(SettingsRepositoryImpl(project), sourceRootRepository)
         val packageExtractor = PackageExtractorImpl(currentPath, sourceRootRepository)
         val writeActionDispatcher = WriteActionDispatcherImpl()
         val moduleRepository = ModuleRepositoryImpl(projectStructure)
-        presenter = NewScreenPresenter(this, fileCreator, packageExtractor, writeActionDispatcher, moduleRepository, currentPath)
+        presenter = NewScreenPresenter(this, settingsImpl, fileCreator, packageExtractor, writeActionDispatcher, moduleRepository, currentPath)
         init()
     }
 
     override fun doOKAction() =
             presenter.onOkClick(
+                    panel.categoryComboBox.selectedItem as Category,
                     panel.packageTextField.text,
                     panel.nameTextField.text,
                     AndroidComponent.values()[panel.androidComponentComboBox.selectedIndex],
-                    panel.moduleComboBox.selectedItem as String)
+                    panel.moduleComboBox.selectedItem as String
+            )
 
     override fun createCenterPanel(): JComponent {
         presenter.onLoadView()
@@ -42,6 +47,12 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
 
     override fun showPackage(packageName: String) {
         panel.packageTextField.text = packageName
+    }
+
+    override fun showCategories(categories: List<Category>) = categories.forEach { panel.categoryComboBox.addItem(it) }
+
+    override fun selectCategory(category: Category) {
+        panel.categoryComboBox.selectedItem = category
     }
 
     override fun showModules(modules: List<String>) = modules.forEach { panel.moduleComboBox.addItem(it) }
