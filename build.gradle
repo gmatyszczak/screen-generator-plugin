@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'screengenerator'
-version '1.0.4'
+version '1.1.0'
 
 apply plugin: 'kotlin'
 
