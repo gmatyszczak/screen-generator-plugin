@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.1.1] - 2020-10-14
+### Fixed
+- Issue with loading modules in Android Studio 4.1 ([Issue #13](https://github.com/gmatyszczak/screen-generator-plugin/issues/13))
+
 ## [1.1.0] - 2020-07-03
 ### Added
 - Undo/redo action ([Issue #9](https://github.com/gmatyszczak/screen-generator-plugin/issues/9))
