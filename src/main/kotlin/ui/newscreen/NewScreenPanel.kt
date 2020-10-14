@@ -2,6 +2,7 @@ package ui.newscreen
 
 import com.intellij.openapi.ui.ComboBox
 import model.AndroidComponent
+import model.Module
 import java.awt.Dimension
 import java.awt.GridLayout
 import javax.swing.JLabel
@@ -15,7 +16,7 @@ class NewScreenPanel : JPanel() {
     val packageTextField = JTextField()
 
     val androidComponentComboBox = ComboBox<AndroidComponent>(AndroidComponent.values())
-    val moduleComboBox = ComboBox<String>()
+    val moduleComboBox = ComboBox<Module>()
 
     init {
         layout = GridLayout(0, 2)

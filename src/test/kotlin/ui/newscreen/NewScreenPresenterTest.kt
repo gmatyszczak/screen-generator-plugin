@@ -9,6 +9,7 @@ import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
 import data.repository.ModuleRepository
 import model.AndroidComponent
+import model.Module
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,8 +35,10 @@ class NewScreenPresenterTest {
     private lateinit var moduleRepositoryMock: ModuleRepository
 
     private val moduleName = "domain"
+    private val moduleDomain = Module("MyApplication.$moduleName", moduleName)
+    private val moduleApp = Module("MyApplication.app", "app")
 
-    private val currentPath = CurrentPath("src", true, moduleName)
+    private val currentPath = CurrentPath("src", true, moduleDomain)
 
     private lateinit var presenter: NewScreenPresenter
 
@@ -48,13 +51,13 @@ class NewScreenPresenterTest {
     fun `on load view`() {
         val packageName = "com.example"
         whenever(packageExtractorMock.extractFromCurrentPath()).thenReturn(packageName)
-        whenever(moduleRepositoryMock.getAllModules()).thenReturn(listOf("app", "domain"))
+        whenever(moduleRepositoryMock.getAllModules()).thenReturn(listOf(moduleApp, moduleDomain))
 
         presenter.onLoadView()
 
         verify(viewMock).showPackage(packageName)
-        verify(viewMock).showModules(listOf("app", "domain"))
-        verify(viewMock).selectModule("domain")
+        verify(viewMock).showModules(listOf(moduleApp, moduleDomain))
+        verify(viewMock).selectModule(moduleDomain)
     }
 
     @Test
@@ -63,9 +66,9 @@ class NewScreenPresenterTest {
         val screenName = "Test"
         val packageName = "com.test"
 
-        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY, moduleName)
+        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY, moduleDomain)
 
-        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY, moduleName)
+        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY, moduleDomain)
         verify(viewMock).close()
     }
 }

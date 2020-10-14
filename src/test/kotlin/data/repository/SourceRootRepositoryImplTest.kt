@@ -3,6 +3,7 @@ package data.repository
 import com.nhaarman.mockitokotlin2.whenever
 import data.file.ProjectStructure
 import data.file.SourceRoot
+import model.Module
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -39,6 +40,7 @@ class SourceRootRepositoryImplTest {
     private lateinit var sourceRootDebugResMock: SourceRoot
 
     private val moduleName = "presentation"
+    private val module = Module("MyApplication.$moduleName", moduleName)
 
     @InjectMocks
     private lateinit var sourceRootRepository: SourceRootRepositoryImpl
@@ -52,7 +54,7 @@ class SourceRootRepositoryImplTest {
         whenever(sourceRootDebugResMock.path).thenReturn("/User/MyApplication/$moduleName/src/debug/res")
         whenever(sourceRootAssetsMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/assets")
         whenever(sourceRootSrcMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/java")
-        whenever(projectStructureMock.findSourceRoots(moduleName)).thenReturn(
+        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(
                 listOf(
                         sourceRootBuildMock,
                         sourceRootTestMock,
@@ -68,12 +70,12 @@ class SourceRootRepositoryImplTest {
 
     @Test
     fun `on find code source root`() {
-        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot(moduleName))
+        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot(module))
     }
 
     @Test
     fun `on find resources source root`() {
-        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(moduleName))
+        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(module))
     }
 
 }

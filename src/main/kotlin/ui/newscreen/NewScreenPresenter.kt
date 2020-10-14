@@ -6,6 +6,7 @@ import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
 import data.repository.ModuleRepository
 import model.AndroidComponent
+import model.Module
 
 class NewScreenPresenter(private val view: NewScreenView,
                          private val fileCreator: FileCreator,
@@ -20,7 +21,7 @@ class NewScreenPresenter(private val view: NewScreenView,
         currentPath?.let { view.selectModule(currentPath.module) }
     }
 
-    fun onOkClick(packageName: String, screenName: String, androidComponent: AndroidComponent, module: String) {
+    fun onOkClick(packageName: String, screenName: String, androidComponent: AndroidComponent, module: Module) {
         writeActionDispatcher.dispatch {
             fileCreator.createScreenFiles(packageName, screenName, androidComponent, module)
         }

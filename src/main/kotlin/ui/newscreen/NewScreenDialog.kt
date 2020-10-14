@@ -7,6 +7,7 @@ import data.repository.ModuleRepositoryImpl
 import data.repository.SettingsRepositoryImpl
 import data.repository.SourceRootRepositoryImpl
 import model.AndroidComponent
+import model.Module
 import javax.swing.JComponent
 
 class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true), NewScreenView {
@@ -31,7 +32,7 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
                     panel.packageTextField.text,
                     panel.nameTextField.text,
                     AndroidComponent.values()[panel.androidComponentComboBox.selectedIndex],
-                    panel.moduleComboBox.selectedItem as String)
+                    panel.moduleComboBox.selectedItem as Module)
 
     override fun createCenterPanel(): JComponent {
         presenter.onLoadView()
@@ -44,9 +45,9 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         panel.packageTextField.text = packageName
     }
 
-    override fun showModules(modules: List<String>) = modules.forEach { panel.moduleComboBox.addItem(it) }
+    override fun showModules(modules: List<Module>) = modules.forEach { panel.moduleComboBox.addItem(it) }
 
-    override fun selectModule(module: String) {
+    override fun selectModule(module: Module) {
         panel.moduleComboBox.selectedItem = module
     }
 }
