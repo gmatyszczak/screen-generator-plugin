@@ -14,5 +14,5 @@ class WriteActionDispatcherImpl(val project: Project) : WriteActionDispatcher {
 
     override fun dispatch(action: () -> Unit) = WriteCommandAction.runWriteCommandAction(project, COMMAND_NAME, GROUP_ID, {
         action()
-    }, arrayOf())
+    })
 }
