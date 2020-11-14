@@ -1,0 +1,19 @@
+package ui.settings
+
+sealed class SettingsAction {
+
+    object ApplySettings : SettingsAction()
+    object ResetSettings : SettingsAction()
+    object AddScreenElement : SettingsAction()
+    data class RemoveScreenElement(val index: Int) : SettingsAction()
+    data class MoveDownScreenElement(val index: Int) : SettingsAction()
+    data class MoveUpScreenElement(val index: Int) : SettingsAction()
+    data class SelectScreenElement(val index: Int) : SettingsAction()
+    data class ChangeName(val text: String): SettingsAction()
+    data class ChangeFileName(val text: String): SettingsAction()
+    data class ChangeTemplate(val text: String): SettingsAction()
+    data class ChangeFileType(val index: Int): SettingsAction()
+    data class ChangeActivity(val text: String): SettingsAction()
+    data class ChangeFragment(val text: String): SettingsAction()
+    object ClickHelp: SettingsAction()
+}

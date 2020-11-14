@@ -14,6 +14,8 @@ private fun defaultScreenElements() = mutableListOf(
         ScreenElement("layout", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
 )
 
-data class Settings(var screenElements: MutableList<ScreenElement> = defaultScreenElements(),
-               var activityBaseClass: String = DEFAULT_BASE_ACTIVITY_CLASS,
-               var fragmentBaseClass: String = DEFAULT_BASE_FRAGMENT_CLASS) : Serializable
+data class Settings(
+    var screenElements: MutableList<ScreenElement> = defaultScreenElements(),
+    var activityBaseClass: String = DEFAULT_BASE_ACTIVITY_CLASS,
+    var fragmentBaseClass: String = DEFAULT_BASE_FRAGMENT_CLASS
+) : Serializable

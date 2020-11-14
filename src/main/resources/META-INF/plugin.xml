@@ -27,7 +27,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <defaultProjectTypeProvider type="Android"/>
         <projectConfigurable
-                instance="ui.settings.SettingsViewImpl">
+                instance="ui.settings.SettingsConfigurable">
         </projectConfigurable>
         <projectService serviceInterface="data.ScreenGeneratorComponent" serviceImplementation="data.ScreenGeneratorComponent"/>
     </extensions>
