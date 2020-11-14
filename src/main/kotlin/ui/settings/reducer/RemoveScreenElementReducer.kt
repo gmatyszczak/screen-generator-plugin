@@ -5,12 +5,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface RemoveScreenElementReducer {
     operator fun invoke(index: Int)
 }
 
-class RemoveScreenElementReducerImpl(
+class RemoveScreenElementReducerImpl @Inject constructor(
     state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

@@ -8,13 +8,14 @@ import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
+import javax.inject.Inject
 
 interface UpdateScreenElementReducer {
 
     operator fun invoke(updatedElement: ScreenElement)
 }
 
-class UpdateScreenElementReducerImpl(
+class UpdateScreenElementReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

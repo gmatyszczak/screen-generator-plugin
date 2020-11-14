@@ -7,12 +7,13 @@ import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
+import javax.inject.Inject
 
 interface SelectScreenElementReducer {
     operator fun invoke(index: Int)
 }
 
-class SelectScreenElementReducerImpl(
+class SelectScreenElementReducerImpl @Inject constructor(
     state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope

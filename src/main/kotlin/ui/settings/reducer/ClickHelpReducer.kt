@@ -5,13 +5,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface ClickHelpReducer {
 
     operator fun invoke()
 }
 
-class ClickHelpReducerImpl(
+class ClickHelpReducerImpl @Inject constructor(
     state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope

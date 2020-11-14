@@ -6,12 +6,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import util.swap
+import javax.inject.Inject
 
 interface MoveUpScreenElementReducer {
     operator fun invoke(index: Int)
 }
 
-class MoveUpScreenElementReducerImpl(
+class MoveUpScreenElementReducerImpl @Inject constructor(
     state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

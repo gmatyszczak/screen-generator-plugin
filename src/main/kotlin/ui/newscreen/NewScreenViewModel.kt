@@ -12,8 +12,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import model.AndroidComponent
 import model.Module
+import javax.inject.Inject
 
-class NewScreenViewModel(
+class NewScreenViewModel @Inject constructor(
     private val fileCreator: FileCreator,
     packageExtractor: PackageExtractor,
     private val writeActionDispatcher: WriteActionDispatcher,

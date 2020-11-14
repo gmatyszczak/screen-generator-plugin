@@ -7,13 +7,14 @@ import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
+import javax.inject.Inject
 
 interface ChangeFragmentReducer {
 
     operator fun invoke(text: String)
 }
 
-class ChangeFragmentReducerImpl(
+class ChangeFragmentReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope

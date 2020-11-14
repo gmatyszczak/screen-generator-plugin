@@ -6,13 +6,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface ResetSettingsReducer {
 
     operator fun invoke()
 }
 
-class ResetSettingsReducerImpl(
+class ResetSettingsReducerImpl @Inject constructor(
     state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

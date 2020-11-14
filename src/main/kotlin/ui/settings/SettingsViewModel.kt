@@ -2,12 +2,13 @@ package ui.settings
 
 import model.ScreenElement
 import ui.settings.reducer.*
+import javax.inject.Inject
 
 const val SAMPLE_SCREEN_NAME = "Sample"
 const val SAMPLE_PACKAGE_NAME = "com.sample"
 const val SAMPLE_ANDROID_COMPONENT = "Activity"
 
-class SettingsViewModel(
+class SettingsViewModel @Inject constructor(
     private val applySettingsReducer: ApplySettingsReducer,
     private val resetSettingsReducer: ResetSettingsReducer,
     private val addScreenElementReducer: AddScreenElementReducer,

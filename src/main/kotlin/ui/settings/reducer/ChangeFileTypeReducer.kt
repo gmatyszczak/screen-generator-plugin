@@ -6,13 +6,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import model.FileType
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface ChangeFileTypeReducer {
 
     operator fun invoke(index: Int)
 }
 
-class ChangeFileTypeReducerImpl(
+class ChangeFileTypeReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

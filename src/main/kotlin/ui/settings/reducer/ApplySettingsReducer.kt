@@ -7,13 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import model.Settings
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface ApplySettingsReducer {
 
     operator fun invoke()
 }
 
-class ApplySettingsReducerImpl(
+class ApplySettingsReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

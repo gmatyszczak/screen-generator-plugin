@@ -6,12 +6,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import model.ScreenElement
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
+import javax.inject.Inject
 
 interface AddScreenElementReducer {
     operator fun invoke()
 }
 
-class AddScreenElementReducerImpl(
+class AddScreenElementReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,

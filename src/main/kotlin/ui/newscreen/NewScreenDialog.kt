@@ -2,15 +2,14 @@ package ui.newscreen
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import data.file.*
-import data.repository.ModuleRepositoryImpl
-import data.repository.SettingsRepositoryImpl
-import data.repository.SourceRootRepositoryImpl
+import data.file.CurrentPath
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import model.Module
+import ui.newscreen.dagger.DaggerNewScreenComponent
+import javax.inject.Inject
 
 class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true) {
 
@@ -18,24 +17,18 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
 
     private val panel = NewScreenPanel()
 
-    private val viewModel: NewScreenViewModel
+    @Inject
+    lateinit var viewModel: NewScreenViewModel
 
     init {
-        val projectStructure = ProjectStructureImpl(project)
-        val sourceRootRepository = SourceRootRepositoryImpl(projectStructure)
-        val fileCreator = FileCreatorImpl(SettingsRepositoryImpl(project), sourceRootRepository)
-        val packageExtractor = PackageExtractorImpl(currentPath, sourceRootRepository)
-        val writeActionDispatcher = WriteActionDispatcherImpl(project)
-        val moduleRepository = ModuleRepositoryImpl(projectStructure)
-        viewModel =
-            NewScreenViewModel(fileCreator, packageExtractor, writeActionDispatcher, moduleRepository, currentPath)
+        DaggerNewScreenComponent.factory().create(project, currentPath).inject(this)
         scope.launch { viewModel.state.collect { it.render() } }
         scope.launch { viewModel.effect.collect { handleEffect(it) } }
         init()
     }
 
     private fun handleEffect(effect: NewScreenEffect) = when(effect) {
-        NewScreenEffect.Close -> close(DialogWrapper.OK_EXIT_CODE)
+        NewScreenEffect.Close -> close(OK_EXIT_CODE)
     }
 
     private fun NewScreenState.render() {
