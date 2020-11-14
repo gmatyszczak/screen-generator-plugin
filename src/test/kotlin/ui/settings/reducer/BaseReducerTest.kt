@@ -9,7 +9,7 @@ import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 @RunWith(MockitoJUnitRunner::class)
-open class BaseReducerTest {
+abstract class BaseReducerTest {
 
     @Mock
     protected lateinit var effectMock: MutableSharedFlow<SettingsEffect>
