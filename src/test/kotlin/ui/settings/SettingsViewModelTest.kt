@@ -51,6 +51,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var changeAndroidComponentReducerMock: ChangeAndroidComponentReducer
 
+    @Mock
+    private lateinit var addCategoryReducerMock: AddCategoryReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -147,5 +150,12 @@ class SettingsViewModelTest {
         viewModel.reduce(SettingsAction.ChangeAndroidComponent(1))
 
         verify(changeAndroidComponentReducerMock).invoke(1)
+    }
+
+    @Test
+    fun `when AddCategory on invoke`() {
+        viewModel.reduce(SettingsAction.AddCategory)
+
+        verify(addCategoryReducerMock).invoke()
     }
 }

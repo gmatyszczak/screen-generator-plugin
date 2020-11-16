@@ -14,6 +14,6 @@ sealed class SettingsAction {
     data class ChangeTemplate(val text: String): SettingsAction()
     data class ChangeFileType(val index: Int): SettingsAction()
     data class ChangeAndroidComponent(val index: Int) : SettingsAction()
-
     object ClickHelp: SettingsAction()
+    object AddCategory : SettingsAction()
 }

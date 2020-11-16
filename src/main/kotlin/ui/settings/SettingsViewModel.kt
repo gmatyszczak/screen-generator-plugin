@@ -21,7 +21,8 @@ class SettingsViewModel @Inject constructor(
     private val changeTemplateReducer: ChangeTemplateReducer,
     private val changeFileTypeReducer: ChangeFileTypeReducer,
     private val clickHelpReducer: ClickHelpReducer,
-    private val changeAndroidComponentReducer: ChangeAndroidComponentReducer
+    private val changeAndroidComponentReducer: ChangeAndroidComponentReducer,
+    private val addCategoryReducer: AddCategoryReducer
 ) {
 
     init {
@@ -42,6 +43,7 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.ChangeFileType -> changeFileTypeReducer(action.index)
         is SettingsAction.ClickHelp -> clickHelpReducer()
         is SettingsAction.ChangeAndroidComponent -> changeAndroidComponentReducer(action.index)
+        is SettingsAction.AddCategory -> addCategoryReducer()
     }
 }
 

@@ -17,4 +17,6 @@ class SettingsRepositoryImpl @Inject constructor(private val project: Project) :
     override fun update(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
         this.settings = settings
     }
+
+
 }

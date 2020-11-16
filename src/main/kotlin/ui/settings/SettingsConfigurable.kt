@@ -42,6 +42,8 @@ class SettingsConfigurable(private val project: Project) : Configurable {
         DaggerSettingsComponent.factory().create(project).inject(this)
         panel = SettingsPanel(project)
 
+        panel.categoriesPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddCategory) }
+
         panel.screenElementsPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddScreenElement) }
         panel.screenElementsPanel.onRemoveClicked = { viewModel.reduce(SettingsAction.RemoveScreenElement(it)) }
         panel.screenElementsPanel.onMoveDownClicked = { viewModel.reduce(SettingsAction.MoveDownScreenElement(it)) }
@@ -51,7 +53,8 @@ class SettingsConfigurable(private val project: Project) : Configurable {
         panel.screenElementDetailsPanel.onNameTextChanged = { viewModel.reduce(SettingsAction.ChangeName(it)) }
         panel.screenElementDetailsPanel.onFileNameTextChanged = { viewModel.reduce(SettingsAction.ChangeFileName(it)) }
         panel.screenElementDetailsPanel.onFileTypeIndexChanged = { viewModel.reduce(SettingsAction.ChangeFileType(it)) }
-        panel.screenElementDetailsPanel.onAndroidComponentIndexChanged = { viewModel.reduce(SettingsAction.ChangeAndroidComponent(it)) }
+        panel.screenElementDetailsPanel.onAndroidComponentIndexChanged =
+            { viewModel.reduce(SettingsAction.ChangeAndroidComponent(it)) }
 
         panel.onTemplateTextChanged = { viewModel.reduce(SettingsAction.ChangeTemplate(it)) }
         panel.onHelpClicked = { viewModel.reduce(SettingsAction.ClickHelp) }

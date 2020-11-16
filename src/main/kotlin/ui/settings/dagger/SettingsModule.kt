@@ -62,6 +62,9 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindChangeAndroidComponentReducer(reducer: ChangeAndroidComponentReducerImpl): ChangeAndroidComponentReducer
 
+    @Binds
+    abstract fun bindAddCategoryReducer(reducer: AddCategoryReducerImpl): AddCategoryReducer
+
     companion object {
 
         @Provides
