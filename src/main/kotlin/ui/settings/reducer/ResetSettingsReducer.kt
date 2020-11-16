@@ -25,8 +25,6 @@ class ResetSettingsReducerImpl @Inject constructor(
         pushState {
             copy(
                 screenElements = settings.screenElements,
-                activityBaseClass = settings.activityBaseClass,
-                fragmentBaseClass = settings.fragmentBaseClass,
                 selectedElementIndex = null,
                 fileNameRendered = "",
                 sampleCode = "",

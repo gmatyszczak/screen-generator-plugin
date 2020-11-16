@@ -30,24 +30,24 @@ class FileCreatorImpl @Inject constructor(
         val resourcesSubdirectory = findResourcesSubdirectory(module)
         if (codeSubdirectory != null) {
             settingsRepository.loadSettings().apply {
-                val baseClass = getAndroidComponentBaseClass(androidComponent)
-                screenElements.forEach {
-                    if (it.fileType == FileType.LAYOUT_XML) {
-                        val file = File(
-                            it.fileName(screenName, packageName, androidComponent.displayName, baseClass),
-                            it.body(screenName, packageName, androidComponent.displayName, baseClass),
-                            it.fileType
-                        )
-                        resourcesSubdirectory.addFile(file)
-                    } else {
-                        val file = File(
-                            it.fileName(screenName, packageName, androidComponent.displayName, baseClass),
-                            it.body(screenName, packageName, androidComponent.displayName, baseClass),
-                            it.fileType
-                        )
-                        codeSubdirectory.addFile(file)
+                screenElements.filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
+                    .forEach {
+                        if (it.fileType == FileType.LAYOUT_XML) {
+                            val file = File(
+                                it.fileName(screenName, packageName, androidComponent.displayName),
+                                it.body(screenName, packageName, androidComponent.displayName),
+                                it.fileType
+                            )
+                            resourcesSubdirectory.addFile(file)
+                        } else {
+                            val file = File(
+                                it.fileName(screenName, packageName, androidComponent.displayName),
+                                it.body(screenName, packageName, androidComponent.displayName),
+                                it.fileType
+                            )
+                            codeSubdirectory.addFile(file)
+                        }
                     }
-                }
             }
         }
     }
@@ -66,8 +66,9 @@ class FileCreatorImpl @Inject constructor(
             findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
         }
 
-    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = when (androidComponent) {
-        AndroidComponent.ACTIVITY -> activityBaseClass
-        AndroidComponent.FRAGMENT -> fragmentBaseClass
-    }
+    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = ""
+//    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = when (androidComponent) {
+//        AndroidComponent.ACTIVITY -> activityBaseClass
+//        AndroidComponent.FRAGMENT -> fragmentBaseClass
+//    }
 }

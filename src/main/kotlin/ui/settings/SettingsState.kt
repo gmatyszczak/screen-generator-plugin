@@ -7,8 +7,6 @@ data class SettingsState(
     val screenElements: List<ScreenElement> = emptyList(),
     val selectedElementIndex: Int? = null,
     val fileNameRendered: String = "",
-    val activityBaseClass: String = "",
-    val fragmentBaseClass: String = "",
     val sampleCode: String = ""
 ) {
 

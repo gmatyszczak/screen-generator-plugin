@@ -22,9 +22,7 @@ class ResetSettingsReducerImplTest : BaseReducerTest() {
     private val settings = Settings(
         screenElements = mutableListOf(
             ScreenElement(name = "test")
-        ),
-        activityBaseClass = "testActivity",
-        fragmentBaseClass = "testFragment"
+        )
     )
 
     private lateinit var reducer: ResetSettingsReducerImpl
@@ -43,9 +41,7 @@ class ResetSettingsReducerImplTest : BaseReducerTest() {
             SettingsState(
                 screenElements = mutableListOf(
                     ScreenElement(name = "test")
-                ),
-                activityBaseClass = "testActivity",
-                fragmentBaseClass = "testFragment"
+                )
             ),
             state.value
         )

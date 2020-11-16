@@ -54,16 +54,13 @@ abstract class SettingsModule {
     abstract fun bindChangeFileTypeReducer(reducer: ChangeFileTypeReducerImpl): ChangeFileTypeReducer
 
     @Binds
-    abstract fun bindChangeActivityReducer(reducer: ChangeActivityReducerImpl): ChangeActivityReducer
-
-    @Binds
-    abstract fun bindChangeFragmentReducer(reducer: ChangeFragmentReducerImpl): ChangeFragmentReducer
-
-    @Binds
     abstract fun bindClickHelpReducer(reducer: ClickHelpReducerImpl): ClickHelpReducer
 
     @Binds
     abstract fun bindResetSettingsReducer(reducer: ResetSettingsReducerImpl): ResetSettingsReducer
+
+    @Binds
+    abstract fun bindChangeAndroidComponentReducer(reducer: ChangeAndroidComponentReducerImpl): ChangeAndroidComponentReducer
 
     companion object {
 

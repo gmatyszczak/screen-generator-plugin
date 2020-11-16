@@ -27,8 +27,8 @@ class UpdateScreenElementReducerImpl @Inject constructor(
                 .apply { set(selectedElementIndex!!, updatedElement) }
             copy(
                 screenElements = newScreenElements,
-                fileNameRendered = updatedElement.renderSampleFileName(activityBaseClass),
-                sampleCode = updatedElement.renderSampleCode(activityBaseClass),
+                fileNameRendered = updatedElement.renderSampleFileName(),
+                sampleCode = updatedElement.renderSampleCode(),
                 isModified = true
             )
         }

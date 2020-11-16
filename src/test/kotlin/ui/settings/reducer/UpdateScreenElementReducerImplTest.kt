@@ -26,8 +26,7 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
             screenElements = listOf(
                 ScreenElement(name = "test1")
             ),
-            selectedElementIndex = 0,
-            activityBaseClass = "test"
+            selectedElementIndex = 0
         )
         val updatedElement = ScreenElement(name = "test2")
 
@@ -37,8 +36,8 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
         assertEquals(
             initialState.copy(
                 screenElements = listOf(updatedElement),
-                fileNameRendered = updatedElement.renderSampleFileName("test"),
-                sampleCode = updatedElement.renderSampleCode("test"),
+                fileNameRendered = updatedElement.renderSampleFileName(),
+                sampleCode = updatedElement.renderSampleCode(),
                 isModified = true
             ),
             state.value

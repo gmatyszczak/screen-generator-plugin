@@ -46,13 +46,10 @@ class SettingsViewModelTest {
     private lateinit var changeFileTypeReducerMock: ChangeFileTypeReducer
 
     @Mock
-    private lateinit var changeActivityReducerMock: ChangeActivityReducer
-
-    @Mock
-    private lateinit var changeFragmentReducerMock: ChangeFragmentReducer
-
-    @Mock
     private lateinit var clickHelpReducerMock: ClickHelpReducer
+
+    @Mock
+    private lateinit var changeAndroidComponentReducerMock: ChangeAndroidComponentReducer
 
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
@@ -139,23 +136,16 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `when ChangeActivity on invoke`() {
-        viewModel.reduce(SettingsAction.ChangeActivity("test"))
-
-        verify(changeActivityReducerMock).invoke("test")
-    }
-
-    @Test
-    fun `when ChangeFragment on invoke`() {
-        viewModel.reduce(SettingsAction.ChangeFragment("test"))
-
-        verify(changeFragmentReducerMock).invoke("test")
-    }
-
-    @Test
     fun `when ClickHelp on invoke`() {
         viewModel.reduce(SettingsAction.ClickHelp)
 
         verify(clickHelpReducerMock).invoke()
+    }
+
+    @Test
+    fun `when ChangeAndroidComponent on invoke`() {
+        viewModel.reduce(SettingsAction.ChangeAndroidComponent(1))
+
+        verify(changeAndroidComponentReducerMock).invoke(1)
     }
 }

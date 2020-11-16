@@ -27,8 +27,8 @@ class SelectScreenElementReducerImpl @Inject constructor(
                 null
             }
         val selectedElement = selectedIndex?.let { screenElements[selectedIndex] }
-        val fileName = selectedElement?.renderSampleFileName(activityBaseClass) ?: ""
-        val sampleCode = selectedElement?.renderSampleCode(activityBaseClass) ?: ""
+        val fileName = selectedElement?.renderSampleFileName() ?: ""
+        val sampleCode = selectedElement?.renderSampleCode() ?: ""
         copy(
             selectedElementIndex = selectedIndex,
             fileNameRendered = fileName,

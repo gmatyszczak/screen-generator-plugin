@@ -7,14 +7,12 @@ import model.FileType
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import ui.settings.SettingsState
 import java.awt.BorderLayout
-import java.awt.GridLayout
 import javax.swing.BoxLayout
 import javax.swing.JPanel
 
 class SettingsPanel(project: Project) : JPanel() {
 
     val screenElementsPanel = ScreenElementsPanel()
-    val androidComponentsPanel = AndroidComponentsPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
@@ -32,9 +30,7 @@ class SettingsPanel(project: Project) : JPanel() {
 
     init {
         layout = BorderLayout()
-        val rightPanel = createSplitterRightPanel(androidComponentsPanel, screenElementDetailsPanel)
-
-        addSplitter(screenElementsPanel, rightPanel)
+        addSplitter(screenElementsPanel, screenElementDetailsPanel)
         codePanels = mapOf(
             FileType.KOTLIN to CodePanel(project, KotlinLanguage.INSTANCE, FileType.KOTLIN),
             FileType.LAYOUT_XML to CodePanel(project, XMLLanguage.INSTANCE, FileType.LAYOUT_XML)
@@ -45,7 +41,6 @@ class SettingsPanel(project: Project) : JPanel() {
         }, BorderLayout.CENTER)
     }
 
-
     private fun addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
         add(JBSplitter(0.2f).apply {
             firstComponent = leftPanel
@@ -53,16 +48,9 @@ class SettingsPanel(project: Project) : JPanel() {
         }, BorderLayout.PAGE_START)
     }
 
-    private fun createSplitterRightPanel(androidComponentsPanel: JPanel, screenElementDetailsPanel: JPanel) =
-        JPanel(GridLayout(0, 1)).apply {
-            add(androidComponentsPanel)
-            add(screenElementDetailsPanel)
-        }
-
     fun render(state: SettingsState) {
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
-        androidComponentsPanel.render(state)
         codePanels.values.forEach { it.render(state) }
     }
 }

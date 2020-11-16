@@ -24,8 +24,6 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
         screenElements = mutableListOf(
             ScreenElement(name = "test")
         ),
-        activityBaseClass = "testActivity",
-        fragmentBaseClass = "testFragment",
         isModified = true
     )
 
@@ -42,9 +40,7 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
         assertEquals(initialState.copy(isModified = false), state.value)
         verify(settingsRepositoryMock).update(
             Settings(
-                screenElements = initialState.screenElements.toMutableList(),
-                activityBaseClass = initialState.activityBaseClass,
-                fragmentBaseClass = initialState.fragmentBaseClass
+                screenElements = initialState.screenElements.toMutableList()
             )
         )
     }

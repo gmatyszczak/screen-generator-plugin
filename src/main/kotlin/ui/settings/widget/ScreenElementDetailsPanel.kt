@@ -2,6 +2,7 @@ package ui.settings.widget
 
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.IdeBorderFactory
+import model.AndroidComponent
 import model.FileType
 import ui.settings.SettingsState
 import util.addTextChangeListener
@@ -18,6 +19,7 @@ class ScreenElementDetailsPanel : JPanel() {
     var onNameTextChanged: ((String) -> Unit)? = null
     var onFileNameTextChanged: ((String) -> Unit)? = null
     var onFileTypeIndexChanged: ((Int) -> Unit)? = null
+    var onAndroidComponentIndexChanged: ((Int) -> Unit)? = null
 
     private val nameTextField = JTextField()
     private val fileTypeComboBox = ComboBox(FileType.values())
@@ -26,6 +28,8 @@ class ScreenElementDetailsPanel : JPanel() {
     private val screenElementNameLabel = JLabel("Screen Element Name:")
     private val fileNameLabel = JLabel("File Name:")
     private val fileTypeLabel = JLabel("File Type:")
+    private val androidComponentLabel = JLabel("Related Android Component:")
+    private val androidComponentComboBox = ComboBox(AndroidComponent.values())
 
     private var listenersBlocked = false
 
@@ -48,9 +52,19 @@ class ScreenElementDetailsPanel : JPanel() {
             anchor = GridBagConstraints.LINE_END
             fill = GridBagConstraints.NONE
         })
+        add(androidComponentLabel, constraintsLeft(0, 3))
+        add(androidComponentComboBox, constraintsRight(1, 3).apply {
+            fill = GridBagConstraints.NONE
+            anchor = GridBagConstraints.LINE_START
+        })
         nameTextField.addTextChangeListener { if (!listenersBlocked) onNameTextChanged?.invoke(it) }
         fileNameTextField.addTextChangeListener { if (!listenersBlocked) onFileNameTextChanged?.invoke(it) }
         fileTypeComboBox.addActionListener { if (!listenersBlocked) onFileTypeIndexChanged?.invoke(fileTypeComboBox.selectedIndex) }
+        androidComponentComboBox.addActionListener {
+            if (!listenersBlocked) onAndroidComponentIndexChanged?.invoke(
+                androidComponentComboBox.selectedIndex
+            )
+        }
     }
 
     fun render(state: SettingsState) {
@@ -59,6 +73,9 @@ class ScreenElementDetailsPanel : JPanel() {
         fileTypeComboBox.selectIndex(state.selectedElement?.fileType?.ordinal ?: FileType.KOTLIN.ordinal)
         fileNameTextField.updateText(state.selectedElement?.fileNameTemplate ?: "")
         fileNameSampleLabel.updateText(state.fileNameRendered)
+        androidComponentComboBox.selectIndex(
+            state.selectedElement?.relatedAndroidComponent?.ordinal ?: AndroidComponent.NONE.ordinal
+        )
         listenersBlocked = false
     }
 }

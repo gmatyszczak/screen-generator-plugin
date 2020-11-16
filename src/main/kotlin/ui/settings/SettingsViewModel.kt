@@ -20,9 +20,8 @@ class SettingsViewModel @Inject constructor(
     private val changeFileNameReducer: ChangeFileNameReducer,
     private val changeTemplateReducer: ChangeTemplateReducer,
     private val changeFileTypeReducer: ChangeFileTypeReducer,
-    private val changeActivityReducer: ChangeActivityReducer,
-    private val changeFragmentReducer: ChangeFragmentReducer,
-    private val clickHelpReducer: ClickHelpReducer
+    private val clickHelpReducer: ClickHelpReducer,
+    private val changeAndroidComponentReducer: ChangeAndroidComponentReducer
 ) {
 
     init {
@@ -41,26 +40,23 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.ChangeFileName -> changeFileNameReducer(action.text)
         is SettingsAction.ChangeTemplate -> changeTemplateReducer(action.text)
         is SettingsAction.ChangeFileType -> changeFileTypeReducer(action.index)
-        is SettingsAction.ChangeActivity -> changeActivityReducer(action.text)
-        is SettingsAction.ChangeFragment -> changeFragmentReducer(action.text)
         is SettingsAction.ClickHelp -> clickHelpReducer()
+        is SettingsAction.ChangeAndroidComponent -> changeAndroidComponentReducer(action.index)
     }
 }
 
-fun ScreenElement.renderSampleFileName(activity: String) =
+fun ScreenElement.renderSampleFileName() =
     "${
         fileName(
             SAMPLE_SCREEN_NAME,
             SAMPLE_PACKAGE_NAME,
-            SAMPLE_ANDROID_COMPONENT,
-            activity
+            SAMPLE_ANDROID_COMPONENT
         )
     }.${fileType.extension}"
 
-fun ScreenElement.renderSampleCode(activity: String) =
+fun ScreenElement.renderSampleCode() =
     body(
         SAMPLE_SCREEN_NAME,
         SAMPLE_PACKAGE_NAME,
-        SAMPLE_ANDROID_COMPONENT,
-        activity
+        SAMPLE_ANDROID_COMPONENT
     )

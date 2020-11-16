@@ -51,12 +51,10 @@ class SettingsConfigurable(private val project: Project) : Configurable {
         panel.screenElementDetailsPanel.onNameTextChanged = { viewModel.reduce(SettingsAction.ChangeName(it)) }
         panel.screenElementDetailsPanel.onFileNameTextChanged = { viewModel.reduce(SettingsAction.ChangeFileName(it)) }
         panel.screenElementDetailsPanel.onFileTypeIndexChanged = { viewModel.reduce(SettingsAction.ChangeFileType(it)) }
+        panel.screenElementDetailsPanel.onAndroidComponentIndexChanged = { viewModel.reduce(SettingsAction.ChangeAndroidComponent(it)) }
 
         panel.onTemplateTextChanged = { viewModel.reduce(SettingsAction.ChangeTemplate(it)) }
         panel.onHelpClicked = { viewModel.reduce(SettingsAction.ClickHelp) }
-
-        panel.androidComponentsPanel.onActivityTextChanged = { viewModel.reduce(SettingsAction.ChangeActivity(it)) }
-        panel.androidComponentsPanel.onFragmentTextChanged = { viewModel.reduce(SettingsAction.ChangeFragment(it)) }
 
         scope.launch { state.collect { panel.render(it) } }
         scope.launch { effect.collect { it.handle() } }

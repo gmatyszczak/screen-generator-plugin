@@ -57,8 +57,7 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
             fileNameTemplate = "test"
         )
         val initialState = SettingsState(
-            screenElements = listOf(screenElement),
-            activityBaseClass = "test"
+            screenElements = listOf(screenElement)
         )
         state.value = initialState
 
