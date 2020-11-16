@@ -13,6 +13,7 @@ import javax.swing.JPanel
 class SettingsPanel(project: Project) : JPanel() {
 
     val screenElementsPanel = ScreenElementsPanel()
+    val categoriesPanel = CategoriesPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
@@ -30,7 +31,11 @@ class SettingsPanel(project: Project) : JPanel() {
 
     init {
         layout = BorderLayout()
-        addSplitter(screenElementsPanel, screenElementDetailsPanel)
+        val leftPanel = JBSplitter(0.5f).apply {
+            firstComponent = categoriesPanel
+            secondComponent = screenElementsPanel
+        }
+        addSplitter(leftPanel, screenElementDetailsPanel)
         codePanels = mapOf(
             FileType.KOTLIN to CodePanel(project, KotlinLanguage.INSTANCE, FileType.KOTLIN),
             FileType.LAYOUT_XML to CodePanel(project, XMLLanguage.INSTANCE, FileType.LAYOUT_XML)
@@ -42,13 +47,14 @@ class SettingsPanel(project: Project) : JPanel() {
     }
 
     private fun addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
-        add(JBSplitter(0.2f).apply {
+        add(JBSplitter(0.4f).apply {
             firstComponent = leftPanel
             secondComponent = rightPanel
         }, BorderLayout.PAGE_START)
     }
 
     fun render(state: SettingsState) {
+        categoriesPanel.render(state)
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }

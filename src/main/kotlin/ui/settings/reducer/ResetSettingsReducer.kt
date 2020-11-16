@@ -28,7 +28,9 @@ class ResetSettingsReducerImpl @Inject constructor(
                 selectedElementIndex = null,
                 fileNameRendered = "",
                 sampleCode = "",
-                isModified = false
+                isModified = false,
+                categories = settings.categories,
+                selectedCategoryIndex = if (settings.categories.isNotEmpty()) 0 else null
             )
         }
     }

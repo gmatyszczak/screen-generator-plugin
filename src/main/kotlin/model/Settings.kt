@@ -12,6 +12,11 @@ private fun defaultScreenElements() = mutableListOf(
         ScreenElement("layout", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
 )
 
+private fun defaultCategories() = mutableListOf(
+    Category(0, "Default")
+)
+
 data class Settings(
-    var screenElements: MutableList<ScreenElement> = defaultScreenElements()
+    var screenElements: MutableList<ScreenElement> = defaultScreenElements(),
+    var categories: MutableList<Category> = defaultCategories()
 ) : Serializable
