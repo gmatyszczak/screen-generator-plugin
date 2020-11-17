@@ -20,6 +20,7 @@ class SelectScreenElementReducerImpl @Inject constructor(
 ) : BaseReducer(state, effect, scope), SelectScreenElementReducer {
 
     override fun invoke(index: Int) = pushState {
+        val screenElements = selectedCategoryIndex?.let { categories[it].screenElements } ?: emptyList()
         val selectedIndex =
             if (screenElements.isNotEmpty() && index in screenElements.indices) {
                 index

@@ -23,7 +23,10 @@ class ApplySettingsReducerImpl @Inject constructor(
 
     override fun invoke() {
         val newSettings = state.value.run {
-            Settings(screenElements = screenElements.toMutableList())
+            Settings(
+                screenElements = categories.flatMap { it.screenElements }.toMutableList(),
+                categories = categories.map { it.category }.toMutableList()
+            )
         }
         settingsRepository.update(newSettings)
         pushState { copy(isModified = false) }

@@ -65,6 +65,18 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindAddCategoryReducer(reducer: AddCategoryReducerImpl): AddCategoryReducer
 
+    @Binds
+    abstract fun bindSelectCategoryReducer(reducer: SelectCategoryReducerImpl): SelectCategoryReducer
+
+    @Binds
+    abstract fun bindRemoveCategoryReducer(reducer: RemoveCategoryReducerImpl): RemoveCategoryReducer
+
+    @Binds
+    abstract fun bindMoveUpCategoryReducer(reducer: MoveUpCategoryReducerImpl): MoveUpCategoryReducer
+
+    @Binds
+    abstract fun bindMoveDownCategoryReducer(reducer: MoveDownCategoryReducerImpl): MoveDownCategoryReducer
+
     companion object {
 
         @Provides

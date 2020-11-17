@@ -21,16 +21,16 @@ class ResetSettingsReducerImpl @Inject constructor(
 ) : BaseReducer(state, effect, scope), ResetSettingsReducer {
 
     override fun invoke() {
-        val settings = settingsRepository.loadSettings()
+        val categoriesWithScreenElements = settingsRepository.loadCategoriesWithScreenElements()
         pushState {
+            val selectedCategory = if (categoriesWithScreenElements.isNotEmpty()) 0 else null
             copy(
-                screenElements = settings.screenElements,
                 selectedElementIndex = null,
                 fileNameRendered = "",
                 sampleCode = "",
                 isModified = false,
-                categories = settings.categories,
-                selectedCategoryIndex = if (settings.categories.isNotEmpty()) 0 else null
+                categories = categoriesWithScreenElements,
+                selectedCategoryIndex = selectedCategory
             )
         }
     }

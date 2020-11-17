@@ -6,8 +6,8 @@ import data.repository.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
-import model.Settings
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.Mock
@@ -19,48 +19,41 @@ class ResetSettingsReducerImplTest : BaseReducerTest() {
     @Mock
     private lateinit var settingsRepositoryMock: SettingsRepository
 
-    private val settings = Settings(
-        screenElements = mutableListOf(
-            ScreenElement(name = "test")
-        ),
-        categories = mutableListOf()
+    private val categories = mutableListOf(
+        CategoryScreenElements(
+            Category(name = "test"),
+            listOf(ScreenElement(name = "test"))
+        )
     )
 
     private lateinit var reducer: ResetSettingsReducerImpl
 
     @Test
-    fun `when categories empty on invoke`() {
-        whenever(settingsRepositoryMock.loadSettings()) doReturn settings
+    fun `when categories not empty on invoke`() {
+        whenever(settingsRepositoryMock.loadCategoriesWithScreenElements()) doReturn categories
         reducer = ResetSettingsReducerImpl(state, effectMock, TestCoroutineScope(), settingsRepositoryMock)
 
         reducer.invoke()
 
         assertEquals(
             SettingsState(
-                screenElements = mutableListOf(
-                    ScreenElement(name = "test")
-                ),
-                categories = emptyList(),
-                selectedCategoryIndex = null
+                categories = categories,
+                selectedCategoryIndex = 0
             ),
             state.value
         )
     }
 
     @Test
-    fun `when categories not empty on invoke`() {
-        whenever(settingsRepositoryMock.loadSettings()) doReturn settings.copy(categories = mutableListOf(Category()))
+    fun `when categories empty on invoke`() {
         reducer = ResetSettingsReducerImpl(state, effectMock, TestCoroutineScope(), settingsRepositoryMock)
 
         reducer.invoke()
 
         assertEquals(
             SettingsState(
-                screenElements = mutableListOf(
-                    ScreenElement(name = "test")
-                ),
-                categories = listOf(Category()),
-                selectedCategoryIndex = 0
+                categories = emptyList(),
+                selectedCategoryIndex = null
             ),
             state.value
         )

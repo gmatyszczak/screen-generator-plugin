@@ -2,6 +2,8 @@ package ui.settings.reducer
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
@@ -23,10 +25,14 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
     @Test
     fun `on invoke`() {
         val initialState = SettingsState(
-            screenElements = listOf(
-                ScreenElement(name = "test1")
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(),
+                    listOf(ScreenElement(name = "test1"))
+                )
             ),
-            selectedElementIndex = 0
+            selectedElementIndex = 0,
+            selectedCategoryIndex = 0
         )
         val updatedElement = ScreenElement(name = "test2")
 
@@ -35,7 +41,12 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
 
         assertEquals(
             initialState.copy(
-                screenElements = listOf(updatedElement),
+                categories = listOf(
+                    CategoryScreenElements(
+                        Category(),
+                        listOf(updatedElement)
+                    )
+                ),
                 fileNameRendered = updatedElement.renderSampleFileName(),
                 sampleCode = updatedElement.renderSampleCode(),
                 isModified = true

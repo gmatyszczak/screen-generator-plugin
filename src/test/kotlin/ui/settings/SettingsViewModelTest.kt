@@ -54,6 +54,18 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var addCategoryReducerMock: AddCategoryReducer
 
+    @Mock
+    private lateinit var selectCategoryReducerMock: SelectCategoryReducer
+
+    @Mock
+    private lateinit var removeCategoryReducerMock: RemoveCategoryReducer
+
+    @Mock
+    private lateinit var moveUpCategoryReducerMock: MoveUpCategoryReducer
+
+    @Mock
+    private lateinit var moveDownCategoryReducerMock: MoveDownCategoryReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -157,5 +169,30 @@ class SettingsViewModelTest {
         viewModel.reduce(SettingsAction.AddCategory)
 
         verify(addCategoryReducerMock).invoke()
+    }
+
+
+    @Test
+    fun `when SelectCategory on invoke`() {
+        viewModel.reduce(SettingsAction.SelectCategory(0))
+        verify(selectCategoryReducerMock).invoke(0)
+    }
+
+    @Test
+    fun `when RemoveCategory on invoke`() {
+        viewModel.reduce(SettingsAction.RemoveCategory(0))
+        verify(removeCategoryReducerMock).invoke(0)
+    }
+
+    @Test
+    fun `when MoveUpCategory on invoke`() {
+        viewModel.reduce(SettingsAction.MoveUpCategory(0))
+        verify(moveUpCategoryReducerMock).invoke(0)
+    }
+
+    @Test
+    fun `when MoveDownCategory on invoke`() {
+        viewModel.reduce(SettingsAction.MoveDownCategory(0))
+        verify(moveDownCategoryReducerMock).invoke(0)
     }
 }

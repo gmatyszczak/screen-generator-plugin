@@ -3,6 +3,7 @@ package ui.settings.reducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import model.CategoryScreenElements
 import model.ScreenElement
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
@@ -20,14 +21,21 @@ class AddScreenElementReducerImpl @Inject constructor(
 ) : BaseReducer(state, effect, scope), AddScreenElementReducer {
 
     override fun invoke() {
-        val newList = state.value.screenElements.toMutableList().apply { add(ScreenElement.getDefault()) }
-        pushState {
-            copy(
-                isModified = true,
-                screenElements = newList
-            )
+        val categoryScreenElements = state.value.selectedCategoryScreenElements
+        if (categoryScreenElements != null) {
+            val newList =
+                categoryScreenElements.screenElements.toMutableList().apply { add(ScreenElement.getDefault()) }
+            val newCategories = state.value.categories.toMutableList().apply {
+                set(state.value.selectedCategoryIndex!!, CategoryScreenElements(categoryScreenElements.category, newList))
+            }
+            pushState {
+                copy(
+                    isModified = true,
+                    categories = newCategories
+                )
+            }
+            pushEffect(SettingsEffect.SelectScreenElement(newList.size - 1))
+            selectScreenElementReducer(newList.size - 1)
         }
-        pushEffect(SettingsEffect.SelectScreenElement(newList.size - 1))
-        selectScreenElementReducer(newList.size - 1)
     }
 }

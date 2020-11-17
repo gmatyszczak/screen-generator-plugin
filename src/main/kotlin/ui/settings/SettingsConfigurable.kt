@@ -43,6 +43,10 @@ class SettingsConfigurable(private val project: Project) : Configurable {
         panel = SettingsPanel(project)
 
         panel.categoriesPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddCategory) }
+        panel.categoriesPanel.onRemoveClicked = { viewModel.reduce(SettingsAction.RemoveCategory(it)) }
+        panel.categoriesPanel.onMoveUpClicked = { viewModel.reduce(SettingsAction.MoveUpCategory(it)) }
+        panel.categoriesPanel.onMoveDownClicked = { viewModel.reduce(SettingsAction.MoveDownCategory(it)) }
+        panel.categoriesPanel.onItemSelected = { viewModel.reduce(SettingsAction.SelectCategory(it)) }
 
         panel.screenElementsPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddScreenElement) }
         panel.screenElementsPanel.onRemoveClicked = { viewModel.reduce(SettingsAction.RemoveScreenElement(it)) }

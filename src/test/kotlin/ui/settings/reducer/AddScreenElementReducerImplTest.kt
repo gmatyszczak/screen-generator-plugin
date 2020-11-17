@@ -3,6 +3,8 @@ package ui.settings.reducer
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
@@ -18,10 +20,13 @@ class AddScreenElementReducerImplTest : BaseReducerTest() {
 
     private lateinit var reducer: AddScreenElementReducerImpl
 
+    private val categoryScreenElement = CategoryScreenElements(
+        Category(),
+        listOf(ScreenElement(name = "test"))
+    )
     private val initialState = SettingsState(
-        screenElements = listOf(
-            ScreenElement(name = "test")
-        )
+        categories = listOf(categoryScreenElement),
+        selectedCategoryIndex = 0
     )
 
     @Before
@@ -37,7 +42,12 @@ class AddScreenElementReducerImplTest : BaseReducerTest() {
         assertEquals(
             SettingsState(
                 isModified = true,
-                screenElements = listOf(ScreenElement(name = "test"), ScreenElement.getDefault())
+                categories = listOf(
+                    categoryScreenElement.copy(
+                        screenElements = listOf(ScreenElement(name = "test"), ScreenElement.getDefault())
+                    )
+                ),
+                selectedCategoryIndex = 0
             ),
             state.value
         )

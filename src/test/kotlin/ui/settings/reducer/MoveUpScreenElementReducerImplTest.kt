@@ -4,6 +4,8 @@ import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
+import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
@@ -21,16 +23,23 @@ class MoveUpScreenElementReducerImplTest : BaseReducerTest() {
     private lateinit var reducer: MoveUpScreenElementReducerImpl
 
     private val initialState = SettingsState(
-        screenElements = listOf(
-            ScreenElement(name = "test1"),
-            ScreenElement(name = "test2")
-        )
+        categories = listOf(
+            CategoryScreenElements(
+                Category(),
+                listOf(
+                    ScreenElement(name = "test1"),
+                    ScreenElement(name = "test2")
+                )
+            )
+        ),
+        selectedCategoryIndex = 0
     )
 
     @Before
     fun setup() {
         state.value = initialState
-        reducer = MoveUpScreenElementReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)
+        reducer =
+            MoveUpScreenElementReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)
     }
 
     @Test
@@ -40,10 +49,16 @@ class MoveUpScreenElementReducerImplTest : BaseReducerTest() {
         assertEquals(
             SettingsState(
                 isModified = true,
-                screenElements = listOf(
-                    ScreenElement(name = "test2"),
-                    ScreenElement(name = "test1")
-                )
+                categories = listOf(
+                    CategoryScreenElements(
+                        Category(),
+                        listOf(
+                            ScreenElement(name = "test2"),
+                            ScreenElement(name = "test1")
+                        )
+                    )
+                ),
+                selectedCategoryIndex = 0
             ),
             state.value
         )

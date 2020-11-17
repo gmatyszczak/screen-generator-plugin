@@ -41,15 +41,15 @@ class ScreenElementsPanel : JPanel() {
 
     fun render(state: SettingsState) {
         listenersBlocked = true
-        state.screenElements.forEachIndexed { index, screenElement ->
+        state.selectedCategoryScreenElements?.screenElements?.forEachIndexed { index, screenElement ->
             if (index < listModel.size && listModel.getElementAt(index) != screenElement) {
                 listModel.setElementAt(screenElement, index)
             } else if (index >= listModel.size) {
                 listModel.add(screenElement)
             }
         }
-        if (listModel.size > state.screenElements.size) {
-            listModel.removeRange(state.screenElements.size, listModel.size - 1)
+        if (listModel.size > state.selectedCategoryScreenElements?.screenElements?.size ?: 0) {
+            listModel.removeRange(state.selectedCategoryScreenElements?.screenElements?.size ?: 0, listModel.size - 1)
         }
         listenersBlocked = false
     }

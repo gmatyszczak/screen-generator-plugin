@@ -4,6 +4,8 @@ import com.nhaarman.mockitokotlin2.verify
 import data.repository.SettingsRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
 import model.Settings
 import org.junit.Assert.assertEquals
@@ -20,10 +22,14 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
 
     private lateinit var reducer: ApplySettingsReducerImpl
 
+    private val categoryScreenElement = CategoryScreenElements(
+        Category(),
+        listOf(ScreenElement(name = "test"))
+    )
+
     private val initialState = SettingsState(
-        screenElements = mutableListOf(
-            ScreenElement(name = "test")
-        ),
+        categories = listOf(categoryScreenElement),
+        selectedCategoryIndex = 0,
         isModified = true
     )
 
@@ -40,7 +46,8 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
         assertEquals(initialState.copy(isModified = false), state.value)
         verify(settingsRepositoryMock).update(
             Settings(
-                screenElements = initialState.screenElements.toMutableList()
+                screenElements = initialState.categories.flatMap { it.screenElements }.toMutableList(),
+                categories = initialState.categories.map { it.category }.toMutableList()
             )
         )
     }

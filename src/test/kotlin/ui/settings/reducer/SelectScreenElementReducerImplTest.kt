@@ -2,6 +2,8 @@ package ui.settings.reducer
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
+import model.Category
+import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
@@ -34,7 +36,10 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
 
     @Test
     fun `when index not in bounds on invoke`() {
-        val initialState = SettingsState(screenElements = listOf(ScreenElement()))
+        val initialState = SettingsState(
+            categories = listOf(CategoryScreenElements(Category(), listOf(ScreenElement()))),
+            selectedCategoryIndex = 0
+        )
         state.value = initialState
 
         reducer.invoke(10)
@@ -57,7 +62,8 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
             fileNameTemplate = "test"
         )
         val initialState = SettingsState(
-            screenElements = listOf(screenElement)
+            categories = listOf(CategoryScreenElements(Category(), listOf(screenElement))),
+            selectedCategoryIndex = 0
         )
         state.value = initialState
 

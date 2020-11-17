@@ -22,7 +22,11 @@ class SettingsViewModel @Inject constructor(
     private val changeFileTypeReducer: ChangeFileTypeReducer,
     private val clickHelpReducer: ClickHelpReducer,
     private val changeAndroidComponentReducer: ChangeAndroidComponentReducer,
-    private val addCategoryReducer: AddCategoryReducer
+    private val addCategoryReducer: AddCategoryReducer,
+    private val selectCategoryReducer: SelectCategoryReducer,
+    private val removeCategoryReducer: RemoveCategoryReducer,
+    private val moveUpCategoryReducer: MoveUpCategoryReducer,
+    private val moveDownCategoryReducer: MoveDownCategoryReducer
 ) {
 
     init {
@@ -44,6 +48,10 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.ClickHelp -> clickHelpReducer()
         is SettingsAction.ChangeAndroidComponent -> changeAndroidComponentReducer(action.index)
         is SettingsAction.AddCategory -> addCategoryReducer()
+        is SettingsAction.SelectCategory -> selectCategoryReducer(action.index)
+        is SettingsAction.RemoveCategory -> removeCategoryReducer(action.index)
+        is SettingsAction.MoveUpCategory -> moveUpCategoryReducer(action.index)
+        is SettingsAction.MoveDownCategory -> moveDownCategoryReducer(action.index)
     }
 }
 

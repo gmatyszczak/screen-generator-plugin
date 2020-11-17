@@ -3,6 +3,7 @@ package ui.settings.reducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import model.CategoryScreenElements
 import model.ScreenElement
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
@@ -23,10 +24,18 @@ class UpdateScreenElementReducerImpl @Inject constructor(
 
     override fun invoke(updatedElement: ScreenElement) {
         pushState {
-            val newScreenElements = state.value.screenElements.toMutableList()
+            val categoryScreenElements = categories[selectedCategoryIndex!!]
+            val newScreenElements = categoryScreenElements.screenElements.toMutableList()
                 .apply { set(selectedElementIndex!!, updatedElement) }
+            val newCategories = categories.toMutableList()
+                .apply {
+                    set(
+                        selectedCategoryIndex,
+                        CategoryScreenElements(categoryScreenElements.category, newScreenElements)
+                    )
+                }
             copy(
-                screenElements = newScreenElements,
+                categories = newCategories,
                 fileNameRendered = updatedElement.renderSampleFileName(),
                 sampleCode = updatedElement.renderSampleCode(),
                 isModified = true

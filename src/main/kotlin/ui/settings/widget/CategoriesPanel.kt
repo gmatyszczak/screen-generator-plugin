@@ -41,11 +41,11 @@ class CategoriesPanel : JPanel() {
 
     fun render(state: SettingsState) {
         listenersBlocked = true
-        state.categories.forEachIndexed { index, category ->
-            if (index < listModel.size && listModel.getElementAt(index) != category) {
-                listModel.setElementAt(category, index)
+        state.categories.forEachIndexed { index, categoryScreenElements ->
+            if (index < listModel.size && listModel.getElementAt(index) != categoryScreenElements.category) {
+                listModel.setElementAt(categoryScreenElements.category, index)
             } else if (index >= listModel.size) {
-                listModel.add(category)
+                listModel.add(categoryScreenElements.category)
             }
         }
         if (listModel.size > state.categories.size) {
