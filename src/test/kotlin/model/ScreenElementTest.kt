@@ -54,7 +54,7 @@ class ScreenElementTest {
     @Test
     fun `on get default`() {
         assertEquals(
-                ScreenElement("UnnamedElement", FileType.KOTLIN.defaultTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName),
-                ScreenElement.getDefault())
+                ScreenElement("UnnamedElement", FileType.KOTLIN.defaultTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName, AndroidComponent.NONE, 10),
+                ScreenElement.getDefault(10))
     }
 }

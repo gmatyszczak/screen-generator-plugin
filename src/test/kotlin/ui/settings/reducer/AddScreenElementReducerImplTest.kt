@@ -20,13 +20,19 @@ class AddScreenElementReducerImplTest : BaseReducerTest() {
 
     private lateinit var reducer: AddScreenElementReducerImpl
 
-    private val categoryScreenElement = CategoryScreenElements(
-        Category(),
+    private val categoryScreenElement1 = CategoryScreenElements(
+        Category(id = 0),
         listOf(ScreenElement(name = "test"))
     )
+
+    private val categoryScreenElement2 = CategoryScreenElements(
+        Category(id = 1),
+        listOf(ScreenElement(name = "test"))
+    )
+
     private val initialState = SettingsState(
-        categories = listOf(categoryScreenElement),
-        selectedCategoryIndex = 0
+        categories = listOf(categoryScreenElement1, categoryScreenElement2),
+        selectedCategoryIndex = 1
     )
 
     @Before
@@ -43,11 +49,12 @@ class AddScreenElementReducerImplTest : BaseReducerTest() {
             SettingsState(
                 isModified = true,
                 categories = listOf(
-                    categoryScreenElement.copy(
-                        screenElements = listOf(ScreenElement(name = "test"), ScreenElement.getDefault())
+                    categoryScreenElement1,
+                    categoryScreenElement2.copy(
+                        screenElements = listOf(ScreenElement(name = "test"), ScreenElement.getDefault(1))
                     )
                 ),
-                selectedCategoryIndex = 0
+                selectedCategoryIndex = 1
             ),
             state.value
         )

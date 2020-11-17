@@ -42,11 +42,12 @@ data class ScreenElement(
 
 
     companion object {
-        fun getDefault() = ScreenElement(
+        fun getDefault(categoryId: Int) = ScreenElement(
             UNNAMED_ELEMENT,
             FileType.KOTLIN.defaultTemplate,
             FileType.KOTLIN,
-            FileType.KOTLIN.defaultFileName
+            FileType.KOTLIN.defaultFileName,
+            categoryId = categoryId
         )
     }
 }

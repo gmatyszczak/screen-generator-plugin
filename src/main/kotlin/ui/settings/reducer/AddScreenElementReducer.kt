@@ -24,9 +24,13 @@ class AddScreenElementReducerImpl @Inject constructor(
         val categoryScreenElements = state.value.selectedCategoryScreenElements
         if (categoryScreenElements != null) {
             val newList =
-                categoryScreenElements.screenElements.toMutableList().apply { add(ScreenElement.getDefault()) }
+                categoryScreenElements.screenElements.toMutableList()
+                    .apply { add(ScreenElement.getDefault(state.value.selectedCategoryScreenElements!!.category.id)) }
             val newCategories = state.value.categories.toMutableList().apply {
-                set(state.value.selectedCategoryIndex!!, CategoryScreenElements(categoryScreenElements.category, newList))
+                set(
+                    state.value.selectedCategoryIndex!!,
+                    CategoryScreenElements(categoryScreenElements.category, newList)
+                )
             }
             pushState {
                 copy(
