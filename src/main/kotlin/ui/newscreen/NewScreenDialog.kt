@@ -7,6 +7,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import model.Category
 import model.Module
 import ui.newscreen.dagger.DaggerNewScreenComponent
 import javax.inject.Inject
@@ -35,6 +36,7 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         panel.packageTextField.text = packageName
         panel.moduleComboBox.removeAllItems()
         modules.forEach { panel.moduleComboBox.addItem(it) }
+        categories.forEach { panel.categoryComboBox.addItem(it) }
         panel.moduleComboBox.selectedItem = selectedModule
     }
 
@@ -43,7 +45,8 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
             panel.packageTextField.text,
             panel.nameTextField.text,
             panel.androidComponentComboBox.selectedIndex,
-            panel.moduleComboBox.selectedItem as Module
+            panel.moduleComboBox.selectedItem as Module,
+            panel.categoryComboBox.selectedItem as Category
         )
 
     override fun createCenterPanel() = panel

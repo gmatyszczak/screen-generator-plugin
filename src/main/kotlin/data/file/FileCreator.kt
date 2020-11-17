@@ -3,16 +3,22 @@ package data.file
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
 import model.AndroidComponent
+import model.Category
 import model.FileType
 import model.Module
-import model.Settings
 import javax.inject.Inject
 
 private const val LAYOUT_DIRECTORY = "layout"
 
 interface FileCreator {
 
-    fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent, module: Module)
+    fun createScreenFiles(
+        packageName: String,
+        screenName: String,
+        androidComponent: AndroidComponent,
+        module: Module,
+        category: Category
+    )
 }
 
 class FileCreatorImpl @Inject constructor(
@@ -24,13 +30,14 @@ class FileCreatorImpl @Inject constructor(
         packageName: String,
         screenName: String,
         androidComponent: AndroidComponent,
-        module: Module
+        module: Module,
+        category: Category
     ) {
         val codeSubdirectory = findCodeSubdirectory(packageName, module)
         val resourcesSubdirectory = findResourcesSubdirectory(module)
         if (codeSubdirectory != null) {
-            settingsRepository.loadSettings().apply {
-                screenElements.filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
+            settingsRepository.loadScreenElements(category.id).apply {
+                filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
                     .forEach {
                         if (it.fileType == FileType.LAYOUT_XML) {
                             val file = File(
@@ -65,10 +72,4 @@ class FileCreatorImpl @Inject constructor(
         sourceRootRepository.findResourcesSourceRoot(module).directory.run {
             findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
         }
-
-    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = ""
-//    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = when (androidComponent) {
-//        AndroidComponent.ACTIVITY -> activityBaseClass
-//        AndroidComponent.FRAGMENT -> fragmentBaseClass
-//    }
 }

@@ -5,12 +5,14 @@ import data.file.FileCreator
 import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
 import data.repository.ModuleRepository
+import data.repository.SettingsRepository
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import model.AndroidComponent
+import model.Category
 import model.Module
 import javax.inject.Inject
 
@@ -19,7 +21,8 @@ class NewScreenViewModel @Inject constructor(
     packageExtractor: PackageExtractor,
     private val writeActionDispatcher: WriteActionDispatcher,
     moduleRepository: ModuleRepository,
-    currentPath: CurrentPath?
+    currentPath: CurrentPath?,
+    settingsRepository: SettingsRepository
 ) {
 
     private val scope = MainScope()
@@ -28,19 +31,27 @@ class NewScreenViewModel @Inject constructor(
         NewScreenState(
             packageName = packageExtractor.extractFromCurrentPath(),
             modules = moduleRepository.getAllModules(),
-            selectedModule = currentPath?.module
+            selectedModule = currentPath?.module,
+            categories = settingsRepository.loadCategories()
         )
     )
 
     val effect = MutableSharedFlow<NewScreenEffect>(replay = 0)
 
-    fun onOkClick(packageName: String, screenName: String, androidComponentIndex: Int, module: Module) {
+    fun onOkClick(
+        packageName: String,
+        screenName: String,
+        androidComponentIndex: Int,
+        module: Module,
+        category: Category
+    ) {
         writeActionDispatcher.dispatch {
             fileCreator.createScreenFiles(
                 packageName,
                 screenName,
                 AndroidComponent.values()[androidComponentIndex],
-                module
+                module,
+                category
             )
         }
         effect.push(NewScreenEffect.Close)
