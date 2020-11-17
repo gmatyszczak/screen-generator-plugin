@@ -68,6 +68,7 @@ class CodePanel(
         listenersBlocked = true
         val selectedElement = state.selectedElement
         if (selectedElement != null) {
+            setEnabledAll(true)
             if (selectedElement.fileType == fileType) {
                 isVisible = true
                 templateTextField.updateText(selectedElement.template)
@@ -77,7 +78,15 @@ class CodePanel(
             }
         } else {
             isVisible = false
+            setEnabledAll(false)
         }
         listenersBlocked = false
+    }
+
+    private fun setEnabledAll(isEnabled: Boolean) {
+        components.forEach {
+            it.isEnabled = isEnabled
+            (it as JPanel).components.filter { it != sampleTextField }.forEach { it.isEnabled = isEnabled }
+        }
     }
 }

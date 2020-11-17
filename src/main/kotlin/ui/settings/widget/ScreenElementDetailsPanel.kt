@@ -69,13 +69,16 @@ class ScreenElementDetailsPanel : JPanel() {
 
     fun render(state: SettingsState) {
         listenersBlocked = true
-        nameTextField.updateText(state.selectedElement?.name ?: "")
-        fileTypeComboBox.selectIndex(state.selectedElement?.fileType?.ordinal ?: FileType.KOTLIN.ordinal)
-        fileNameTextField.updateText(state.selectedElement?.fileNameTemplate ?: "")
+        val selectedElement = state.selectedElement
+        nameTextField.updateText(selectedElement?.name ?: "")
+        fileTypeComboBox.selectIndex(selectedElement?.fileType?.ordinal ?: FileType.KOTLIN.ordinal)
+        fileNameTextField.updateText(selectedElement?.fileNameTemplate ?: "")
         fileNameSampleLabel.updateText(state.fileNameRendered)
         androidComponentComboBox.selectIndex(
             state.selectedElement?.relatedAndroidComponent?.ordinal ?: AndroidComponent.NONE.ordinal
         )
+        isEnabled = selectedElement != null
+        components.filter { it != fileNameSampleLabel }.forEach { it.isEnabled = selectedElement != null }
         listenersBlocked = false
     }
 }

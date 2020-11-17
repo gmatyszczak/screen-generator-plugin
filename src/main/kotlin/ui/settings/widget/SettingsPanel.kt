@@ -58,5 +58,8 @@ class SettingsPanel(project: Project) : JPanel() {
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }
+        if (state.selectedElementIndex == null) {
+            codePanels[FileType.KOTLIN]?.isVisible = true
+        }
     }
 }
