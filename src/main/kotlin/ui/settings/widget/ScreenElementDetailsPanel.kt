@@ -18,6 +18,7 @@ class ScreenElementDetailsPanel : JPanel() {
 
     var onNameTextChanged: ((String) -> Unit)? = null
     var onFileNameTextChanged: ((String) -> Unit)? = null
+    var onSubdirectoryTextChanged: ((String) -> Unit)? = null
     var onFileTypeIndexChanged: ((Int) -> Unit)? = null
     var onAndroidComponentIndexChanged: ((Int) -> Unit)? = null
 
@@ -30,6 +31,9 @@ class ScreenElementDetailsPanel : JPanel() {
     private val fileTypeLabel = JLabel("File Type:")
     private val androidComponentLabel = JLabel("Related Android Component:")
     private val androidComponentComboBox = ComboBox(AndroidComponent.values())
+
+    private val subdirectoryLabel = JLabel("Subdirectory:")
+    private val subdirectoryTextField= JTextField()
 
     private var listenersBlocked = false
 
@@ -57,8 +61,12 @@ class ScreenElementDetailsPanel : JPanel() {
             fill = GridBagConstraints.NONE
             anchor = GridBagConstraints.LINE_START
         })
+        add(subdirectoryLabel, constraintsLeft(0, 4))
+        add(subdirectoryTextField, constraintsRight(1, 4))
+
         nameTextField.addTextChangeListener { if (!listenersBlocked) onNameTextChanged?.invoke(it) }
         fileNameTextField.addTextChangeListener { if (!listenersBlocked) onFileNameTextChanged?.invoke(it) }
+        subdirectoryTextField.addTextChangeListener { if (!listenersBlocked) onSubdirectoryTextChanged?.invoke(it) }
         fileTypeComboBox.addActionListener { if (!listenersBlocked) onFileTypeIndexChanged?.invoke(fileTypeComboBox.selectedIndex) }
         androidComponentComboBox.addActionListener {
             if (!listenersBlocked) onAndroidComponentIndexChanged?.invoke(
@@ -77,6 +85,8 @@ class ScreenElementDetailsPanel : JPanel() {
         androidComponentComboBox.selectIndex(
             state.selectedElement?.relatedAndroidComponent?.ordinal ?: AndroidComponent.NONE.ordinal
         )
+        subdirectoryTextField.updateText(selectedElement?.subdirectory ?: "")
+
         isEnabled = selectedElement != null
         components.filter { it != fileNameSampleLabel }.forEach { it.isEnabled = selectedElement != null }
         listenersBlocked = false

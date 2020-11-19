@@ -18,6 +18,7 @@ sealed class SettingsAction {
     data class RemoveCategory(val index: Int) : SettingsAction()
     data class MoveUpCategory(val index: Int) : SettingsAction()
     data class MoveDownCategory(val index: Int) : SettingsAction()
+    data class ChangeSubdirectory(val text: String) : SettingsAction()
 
     object ClickHelp: SettingsAction()
     object AddCategory : SettingsAction()

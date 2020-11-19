@@ -26,7 +26,8 @@ class SettingsViewModel @Inject constructor(
     private val selectCategoryReducer: SelectCategoryReducer,
     private val removeCategoryReducer: RemoveCategoryReducer,
     private val moveUpCategoryReducer: MoveUpCategoryReducer,
-    private val moveDownCategoryReducer: MoveDownCategoryReducer
+    private val moveDownCategoryReducer: MoveDownCategoryReducer,
+    private val changeSubdirectoryReducer: ChangeSubdirectoryReducer,
 ) {
 
     init {
@@ -52,6 +53,7 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.RemoveCategory -> removeCategoryReducer(action.index)
         is SettingsAction.MoveUpCategory -> moveUpCategoryReducer(action.index)
         is SettingsAction.MoveDownCategory -> moveDownCategoryReducer(action.index)
+        is SettingsAction.ChangeSubdirectory -> changeSubdirectoryReducer(action.text)
     }
 }
 

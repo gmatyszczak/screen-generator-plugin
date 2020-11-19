@@ -1,5 +1,6 @@
 package data.file
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
@@ -105,6 +106,42 @@ class FileCreatorImplTest {
         verify(resourcesDirectoryMock).addFile(
             File(
                 "fragment_test",
+                "<FrameLayout></FrameLayout>",
+                FileType.LAYOUT_XML
+            )
+        )
+    }
+
+    @Test
+    fun `when subdirectory is not empty on create screen files`() {
+        val screenElements = listOf(
+            ScreenElement("Activity", "test", FileType.KOTLIN, FileType.KOTLIN.defaultFileName, subdirectory = "abc/cba"),
+            ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName, subdirectory = "def")
+        )
+        whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
+        whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
+        whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
+        whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
+        whenever(sourceRootRepositoryMock.findResourcesSourceRoot(module)).thenReturn(resourcesSourceRootMock)
+        whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
+        whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
+        whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
+        whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
+        whenever(codeDirectoryMock.findSubdirectory("abc")) doReturn null
+        whenever(codeDirectoryMock.createSubdirectory("abc")) doReturn codeDirectoryMock
+        whenever(codeDirectoryMock.findSubdirectory("cba")) doReturn null
+        whenever(codeDirectoryMock.createSubdirectory("cba")) doReturn codeDirectoryMock
+        whenever(resourcesDirectoryMock.findSubdirectory("def")) doReturn null
+        whenever(resourcesDirectoryMock.createSubdirectory("def")) doReturn resourcesDirectoryMock
+
+
+        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.ACTIVITY, module, category)
+
+        verify(codeDirectoryMock).addFile(File("TestActivity", "test", FileType.KOTLIN))
+        verify(resourcesDirectoryMock).addFile(
+            File(
+                "activity_test",
                 "<FrameLayout></FrameLayout>",
                 FileType.LAYOUT_XML
             )

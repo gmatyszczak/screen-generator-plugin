@@ -11,7 +11,8 @@ data class ScreenElement(
     var fileType: FileType = FileType.KOTLIN,
     var fileNameTemplate: String = "",
     var relatedAndroidComponent: AndroidComponent = AndroidComponent.NONE,
-    var categoryId: Int = 0
+    var categoryId: Int = 0,
+    var subdirectory: String = ""
 ) : Serializable {
 
     override fun toString() = name

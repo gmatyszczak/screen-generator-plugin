@@ -66,6 +66,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var moveDownCategoryReducerMock: MoveDownCategoryReducer
 
+    @Mock
+    private lateinit var changeSubdirectoryReducerMock: ChangeSubdirectoryReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -194,5 +197,11 @@ class SettingsViewModelTest {
     fun `when MoveDownCategory on invoke`() {
         viewModel.reduce(SettingsAction.MoveDownCategory(0))
         verify(moveDownCategoryReducerMock).invoke(0)
+    }
+
+    @Test
+    fun `when ChangeSubdirectory on invoke`() {
+        viewModel.reduce(SettingsAction.ChangeSubdirectory("test"))
+        verify(changeSubdirectoryReducerMock).invoke("test")
     }
 }

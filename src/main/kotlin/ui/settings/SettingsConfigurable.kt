@@ -57,6 +57,7 @@ class SettingsConfigurable(private val project: Project) : Configurable {
         panel.screenElementDetailsPanel.onNameTextChanged = { viewModel.reduce(SettingsAction.ChangeName(it)) }
         panel.screenElementDetailsPanel.onFileNameTextChanged = { viewModel.reduce(SettingsAction.ChangeFileName(it)) }
         panel.screenElementDetailsPanel.onFileTypeIndexChanged = { viewModel.reduce(SettingsAction.ChangeFileType(it)) }
+        panel.screenElementDetailsPanel.onSubdirectoryTextChanged = { viewModel.reduce(SettingsAction.ChangeSubdirectory(it)) }
         panel.screenElementDetailsPanel.onAndroidComponentIndexChanged =
             { viewModel.reduce(SettingsAction.ChangeAndroidComponent(it)) }
 

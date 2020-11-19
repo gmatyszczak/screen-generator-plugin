@@ -39,23 +39,30 @@ class FileCreatorImpl @Inject constructor(
             settingsRepository.loadScreenElements(category.id).apply {
                 filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
                     .forEach {
+                        val file = File(
+                            it.fileName(screenName, packageName, androidComponent.displayName),
+                            it.body(screenName, packageName, androidComponent.displayName),
+                            it.fileType
+                        )
                         if (it.fileType == FileType.LAYOUT_XML) {
-                            val file = File(
-                                it.fileName(screenName, packageName, androidComponent.displayName),
-                                it.body(screenName, packageName, androidComponent.displayName),
-                                it.fileType
-                            )
-                            resourcesSubdirectory.addFile(file)
+                            addFile(resourcesSubdirectory, file, it.subdirectory)
                         } else {
-                            val file = File(
-                                it.fileName(screenName, packageName, androidComponent.displayName),
-                                it.body(screenName, packageName, androidComponent.displayName),
-                                it.fileType
-                            )
-                            codeSubdirectory.addFile(file)
+                            addFile(codeSubdirectory, file, it.subdirectory)
                         }
                     }
             }
+        }
+    }
+
+    private fun addFile(directory: Directory, file: File, subdirectory: String) {
+        if (subdirectory.isNotEmpty()) {
+            var newSubdirectory = directory
+            subdirectory.split("/").forEach { segment ->
+                newSubdirectory = directory.findSubdirectory(segment) ?: directory.createSubdirectory(segment)
+            }
+            newSubdirectory.addFile(file)
+        } else {
+            directory.addFile(file)
         }
     }
 
