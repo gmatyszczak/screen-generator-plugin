@@ -69,6 +69,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var changeSubdirectoryReducerMock: ChangeSubdirectoryReducer
 
+    @Mock
+    private lateinit var changeSourceSetReducerMock: ChangeSourceSetReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -203,5 +206,11 @@ class SettingsViewModelTest {
     fun `when ChangeSubdirectory on invoke`() {
         viewModel.reduce(SettingsAction.ChangeSubdirectory("test"))
         verify(changeSubdirectoryReducerMock).invoke("test")
+    }
+
+    @Test
+    fun `when ChangeSourceSet on invoke`() {
+        viewModel.reduce(SettingsAction.ChangeSourceSet("test"))
+        verify(changeSourceSetReducerMock).invoke("test")
     }
 }

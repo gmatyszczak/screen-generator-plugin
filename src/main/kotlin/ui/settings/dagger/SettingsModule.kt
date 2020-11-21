@@ -80,6 +80,9 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindChangeSubdirectoryReducer(reducer: ChangeSubdirectoryReducerImpl): ChangeSubdirectoryReducer
 
+    @Binds
+    abstract fun bindChangeSourceSetReducer(reducer: ChangeSourceSetReducerImpl): ChangeSourceSetReducer
+
     companion object {
 
         @Provides

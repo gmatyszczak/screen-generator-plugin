@@ -19,6 +19,7 @@ class ScreenElementDetailsPanel : JPanel() {
     var onNameTextChanged: ((String) -> Unit)? = null
     var onFileNameTextChanged: ((String) -> Unit)? = null
     var onSubdirectoryTextChanged: ((String) -> Unit)? = null
+    var onSourceSetTextChanged: ((String) -> Unit)? = null
     var onFileTypeIndexChanged: ((Int) -> Unit)? = null
     var onAndroidComponentIndexChanged: ((Int) -> Unit)? = null
 
@@ -34,6 +35,9 @@ class ScreenElementDetailsPanel : JPanel() {
 
     private val subdirectoryLabel = JLabel("Subdirectory:")
     private val subdirectoryTextField= JTextField()
+
+    private val sourceSetLabel = JLabel("Source Set:")
+    private val sourceSetTextField= JTextField()
 
     private var listenersBlocked = false
 
@@ -63,10 +67,13 @@ class ScreenElementDetailsPanel : JPanel() {
         })
         add(subdirectoryLabel, constraintsLeft(0, 4))
         add(subdirectoryTextField, constraintsRight(1, 4))
+        add(sourceSetLabel, constraintsLeft(0, 5))
+        add(sourceSetTextField, constraintsRight(1, 5))
 
         nameTextField.addTextChangeListener { if (!listenersBlocked) onNameTextChanged?.invoke(it) }
         fileNameTextField.addTextChangeListener { if (!listenersBlocked) onFileNameTextChanged?.invoke(it) }
         subdirectoryTextField.addTextChangeListener { if (!listenersBlocked) onSubdirectoryTextChanged?.invoke(it) }
+        sourceSetTextField.addTextChangeListener { if (!listenersBlocked) onSourceSetTextChanged?.invoke(it) }
         fileTypeComboBox.addActionListener { if (!listenersBlocked) onFileTypeIndexChanged?.invoke(fileTypeComboBox.selectedIndex) }
         androidComponentComboBox.addActionListener {
             if (!listenersBlocked) onAndroidComponentIndexChanged?.invoke(
@@ -86,6 +93,7 @@ class ScreenElementDetailsPanel : JPanel() {
             state.selectedElement?.relatedAndroidComponent?.ordinal ?: AndroidComponent.NONE.ordinal
         )
         subdirectoryTextField.updateText(selectedElement?.subdirectory ?: "")
+        sourceSetTextField.updateText(selectedElement?.sourceSet ?: "")
 
         isEnabled = selectedElement != null
         components.filter { it != fileNameSampleLabel }.forEach { it.isEnabled = selectedElement != null }

@@ -4,6 +4,7 @@ import util.toSnakeCase
 import java.io.Serializable
 
 private const val UNNAMED_ELEMENT = "UnnamedElement"
+const val DEFAULT_SOURCE_SET = "main"
 
 data class ScreenElement(
     var name: String = "",
@@ -12,7 +13,8 @@ data class ScreenElement(
     var fileNameTemplate: String = "",
     var relatedAndroidComponent: AndroidComponent = AndroidComponent.NONE,
     var categoryId: Int = 0,
-    var subdirectory: String = ""
+    var subdirectory: String = "",
+    var sourceSet: String = DEFAULT_SOURCE_SET
 ) : Serializable {
 
     override fun toString() = name

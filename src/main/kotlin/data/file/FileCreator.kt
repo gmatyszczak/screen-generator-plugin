@@ -33,24 +33,25 @@ class FileCreatorImpl @Inject constructor(
         module: Module,
         category: Category
     ) {
-        val codeSubdirectory = findCodeSubdirectory(packageName, module)
-        val resourcesSubdirectory = findResourcesSubdirectory(module)
-        if (codeSubdirectory != null) {
-            settingsRepository.loadScreenElements(category.id).apply {
-                filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
-                    .forEach {
-                        val file = File(
-                            it.fileName(screenName, packageName, androidComponent.displayName),
-                            it.body(screenName, packageName, androidComponent.displayName),
-                            it.fileType
-                        )
-                        if (it.fileType == FileType.LAYOUT_XML) {
-                            addFile(resourcesSubdirectory, file, it.subdirectory)
-                        } else {
+        settingsRepository.loadScreenElements(category.id).apply {
+            filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
+                .forEach {
+                    val file = File(
+                        it.fileName(screenName, packageName, androidComponent.displayName),
+                        it.body(screenName, packageName, androidComponent.displayName),
+                        it.fileType
+                    )
+                    if (it.fileType == FileType.LAYOUT_XML) {
+                        val resourcesSubdirectory = findResourcesSubdirectory(module)
+                        addFile(resourcesSubdirectory, file, it.subdirectory)
+                    } else {
+                        val codeSubdirectory = findCodeSubdirectory(packageName, module, it.sourceSet)
+                        if (codeSubdirectory != null) {
                             addFile(codeSubdirectory, file, it.subdirectory)
                         }
                     }
-            }
+                }
+
         }
     }
 
@@ -66,8 +67,8 @@ class FileCreatorImpl @Inject constructor(
         }
     }
 
-    private fun findCodeSubdirectory(packageName: String, module: Module): Directory? =
-        sourceRootRepository.findCodeSourceRoot(module)?.run {
+    private fun findCodeSubdirectory(packageName: String, module: Module, sourceSet: String): Directory? =
+        sourceRootRepository.findCodeSourceRoot(module, sourceSet)?.run {
             var subdirectory = directory
             packageName.split(".").forEach {
                 subdirectory = subdirectory.findSubdirectory(it) ?: subdirectory.createSubdirectory(it)

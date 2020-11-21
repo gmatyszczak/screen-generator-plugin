@@ -42,7 +42,7 @@ class FileCreatorImplTest {
         "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity"
     private val testXmlTemplate = "<FrameLayout></FrameLayout>"
     private val screenElements = mutableListOf(
-        ScreenElement("Activity", "test", FileType.KOTLIN, FileType.KOTLIN.defaultFileName, AndroidComponent.ACTIVITY),
+        ScreenElement("Activity", "test", FileType.KOTLIN, FileType.KOTLIN.defaultFileName, AndroidComponent.ACTIVITY, sourceSet = "test"),
         ScreenElement("Presenter", testKotlinTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName),
         ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
     )
@@ -54,8 +54,9 @@ class FileCreatorImplTest {
         whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
         whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
         whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module, "test")).thenReturn(codeSourceRootMock)
         whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
+        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
         whenever(sourceRootRepositoryMock.findResourcesSourceRoot(module)).thenReturn(resourcesSourceRootMock)
         whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
         whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
