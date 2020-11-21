@@ -7,17 +7,53 @@ class SettingsTest {
 
     @Test
     fun `on get default`() {
-        val mvpElement = ScreenElement("MVP", "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity", FileType.KOTLIN, "${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value}")
-        val presenterElement = ScreenElement("Presenter", FileType.KOTLIN.defaultTemplate, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
-        val viewElement = ScreenElement("View", "package ${Variable.PACKAGE_NAME.value}\n\ninterface ${Variable.NAME.value}${Variable.SCREEN_ELEMENT.value}", FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
-        val layoutElement = ScreenElement("layout", FileType.LAYOUT_XML.defaultTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
-        assertEquals(Settings(
+        val elementActivity = ScreenElement(
+            "Activity",
+            DEFAULT_ACTIVITY_TEMPLATE,
+            FileType.KOTLIN,
+            "${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value}",
+            AndroidComponent.ACTIVITY
+        )
+        val elementFragment = ScreenElement(
+            "Fragment",
+            DEFAULT_FRAGMENT_TEMPLATE,
+            FileType.KOTLIN,
+            "${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value}",
+            AndroidComponent.FRAGMENT
+        )
+        val elementViewModel =
+            ScreenElement("ViewModel", DEFAULT_VIEW_MODEL_TEMPLATE, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
+        val elementViewModelTest = ScreenElement(
+            "ViewModelTest",
+            DEFAULT_VIEW_MODEL_TEST_TEMPLATE,
+            FileType.KOTLIN,
+            FileType.KOTLIN.defaultFileName,
+            sourceSet = "test"
+        )
+        val elementRepository = ScreenElement(
+            "Repository",
+            DEFAULT_REPOSITORY_TEMPLATE,
+            FileType.KOTLIN,
+            FileType.KOTLIN.defaultFileName,
+            subdirectory = "repository"
+        )
+        val elementLayout = ScreenElement(
+            "layout",
+            FileType.LAYOUT_XML.defaultTemplate,
+            FileType.LAYOUT_XML,
+            FileType.LAYOUT_XML.defaultFileName
+        )
+        assertEquals(
+            Settings(
                 mutableListOf(
-                        mvpElement,
-                        presenterElement,
-                        viewElement,
-                        layoutElement
+                    elementActivity,
+                    elementFragment,
+                    elementViewModel,
+                    elementViewModelTest,
+                    elementRepository,
+                    elementLayout
                 )
-        ), Settings())
+            ), Settings()
+        )
     }
 }
