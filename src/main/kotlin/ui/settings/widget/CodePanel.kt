@@ -4,12 +4,10 @@ import com.intellij.lang.Language
 import com.intellij.openapi.project.Project
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.LanguageTextField
-import com.intellij.ui.components.labels.LinkLabel
 import model.FileType
 import ui.settings.SettingsState
 import util.addTextChangeListener
 import util.updateText
-import java.awt.FlowLayout
 import java.awt.GridLayout
 import javax.swing.BoxLayout
 import javax.swing.BoxLayout.Y_AXIS
@@ -28,8 +26,6 @@ class CodePanel(
 
     private val templatePanel: JPanel
     private val samplePanel: JPanel
-
-    var onHelpClicked: (() -> Unit)? = null
 
     private var listenersBlocked = false
 
@@ -54,9 +50,6 @@ class CodePanel(
             border = IdeBorderFactory.createTitledBorder("Sample Code", false)
             layout = BoxLayout(this, Y_AXIS)
             add(sampleTextField)
-            add(JPanel(FlowLayout(FlowLayout.TRAILING)).apply {
-                add(LinkLabel.create("Help") { onHelpClicked?.invoke() })
-            })
         }
 
     private fun createLanguageTextField(language: Language, isEnabled: Boolean = true) =
