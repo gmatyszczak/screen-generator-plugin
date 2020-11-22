@@ -17,8 +17,7 @@ class NewScreenPanel : JPanel() {
     val packageTextField = JTextField()
 
     val categoryComboBox = ComboBox<Category>()
-    val androidComponentComboBox =
-        ComboBox(AndroidComponent.values().filter { it != AndroidComponent.NONE }.toTypedArray())
+    val androidComponentComboBox = ComboBox(AndroidComponent.values())
     val moduleComboBox = ComboBox<Module>()
 
     init {
