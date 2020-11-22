@@ -2,13 +2,16 @@ package data.repository
 
 import data.file.ProjectStructure
 import model.Module
+import javax.inject.Inject
 
 interface ModuleRepository {
 
     fun getAllModules(): List<Module>
 }
 
-class ModuleRepositoryImpl(private val projectStructure: ProjectStructure) : ModuleRepository {
+class ModuleRepositoryImpl @Inject constructor(
+    private val projectStructure: ProjectStructure
+) : ModuleRepository {
 
     override fun getAllModules() =
         projectStructure.getAllModules()

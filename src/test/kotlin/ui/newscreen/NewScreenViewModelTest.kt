@@ -1,6 +1,7 @@
 package ui.newscreen
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import data.file.CurrentPath
@@ -8,19 +9,21 @@ import data.file.FileCreator
 import data.file.PackageExtractor
 import data.file.WriteActionDispatcher
 import data.repository.ModuleRepository
+import data.repository.SettingsRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import model.AndroidComponent
+import model.Category
 import model.Module
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import kotlin.test.assertEquals
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class NewScreenPresenterTest {
-
-    @Mock
-    private lateinit var viewMock: NewScreenView
+class NewScreenViewModelTest {
 
     @Mock
     private lateinit var fileCreatorMock: FileCreator
@@ -32,32 +35,41 @@ class NewScreenPresenterTest {
     private lateinit var writeActionDispatcherMock: WriteActionDispatcher
 
     @Mock
+    private lateinit var settingsRepositoryMock: SettingsRepository
+
+    @Mock
     private lateinit var moduleRepositoryMock: ModuleRepository
 
+
+    private val packageName = "com.example"
     private val moduleName = "domain"
     private val moduleDomain = Module("MyApplication.$moduleName", moduleName)
     private val moduleApp = Module("MyApplication.app", "app")
 
     private val currentPath = CurrentPath("src", true, moduleDomain)
+    private val category = Category()
 
-    private lateinit var presenter: NewScreenPresenter
+    private lateinit var viewModel: NewScreenViewModel
 
     @Before
     fun setUp() {
-        presenter = NewScreenPresenter(viewMock, fileCreatorMock, packageExtractorMock, writeActionDispatcherMock, moduleRepositoryMock, currentPath)
+        whenever(packageExtractorMock.extractFromCurrentPath()).thenReturn(packageName)
+        whenever(moduleRepositoryMock.getAllModules()).thenReturn(listOf(moduleApp, moduleDomain))
+        whenever(settingsRepositoryMock.loadCategories()) doReturn listOf(category)
+
+        viewModel = NewScreenViewModel(
+            fileCreatorMock,
+            packageExtractorMock,
+            writeActionDispatcherMock,
+            moduleRepositoryMock,
+            currentPath,
+            settingsRepositoryMock
+        )
     }
 
     @Test
-    fun `on load view`() {
-        val packageName = "com.example"
-        whenever(packageExtractorMock.extractFromCurrentPath()).thenReturn(packageName)
-        whenever(moduleRepositoryMock.getAllModules()).thenReturn(listOf(moduleApp, moduleDomain))
-
-        presenter.onLoadView()
-
-        verify(viewMock).showPackage(packageName)
-        verify(viewMock).showModules(listOf(moduleApp, moduleDomain))
-        verify(viewMock).selectModule(moduleDomain)
+    fun `on init`() {
+        assertEquals(NewScreenState(packageName, listOf(moduleApp, moduleDomain), moduleDomain, listOf(category)), viewModel.state.value)
     }
 
     @Test
@@ -66,9 +78,9 @@ class NewScreenPresenterTest {
         val screenName = "Test"
         val packageName = "com.test"
 
-        presenter.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY, moduleDomain)
+        viewModel.onOkClick(packageName, screenName, AndroidComponent.ACTIVITY.ordinal, moduleDomain, category)
 
-        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY, moduleDomain)
-        verify(viewMock).close()
+        // TODO test effect
+        verify(fileCreatorMock).createScreenFiles(packageName, screenName, AndroidComponent.ACTIVITY, moduleDomain, category)
     }
 }

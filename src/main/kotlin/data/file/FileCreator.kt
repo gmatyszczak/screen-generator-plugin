@@ -3,53 +3,81 @@ package data.file
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
 import model.AndroidComponent
+import model.Category
 import model.FileType
 import model.Module
-import model.Settings
+import javax.inject.Inject
 
 private const val LAYOUT_DIRECTORY = "layout"
 
 interface FileCreator {
 
-    fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent, module: Module)
+    fun createScreenFiles(
+        packageName: String,
+        screenName: String,
+        androidComponent: AndroidComponent,
+        module: Module,
+        category: Category
+    )
 }
 
-class FileCreatorImpl(private val settingsRepository: SettingsRepository,
-                      private val sourceRootRepository: SourceRootRepository) : FileCreator {
+class FileCreatorImpl @Inject constructor(
+    private val settingsRepository: SettingsRepository,
+    private val sourceRootRepository: SourceRootRepository
+) : FileCreator {
 
-    override fun createScreenFiles(packageName: String, screenName: String, androidComponent: AndroidComponent, module: Module) {
-        val codeSubdirectory = findCodeSubdirectory(packageName, module)
-        val resourcesSubdirectory = findResourcesSubdirectory(module)
-        if (codeSubdirectory != null) {
-            settingsRepository.loadSettings().apply {
-                val baseClass = getAndroidComponentBaseClass(androidComponent)
-                screenElements.forEach {
+    override fun createScreenFiles(
+        packageName: String,
+        screenName: String,
+        androidComponent: AndroidComponent,
+        module: Module,
+        category: Category
+    ) {
+        settingsRepository.loadScreenElements(category.id).apply {
+            filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
+                .forEach {
+                    val file = File(
+                        it.fileName(screenName, packageName, androidComponent.displayName),
+                        it.body(screenName, packageName, androidComponent.displayName),
+                        it.fileType
+                    )
                     if (it.fileType == FileType.LAYOUT_XML) {
-                        val file = File(it.fileName(screenName, packageName, androidComponent.displayName, baseClass), it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
-                        resourcesSubdirectory.addFile(file)
+                        val resourcesSubdirectory = findResourcesSubdirectory(module)
+                        addFile(resourcesSubdirectory, file, it.subdirectory)
                     } else {
-                        val file = File(it.fileName(screenName, packageName, androidComponent.displayName, baseClass), it.body(screenName, packageName, androidComponent.displayName, baseClass), it.fileType)
-                        codeSubdirectory.addFile(file)
+                        val codeSubdirectory = findCodeSubdirectory(packageName, module, it.sourceSet)
+                        if (codeSubdirectory != null) {
+                            addFile(codeSubdirectory, file, it.subdirectory)
+                        }
                     }
                 }
+
+        }
+    }
+
+    private fun addFile(directory: Directory, file: File, subdirectory: String) {
+        if (subdirectory.isNotEmpty()) {
+            var newSubdirectory = directory
+            subdirectory.split("/").forEach { segment ->
+                newSubdirectory = directory.findSubdirectory(segment) ?: directory.createSubdirectory(segment)
             }
+            newSubdirectory.addFile(file)
+        } else {
+            directory.addFile(file)
         }
     }
 
-    private fun findCodeSubdirectory(packageName: String, module: Module): Directory? = sourceRootRepository.findCodeSourceRoot(module)?.run {
-        var subdirectory = directory
-        packageName.split(".").forEach {
-            subdirectory = subdirectory.findSubdirectory(it) ?: subdirectory.createSubdirectory(it)
+    private fun findCodeSubdirectory(packageName: String, module: Module, sourceSet: String): Directory? =
+        sourceRootRepository.findCodeSourceRoot(module, sourceSet)?.run {
+            var subdirectory = directory
+            packageName.split(".").forEach {
+                subdirectory = subdirectory.findSubdirectory(it) ?: subdirectory.createSubdirectory(it)
+            }
+            return subdirectory
         }
-        return subdirectory
-    }
 
-    private fun findResourcesSubdirectory(module: Module) = sourceRootRepository.findResourcesSourceRoot(module).directory.run {
-        findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
-    }
-
-    private fun Settings.getAndroidComponentBaseClass(androidComponent: AndroidComponent) = when (androidComponent) {
-        AndroidComponent.ACTIVITY -> activityBaseClass
-        AndroidComponent.FRAGMENT -> fragmentBaseClass
-    }
+    private fun findResourcesSubdirectory(module: Module) =
+        sourceRootRepository.findResourcesSourceRoot(module).directory.run {
+            findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
+        }
 }

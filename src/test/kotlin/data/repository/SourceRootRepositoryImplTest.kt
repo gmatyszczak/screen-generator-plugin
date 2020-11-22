@@ -48,8 +48,8 @@ class SourceRootRepositoryImplTest {
     @Before
     fun setUp() {
         whenever(sourceRootBuildMock.path).thenReturn("/User/MyApplication/$moduleName/build/")
-        whenever(sourceRootTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/test")
-        whenever(sourceRootAndroidTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/androidTest")
+        whenever(sourceRootTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/test")
+        whenever(sourceRootAndroidTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/androidTest")
         whenever(sourceRootResMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/res")
         whenever(sourceRootDebugResMock.path).thenReturn("/User/MyApplication/$moduleName/src/debug/res")
         whenever(sourceRootAssetsMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/assets")
@@ -76,6 +76,11 @@ class SourceRootRepositoryImplTest {
     @Test
     fun `on find resources source root`() {
         assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(module))
+    }
+
+    @Test
+    fun `on find test code source root`() {
+        assertEquals(sourceRootTestMock, sourceRootRepository.findCodeSourceRoot(module, "test"))
     }
 
 }

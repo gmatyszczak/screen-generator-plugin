@@ -1,6 +1,8 @@
 package util
 
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.LanguageTextField
+import javax.swing.JLabel
 import javax.swing.JTextField
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -23,4 +25,27 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
     val temp = this[index1]
     this[index1] = this[index2]
     this[index2] = temp
+}
+
+fun JTextField.updateText(newText: String) {
+    if (text != newText) {
+        text = newText
+    }
+}
+
+fun JLabel.updateText(newText: String) {
+    if (text != newText) {
+        text = newText
+    }
+}
+
+fun <E> ComboBox<E>.selectIndex(newIndex: Int) {
+    if (selectedIndex != newIndex) {
+        selectedIndex = newIndex
+    }
+}
+fun LanguageTextField.updateText(newText: String) {
+    if (text != newText) {
+        text = newText
+    }
 }
