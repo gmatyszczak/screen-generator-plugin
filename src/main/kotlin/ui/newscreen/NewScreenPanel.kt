@@ -23,14 +23,14 @@ class NewScreenPanel : JPanel() {
 
     init {
         layout = GridLayout(0, 2)
+        add(JLabel("Name:"))
+        add(nameTextField)
         add(JLabel("Category:"))
         add(categoryComboBox)
         add(JLabel("Module:"))
         add(moduleComboBox)
         add(JLabel("Package:"))
         add(packageTextField)
-        add(JLabel("Name:"))
-        add(nameTextField)
         add(JLabel("Android Component:"))
         add(androidComponentComboBox)
     }
