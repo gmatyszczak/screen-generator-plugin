@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0] - 2020-11-22
+### Added
+- Support for multiple categories of screen elements ([Issue #7](https://github.com/gmatyszczak/screen-generator-plugin/issues/7), [Issue #12](https://github.com/gmatyszczak/screen-generator-plugin/issues/12))
+- Support for subdirectories defined for each screen element ([Issue #11](https://github.com/gmatyszczak/screen-generator-plugin/issues/11))
+- Related Android component for each screen element
+### Removed
+- Base classes for Activity and Fragment - separate screen element can be created for each related Android component
+
 ## [1.1.1] - 2020-10-14
 ### Fixed
 - Issue with loading modules in Android Studio 4.1 ([Issue #13](https://github.com/gmatyszczak/screen-generator-plugin/issues/13))
