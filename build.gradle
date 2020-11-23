@@ -44,3 +44,7 @@ intellij {
     plugins 'org.jetbrains.kotlin'
     intellij.updateSinceUntilBuild false
 }
+
+runPluginVerifier {
+    ideVersions "IU-182.5262.2"
+}
