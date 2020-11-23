@@ -83,6 +83,12 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindChangeSourceSetReducer(reducer: ChangeSourceSetReducerImpl): ChangeSourceSetReducer
 
+    @Binds
+    abstract fun bindChangeCategoryNameReducer(reducer: ChangeCategoryNameReducerImpl): ChangeCategoryNameReducer
+
+    @Binds
+    abstract fun bindUpdateCategoryReducer(reducer: UpdateCategoryReducerImpl): UpdateCategoryReducer
+
     companion object {
 
         @Provides

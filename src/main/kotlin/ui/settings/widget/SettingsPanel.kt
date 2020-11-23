@@ -17,6 +17,7 @@ class SettingsPanel(project: Project) : JPanel() {
     val screenElementsPanel = ScreenElementsPanel()
     val categoriesPanel = CategoriesPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
+    val categoryDetailsPanel = CategoryDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
     var onTemplateTextChanged: ((String) -> Unit)? = null
@@ -36,11 +37,19 @@ class SettingsPanel(project: Project) : JPanel() {
         val contentPanel = JPanel().apply {
             layout = BorderLayout()
 
-            val leftPanel = JBSplitter(0.5f).apply {
-                firstComponent = categoriesPanel
-                secondComponent = screenElementsPanel
+            val topPanel = JPanel().apply {
+                layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                add(JBSplitter(0.3f).apply {
+                    firstComponent = categoriesPanel
+                    secondComponent = categoryDetailsPanel
+                })
+                add(JBSplitter(0.3f).apply {
+                    firstComponent = screenElementsPanel
+                    secondComponent = screenElementDetailsPanel
+                })
             }
-            addSplitter(leftPanel, screenElementDetailsPanel)
+
+            add(topPanel, BorderLayout.PAGE_START)
             codePanels = mapOf(
                 FileType.KOTLIN to CodePanel(project, KotlinLanguage.INSTANCE, FileType.KOTLIN),
                 FileType.LAYOUT_XML to CodePanel(project, XMLLanguage.INSTANCE, FileType.LAYOUT_XML)
@@ -64,6 +73,7 @@ class SettingsPanel(project: Project) : JPanel() {
 
     fun render(state: SettingsState) {
         categoriesPanel.render(state)
+        categoryDetailsPanel.render(state)
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }

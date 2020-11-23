@@ -72,6 +72,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var changeSourceSetReducerMock: ChangeSourceSetReducer
 
+    @Mock
+    private lateinit var changeCategoryNameReducerMock: ChangeCategoryNameReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -212,5 +215,11 @@ class SettingsViewModelTest {
     fun `when ChangeSourceSet on invoke`() {
         viewModel.reduce(SettingsAction.ChangeSourceSet("test"))
         verify(changeSourceSetReducerMock).invoke("test")
+    }
+
+    @Test
+    fun `when ChangeCategoryName on invoke`() {
+        viewModel.reduce(SettingsAction.ChangeCategoryName("test"))
+        verify(changeCategoryNameReducerMock).invoke("test")
     }
 }
