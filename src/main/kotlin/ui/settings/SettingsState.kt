@@ -10,6 +10,7 @@ data class SettingsState(
     val sampleCode: String = "",
     val categories: List<CategoryScreenElements> = emptyList(),
     val selectedCategoryIndex: Int? = null,
+    val selectedCustomVariableIndex: Int? = null,
 ) {
 
     val selectedElement: ScreenElement?

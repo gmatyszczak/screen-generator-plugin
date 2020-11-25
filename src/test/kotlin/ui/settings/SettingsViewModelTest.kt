@@ -78,6 +78,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var addCustomVariableReducerMock: AddCustomVariableReducer
 
+    @Mock
+    private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -230,5 +233,11 @@ class SettingsViewModelTest {
     fun `when AddCustomVariable on invoke`() {
         viewModel.reduce(SettingsAction.AddCustomVariable)
         verify(addCustomVariableReducerMock).invoke()
+    }
+
+    @Test
+    fun `when SelectCustomVariable on invoke`() {
+        viewModel.reduce(SettingsAction.SelectCustomVariable(10))
+        verify(selectCustomVariableReducerMock).invoke(10)
     }
 }

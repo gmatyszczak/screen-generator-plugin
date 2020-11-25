@@ -22,6 +22,7 @@ class CustomVariablesPanel : JPanel() {
     var onRemoveClicked: ((Int) -> Unit)? = null
     var onMoveDownClicked: ((Int) -> Unit)? = null
     var onMoveUpClicked: ((Int) -> Unit)? = null
+    var onItemSelected: ((Int) -> Unit)? = null
 
     private var listenersBlocked = false
 
@@ -35,6 +36,7 @@ class CustomVariablesPanel : JPanel() {
             setMoveUpAction { onMoveUpClicked?.invoke(list.selectedIndex) }
             add(createPanel())
         }
+        list.addListSelectionListener { if (!it.valueIsAdjusting && !listenersBlocked) onItemSelected?.invoke(list.selectedIndex) }
     }
 
     fun render(state: SettingsState) {
@@ -50,6 +52,9 @@ class CustomVariablesPanel : JPanel() {
             }
             if (listModel.size > selectedCategoryScreenElements.category.customVariables.size) {
                 listModel.removeRange(selectedCategoryScreenElements.category.customVariables.size, listModel.size - 1)
+            }
+            if (state.selectedCustomVariableIndex != null && list.selectedIndex != state.selectedCustomVariableIndex) {
+                list.selectedIndex = state.selectedCustomVariableIndex
             }
         } else {
             listModel.removeAll()

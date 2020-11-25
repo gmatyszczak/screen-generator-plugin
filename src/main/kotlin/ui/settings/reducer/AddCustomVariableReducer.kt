@@ -16,7 +16,8 @@ interface AddCustomVariableReducer {
 class AddCustomVariableReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    private val selectCustomVariableReducer: SelectCustomVariableReducer
 ) : BaseReducer(state, effect, scope), AddCustomVariableReducer {
 
     override fun invoke() {
@@ -40,6 +41,7 @@ class AddCustomVariableReducerImpl @Inject constructor(
                     categories = newCategories
                 )
             }
+            selectCustomVariableReducer(newVariables.size - 1)
         }
     }
 }

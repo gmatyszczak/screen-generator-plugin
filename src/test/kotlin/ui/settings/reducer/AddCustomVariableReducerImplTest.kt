@@ -1,5 +1,7 @@
 package ui.settings.reducer
 
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
@@ -8,6 +10,7 @@ import model.CustomVariable
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import ui.settings.SettingsState
 import kotlin.test.assertEquals
 
@@ -25,10 +28,13 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
         selectedCategoryIndex = 0
     )
 
+    @Mock
+    private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
+
     @Before
     fun setup() {
         state.value = initialState
-        reducer = AddCustomVariableReducerImpl(state, effectMock, TestCoroutineScope())
+        reducer = AddCustomVariableReducerImpl(state, effectMock, TestCoroutineScope(), selectCustomVariableReducerMock)
     }
 
     @Test
@@ -52,6 +58,7 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
             ),
             state.value
         )
+        verify(selectCustomVariableReducerMock).invoke(1)
     }
 
     @Test
@@ -64,5 +71,6 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
             SettingsState(),
             state.value
         )
+        verifyZeroInteractions(selectCustomVariableReducerMock)
     }
 }
