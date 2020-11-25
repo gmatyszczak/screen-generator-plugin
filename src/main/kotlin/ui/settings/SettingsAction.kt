@@ -24,4 +24,5 @@ sealed class SettingsAction {
 
     object ClickHelp: SettingsAction()
     object AddCategory : SettingsAction()
+    object AddCustomVariable : SettingsAction()
 }

@@ -75,6 +75,9 @@ class SettingsViewModelTest {
     @Mock
     private lateinit var changeCategoryNameReducerMock: ChangeCategoryNameReducer
 
+    @Mock
+    private lateinit var addCustomVariableReducerMock: AddCustomVariableReducer
+
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
 
@@ -221,5 +224,11 @@ class SettingsViewModelTest {
     fun `when ChangeCategoryName on invoke`() {
         viewModel.reduce(SettingsAction.ChangeCategoryName("test"))
         verify(changeCategoryNameReducerMock).invoke("test")
+    }
+
+    @Test
+    fun `when AddCustomVariable on invoke`() {
+        viewModel.reduce(SettingsAction.AddCustomVariable)
+        verify(addCustomVariableReducerMock).invoke()
     }
 }

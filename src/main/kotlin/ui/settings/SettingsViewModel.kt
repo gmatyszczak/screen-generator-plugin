@@ -30,6 +30,7 @@ class SettingsViewModel @Inject constructor(
     private val changeSubdirectoryReducer: ChangeSubdirectoryReducer,
     private val changeSourceSetReducer: ChangeSourceSetReducer,
     private val changeCategoryNameReducer: ChangeCategoryNameReducer,
+    private val addCustomVariableReducer: AddCustomVariableReducer,
 ) {
 
     init {
@@ -58,6 +59,7 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.ChangeSubdirectory -> changeSubdirectoryReducer(action.text)
         is SettingsAction.ChangeSourceSet -> changeSourceSetReducer(action.text)
         is SettingsAction.ChangeCategoryName -> changeCategoryNameReducer(action.text)
+        is SettingsAction.AddCustomVariable -> addCustomVariableReducer()
     }
 }
 

@@ -89,6 +89,9 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindUpdateCategoryReducer(reducer: UpdateCategoryReducerImpl): UpdateCategoryReducer
 
+    @Binds
+    abstract fun bindAddCustomVariableReducer(reducer: AddCustomVariableReducerImpl): AddCustomVariableReducer
+
     companion object {
 
         @Provides
