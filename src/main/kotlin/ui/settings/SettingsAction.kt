@@ -22,6 +22,7 @@ sealed class SettingsAction {
     data class ChangeSourceSet(val text: String) : SettingsAction()
     data class ChangeCategoryName(val text: String) : SettingsAction()
     data class SelectCustomVariable(val index: Int) : SettingsAction()
+    data class RemoveCustomVariable(val index: Int) : SettingsAction()
 
     object ClickHelp : SettingsAction()
     object AddCategory : SettingsAction()

@@ -32,6 +32,7 @@ class SettingsViewModel @Inject constructor(
     private val changeCategoryNameReducer: ChangeCategoryNameReducer,
     private val addCustomVariableReducer: AddCustomVariableReducer,
     private val selectCustomVariableReducer: SelectCustomVariableReducer,
+    private val removeCustomVariableReducer: RemoveCustomVariableReducer,
 ) {
 
     init {
@@ -62,6 +63,7 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.ChangeCategoryName -> changeCategoryNameReducer(action.text)
         is SettingsAction.AddCustomVariable -> addCustomVariableReducer()
         is SettingsAction.SelectCustomVariable -> selectCustomVariableReducer(action.index)
+        is SettingsAction.RemoveCustomVariable -> removeCustomVariableReducer(action.index)
     }
 }
 
