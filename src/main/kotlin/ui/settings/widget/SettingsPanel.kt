@@ -17,6 +17,7 @@ class SettingsPanel(project: Project) : JPanel() {
     val screenElementsPanel = ScreenElementsPanel()
     val categoriesPanel = CategoriesPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
+    val customVariablesPanel = CustomVariablesPanel()
     val categoryDetailsPanel = CategoryDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
@@ -39,9 +40,13 @@ class SettingsPanel(project: Project) : JPanel() {
 
             val topPanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.Y_AXIS)
+
                 add(JBSplitter(0.3f).apply {
                     firstComponent = categoriesPanel
-                    secondComponent = categoryDetailsPanel
+                    secondComponent = JBSplitter(0.4f).apply {
+                        firstComponent = customVariablesPanel
+                        secondComponent = categoryDetailsPanel
+                    }
                 })
                 add(JBSplitter(0.3f).apply {
                     firstComponent = screenElementsPanel
@@ -64,16 +69,10 @@ class SettingsPanel(project: Project) : JPanel() {
         add(contentPanel, BorderLayout.CENTER)
     }
 
-    private fun JPanel.addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
-        add(JBSplitter(0.4f).apply {
-            firstComponent = leftPanel
-            secondComponent = rightPanel
-        }, BorderLayout.PAGE_START)
-    }
-
     fun render(state: SettingsState) {
         categoriesPanel.render(state)
         categoryDetailsPanel.render(state)
+        customVariablesPanel.render(state)
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }
