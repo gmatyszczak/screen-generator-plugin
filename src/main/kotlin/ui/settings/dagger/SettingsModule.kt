@@ -98,6 +98,12 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindRemoveCustomVariableReducer(reducer: RemoveCustomVariableReducerImpl): RemoveCustomVariableReducer
 
+    @Binds
+    abstract fun bindMoveDownCustomVariableReducer(reducer: MoveDownCustomVariableReducerImpl): MoveDownCustomVariableReducer
+
+    @Binds
+    abstract fun bindMoveUpCustomVariableReducer(reducer: MoveUpCustomVariableReducerImpl): MoveUpCustomVariableReducer
+
     companion object {
 
         @Provides

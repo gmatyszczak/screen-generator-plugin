@@ -52,6 +52,8 @@ class SettingsConfigurable(private val project: Project) : Configurable {
 
         panel.customVariablesPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddCustomVariable) }
         panel.customVariablesPanel.onRemoveClicked = { viewModel.reduce(SettingsAction.RemoveCustomVariable(it)) }
+        panel.customVariablesPanel.onMoveUpClicked = { viewModel.reduce(SettingsAction.MoveUpCustomVariable(it)) }
+        panel.customVariablesPanel.onMoveDownClicked = { viewModel.reduce(SettingsAction.MoveDownCustomVariable(it)) }
         panel.customVariablesPanel.onItemSelected = { viewModel.reduce(SettingsAction.SelectCustomVariable(it)) }
 
         panel.screenElementsPanel.onAddClicked = { viewModel.reduce(SettingsAction.AddScreenElement) }
