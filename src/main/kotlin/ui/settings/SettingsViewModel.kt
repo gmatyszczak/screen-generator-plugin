@@ -35,6 +35,7 @@ class SettingsViewModel @Inject constructor(
     private val removeCustomVariableReducer: RemoveCustomVariableReducer,
     private val moveDownCustomVariableReducer: MoveDownCustomVariableReducer,
     private val moveUpCustomVariableReducer: MoveUpCustomVariableReducer,
+    private val changeCustomVariableNameReducer: ChangeCustomVariableNameReducer,
 ) {
 
     init {
@@ -68,6 +69,7 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.RemoveCustomVariable -> removeCustomVariableReducer(action.index)
         is SettingsAction.MoveDownCustomVariable -> moveDownCustomVariableReducer(action.index)
         is SettingsAction.MoveUpCustomVariable -> moveUpCustomVariableReducer(action.index)
+        is SettingsAction.ChangeCustomVariableName -> changeCustomVariableNameReducer(action.text)
     }
 }
 

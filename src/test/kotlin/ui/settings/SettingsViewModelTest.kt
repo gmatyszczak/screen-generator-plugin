@@ -82,13 +82,16 @@ class SettingsViewModelTest {
     private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
 
     @Mock
-    private lateinit var removeCustomVariableReducer: RemoveCustomVariableReducer
+    private lateinit var removeCustomVariableReducerMock: RemoveCustomVariableReducer
 
     @Mock
-    private lateinit var moveDownCustomVariableReducer: MoveDownCustomVariableReducer
+    private lateinit var moveDownCustomVariableReducerMock: MoveDownCustomVariableReducer
 
     @Mock
-    private lateinit var moveUpCustomVariableReducer: MoveUpCustomVariableReducer
+    private lateinit var moveUpCustomVariableReducerMock: MoveUpCustomVariableReducer
+
+    @Mock
+    private lateinit var changeCustomVariableNameReducerMock: ChangeCustomVariableNameReducer
 
     @InjectMocks
     lateinit var viewModel: SettingsViewModel
@@ -253,18 +256,24 @@ class SettingsViewModelTest {
     @Test
     fun `when RemoveCustomVariable on invoke`() {
         viewModel.reduce(SettingsAction.RemoveCustomVariable(10))
-        verify(removeCustomVariableReducer).invoke(10)
+        verify(removeCustomVariableReducerMock).invoke(10)
     }
 
     @Test
     fun `when MoveDownCustomVariable on invoke`() {
         viewModel.reduce(SettingsAction.MoveDownCustomVariable(10))
-        verify(moveDownCustomVariableReducer).invoke(10)
+        verify(moveDownCustomVariableReducerMock).invoke(10)
     }
 
     @Test
     fun `when MoveUpCustomVariable on invoke`() {
         viewModel.reduce(SettingsAction.MoveUpCustomVariable(10))
-        verify(moveUpCustomVariableReducer).invoke(10)
+        verify(moveUpCustomVariableReducerMock).invoke(10)
+    }
+
+    @Test
+    fun `when ChangeCustomVariableName on invoke`() {
+        viewModel.reduce(SettingsAction.ChangeCustomVariableName("test"))
+        verify(changeCustomVariableNameReducerMock).invoke("test")
     }
 }

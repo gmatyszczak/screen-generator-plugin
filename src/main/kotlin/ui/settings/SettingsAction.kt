@@ -25,6 +25,7 @@ sealed class SettingsAction {
     data class RemoveCustomVariable(val index: Int) : SettingsAction()
     data class MoveDownCustomVariable(val index: Int) : SettingsAction()
     data class MoveUpCustomVariable(val index: Int) : SettingsAction()
+    data class ChangeCustomVariableName(val text: String) : SettingsAction()
 
     object ClickHelp : SettingsAction()
     object AddCategory : SettingsAction()
