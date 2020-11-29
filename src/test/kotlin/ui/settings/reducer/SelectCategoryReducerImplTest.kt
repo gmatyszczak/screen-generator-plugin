@@ -20,6 +20,9 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
     @Mock
     private lateinit var selectScreenElementReducerMock: SelectScreenElementReducer
 
+    @Mock
+    private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
+
     private lateinit var reducer: SelectCategoryReducerImpl
 
     private val categoryScreenElement = CategoryScreenElements(
@@ -33,7 +36,13 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
     @Before
     fun setup() {
         state.value = initialState
-        reducer = SelectCategoryReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)
+        reducer = SelectCategoryReducerImpl(
+            state,
+            effectMock,
+            TestCoroutineScope(),
+            selectScreenElementReducerMock,
+            selectCustomVariableReducerMock
+        )
     }
 
     @Test
@@ -47,6 +56,7 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
             state.value
         )
         verify(selectScreenElementReducerMock).invoke(-1)
+        verify(selectCustomVariableReducerMock).invoke(-1)
     }
 
     @Test
@@ -60,6 +70,7 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
             state.value
         )
         verify(selectScreenElementReducerMock).invoke(0)
+        verify(selectCustomVariableReducerMock).invoke(-1)
         verify(effectMock).emit(SettingsEffect.SelectScreenElement(0))
     }
 }

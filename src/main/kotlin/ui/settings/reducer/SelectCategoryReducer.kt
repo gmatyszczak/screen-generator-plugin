@@ -15,7 +15,8 @@ class SelectCategoryReducerImpl @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
     effect: MutableSharedFlow<SettingsEffect>,
     scope: CoroutineScope,
-    private val selectScreenElementReducer: SelectScreenElementReducer
+    private val selectScreenElementReducer: SelectScreenElementReducer,
+    private val selectCustomVariableReducer: SelectCustomVariableReducer
 ) : BaseReducer(state, effect, scope), SelectCategoryReducer {
 
     override fun invoke(index: Int) {
@@ -27,7 +28,12 @@ class SelectCategoryReducerImpl @Inject constructor(
             }
         val selectedCategory = selectedIndex?.let { state.value.categories[selectedIndex] }
         val selectedElement = selectedCategory?.screenElements?.firstOrNull()
-        pushState { copy(selectedCategoryIndex = selectedIndex) }
+        pushState {
+            copy(
+                selectedCategoryIndex = selectedIndex
+            )
+        }
+        selectCustomVariableReducer(-1)
         if (selectedElement != null) {
             selectScreenElementReducer(0)
             pushEffect(SettingsEffect.SelectScreenElement(0))

@@ -55,6 +55,8 @@ class CustomVariablesPanel : JPanel() {
             }
             if (state.selectedCustomVariableIndex != null && list.selectedIndex != state.selectedCustomVariableIndex) {
                 list.selectedIndex = state.selectedCustomVariableIndex
+            } else if (state.selectedCustomVariableIndex == null) {
+                list.clearSelection()
             }
         } else {
             listModel.removeAll()

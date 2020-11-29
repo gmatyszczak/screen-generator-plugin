@@ -69,7 +69,7 @@ class NewScreenViewModelTest {
 
     @Test
     fun `on init`() {
-        assertEquals(NewScreenState(packageName, listOf(moduleApp, moduleDomain), moduleDomain, listOf(category)), viewModel.state.value)
+        assertEquals(NewScreenState(packageName, listOf(moduleApp, moduleDomain), moduleDomain, listOf(category), category), viewModel.state.value)
     }
 
     @Test
