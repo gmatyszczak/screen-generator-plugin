@@ -1,68 +1,28 @@
 package ui.newscreen
 
-import data.file.CurrentPath
-import data.file.FileCreator
-import data.file.PackageExtractor
-import data.file.WriteActionDispatcher
-import data.repository.ModuleRepository
-import data.repository.SettingsRepository
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import model.AndroidComponent
-import model.Category
-import model.Module
+import ui.newscreen.reducer.CategoryIndexChangedReducer
+import ui.newscreen.reducer.InitReducer
+import ui.newscreen.reducer.OkClickedReducer
 import javax.inject.Inject
 
 class NewScreenViewModel @Inject constructor(
-    private val fileCreator: FileCreator,
-    packageExtractor: PackageExtractor,
-    private val writeActionDispatcher: WriteActionDispatcher,
-    moduleRepository: ModuleRepository,
-    currentPath: CurrentPath?,
-    settingsRepository: SettingsRepository
+    initReducer: InitReducer,
+    private val okClickedReducer: OkClickedReducer,
+    private val categoryIndexChangedReducer: CategoryIndexChangedReducer
 ) {
 
-    private val scope = MainScope()
+    init {
+        initReducer()
+    }
 
-    val state = MutableStateFlow(
-        NewScreenState(
-            packageName = packageExtractor.extractFromCurrentPath(),
-            modules = moduleRepository.getAllModules(),
-            selectedModule = currentPath?.module,
-            categories = settingsRepository.loadCategories(),
-            selectedCategory = settingsRepository.loadCategories().first()
+    fun reduce(action: NewScreenAction) = when (action) {
+        is NewScreenAction.OkClicked -> okClickedReducer(
+            action.packageName,
+            action.screenName,
+            action.androidComponentIndex,
+            action.module,
+            action.category
         )
-    )
-
-    val effect = MutableSharedFlow<NewScreenEffect>(replay = 0)
-
-    fun onOkClick(
-        packageName: String,
-        screenName: String,
-        androidComponentIndex: Int,
-        module: Module,
-        category: Category
-    ) {
-        writeActionDispatcher.dispatch {
-            fileCreator.createScreenFiles(
-                packageName,
-                screenName,
-                AndroidComponent.values()[androidComponentIndex],
-                module,
-                category
-            )
-        }
-        effect.push(NewScreenEffect.Close)
-    }
-
-    private fun MutableSharedFlow<NewScreenEffect>.push(effect: NewScreenEffect) {
-        scope.launch { emit(effect) }
-    }
-
-    fun onCleared() {
-        scope.cancel()
+        is NewScreenAction.CategoryIndexChanged -> categoryIndexChangedReducer(action.index)
     }
 }

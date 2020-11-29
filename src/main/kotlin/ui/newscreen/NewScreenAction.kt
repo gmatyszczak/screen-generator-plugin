@@ -1,20 +1,15 @@
 package ui.newscreen
 
-import com.intellij.openapi.actionSystem.AnAction
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.PlatformDataKeys
-import com.intellij.openapi.module.ModuleUtil
-import data.file.CurrentPath
+import model.Category
 import model.Module
 
-class NewScreenAction : AnAction() {
-
-    override fun actionPerformed(event: AnActionEvent) {
-        val currentPath = event.getData(PlatformDataKeys.VIRTUAL_FILE)?.let {
-            val moduleName = ModuleUtil.findModuleForFile(it, event.project!!)?.name ?: ""
-            val module = Module(moduleName, moduleName.replace("${event.project!!.name}.", ""))
-            CurrentPath(it.path, it.isDirectory, module)
-        }
-        NewScreenDialog(event.project!!, currentPath).show()
-    }
+sealed class NewScreenAction {
+    data class OkClicked(
+        val packageName: String,
+        val screenName: String,
+        val androidComponentIndex: Int,
+        val module: Module,
+        val category: Category
+    ) : NewScreenAction()
+    data class CategoryIndexChanged(val index: Int): NewScreenAction()
 }
