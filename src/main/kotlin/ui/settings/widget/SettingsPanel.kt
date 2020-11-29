@@ -18,6 +18,7 @@ class SettingsPanel(project: Project) : JPanel() {
     val categoriesPanel = CategoriesPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
     val customVariablesPanel = CustomVariablesPanel()
+    val customVariableDetailsPanel = CustomVariableDetailsPanel()
     val categoryDetailsPanel = CategoryDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
@@ -45,7 +46,11 @@ class SettingsPanel(project: Project) : JPanel() {
                     firstComponent = categoriesPanel
                     secondComponent = JBSplitter(0.4f).apply {
                         firstComponent = customVariablesPanel
-                        secondComponent = categoryDetailsPanel
+                        secondComponent = JPanel().apply {
+                            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                            add(categoryDetailsPanel)
+                            add(customVariableDetailsPanel)
+                        }
                     }
                 })
                 add(JBSplitter(0.3f).apply {
@@ -73,6 +78,7 @@ class SettingsPanel(project: Project) : JPanel() {
         categoriesPanel.render(state)
         categoryDetailsPanel.render(state)
         customVariablesPanel.render(state)
+        customVariableDetailsPanel.render(state)
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }
