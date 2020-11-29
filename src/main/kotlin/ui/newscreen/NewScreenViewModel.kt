@@ -32,7 +32,8 @@ class NewScreenViewModel @Inject constructor(
             packageName = packageExtractor.extractFromCurrentPath(),
             modules = moduleRepository.getAllModules(),
             selectedModule = currentPath?.module,
-            categories = settingsRepository.loadCategories()
+            categories = settingsRepository.loadCategories(),
+            selectedCategory = settingsRepository.loadCategories().first()
         )
     )
 

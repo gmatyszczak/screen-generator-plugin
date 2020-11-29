@@ -32,13 +32,7 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
         NewScreenEffect.Close -> close(OK_EXIT_CODE)
     }
 
-    private fun NewScreenState.render() {
-        panel.packageTextField.text = packageName
-        panel.moduleComboBox.removeAllItems()
-        modules.forEach { panel.moduleComboBox.addItem(it) }
-        categories.forEach { panel.categoryComboBox.addItem(it) }
-        panel.moduleComboBox.selectedItem = selectedModule
-    }
+    private fun NewScreenState.render() = panel.render(this)
 
     override fun doOKAction() =
         viewModel.onOkClick(

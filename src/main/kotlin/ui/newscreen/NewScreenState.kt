@@ -7,5 +7,6 @@ data class NewScreenState(
     val packageName: String,
     val modules: List<Module>,
     val selectedModule: Module?,
-    val categories: List<Category>
+    val categories: List<Category>,
+    val selectedCategory: Category
 )
