@@ -21,7 +21,8 @@ class NewScreenViewModel @Inject constructor(
             action.screenName,
             action.androidComponentIndex,
             action.module,
-            action.category
+            action.category,
+            action.customVariablesMap
         )
         is NewScreenAction.CategoryIndexChanged -> categoryIndexChangedReducer(action.index)
     }

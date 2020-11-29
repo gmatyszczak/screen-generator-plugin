@@ -2,10 +2,7 @@ package data.file
 
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
-import model.AndroidComponent
-import model.Category
-import model.FileType
-import model.Module
+import model.*
 import javax.inject.Inject
 
 private const val LAYOUT_DIRECTORY = "layout"
@@ -17,7 +14,8 @@ interface FileCreator {
         screenName: String,
         androidComponent: AndroidComponent,
         module: Module,
-        category: Category
+        category: Category,
+        customVariablesMap: Map<CustomVariable, String>
     )
 }
 
@@ -31,14 +29,15 @@ class FileCreatorImpl @Inject constructor(
         screenName: String,
         androidComponent: AndroidComponent,
         module: Module,
-        category: Category
+        category: Category,
+        customVariablesMap: Map<CustomVariable, String>
     ) {
         settingsRepository.loadScreenElements(category.id).apply {
             filter { it.relatedAndroidComponent == AndroidComponent.NONE || it.relatedAndroidComponent == androidComponent }
                 .forEach {
                     val file = File(
-                        it.fileName(screenName, packageName, androidComponent.displayName),
-                        it.body(screenName, packageName, androidComponent.displayName),
+                        it.fileName(screenName, packageName, androidComponent.displayName, customVariablesMap),
+                        it.body(screenName, packageName, androidComponent.displayName, customVariablesMap),
                         it.fileType
                     )
                     if (it.fileType == FileType.LAYOUT_XML) {

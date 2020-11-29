@@ -78,7 +78,8 @@ fun ScreenElement.renderSampleFileName() =
         fileName(
             SAMPLE_SCREEN_NAME,
             SAMPLE_PACKAGE_NAME,
-            SAMPLE_ANDROID_COMPONENT
+            SAMPLE_ANDROID_COMPONENT,
+            emptyMap()
         )
     }.${fileType.extension}"
 
@@ -86,5 +87,6 @@ fun ScreenElement.renderSampleCode() =
     body(
         SAMPLE_SCREEN_NAME,
         SAMPLE_PACKAGE_NAME,
-        SAMPLE_ANDROID_COMPONENT
+        SAMPLE_ANDROID_COMPONENT,
+        emptyMap()
     )

@@ -12,6 +12,9 @@ class CustomVariablesPanel : JPanel() {
 
     private var textFieldsMap: Map<CustomVariable, JTextField> = emptyMap()
 
+    val customVariablesMap
+        get() = textFieldsMap.keys.associateWith { (textFieldsMap[it] ?: error("")).text }
+
     init {
         layout = GridBagLayout()
     }

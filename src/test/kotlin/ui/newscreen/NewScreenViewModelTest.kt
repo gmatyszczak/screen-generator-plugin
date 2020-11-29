@@ -42,7 +42,8 @@ class NewScreenViewModelTest {
                 "test",
                 0,
                 Module("", ""),
-                Category()
+                Category(),
+                emptyMap()
             )
         )
 
@@ -52,7 +53,8 @@ class NewScreenViewModelTest {
             "test",
             0,
             Module("", ""),
-            Category()
+            Category(),
+            emptyMap()
         )
     }
 

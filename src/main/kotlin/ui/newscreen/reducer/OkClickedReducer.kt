@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import model.AndroidComponent
 import model.Category
+import model.CustomVariable
 import model.Module
 import ui.newscreen.NewScreenEffect
 import ui.newscreen.NewScreenState
@@ -18,7 +19,8 @@ interface OkClickedReducer {
         screenName: String,
         androidComponentIndex: Int,
         module: Module,
-        category: Category
+        category: Category,
+        customVariablesMap: Map<CustomVariable, String>
     )
 }
 
@@ -35,7 +37,8 @@ class OkClickedReducerImpl @Inject constructor(
         screenName: String,
         androidComponentIndex: Int,
         module: Module,
-        category: Category
+        category: Category,
+        customVariablesMap: Map<CustomVariable, String>
     ) {
         writeActionDispatcher.dispatch {
             fileCreator.createScreenFiles(
@@ -43,7 +46,8 @@ class OkClickedReducerImpl @Inject constructor(
                 screenName,
                 AndroidComponent.values()[androidComponentIndex],
                 module,
-                category
+                category,
+                customVariablesMap
             )
         }
         pushEffect(NewScreenEffect.Close)

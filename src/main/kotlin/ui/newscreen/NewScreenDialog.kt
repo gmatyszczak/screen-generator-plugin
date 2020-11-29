@@ -51,7 +51,8 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
                 panel.nameTextField.text,
                 panel.androidComponentComboBox.selectedIndex,
                 panel.moduleComboBox.selectedItem as Module,
-                panel.categoryComboBox.selectedItem as Category
+                panel.categoryComboBox.selectedItem as Category,
+                panel.customVariablesPanel.customVariablesMap
             )
         )
 

@@ -19,16 +19,31 @@ data class ScreenElement(
 
     override fun toString() = name
 
-    fun body(screenName: String, packageName: String, androidComponent: String) =
-        template.replaceVariables(screenName, packageName, androidComponent)
+    fun body(
+        screenName: String,
+        packageName: String,
+        androidComponent: String,
+        customVariablesMap: Map<CustomVariable, String>
+    ) =
+        template
+            .replaceVariables(screenName, packageName, androidComponent)
+            .replaceCustomVariables(customVariablesMap)
 
-    fun fileName(screenName: String, packageName: String, androidComponent: String) =
-        fileNameTemplate.replaceVariables(screenName, packageName, androidComponent).run {
-            if (fileType == FileType.LAYOUT_XML)
-                toLowerCase()
-            else
-                this
-        }
+    fun fileName(
+        screenName: String,
+        packageName: String,
+        androidComponent: String,
+        customVariablesMap: Map<CustomVariable, String>
+    ) =
+        fileNameTemplate
+            .replaceVariables(screenName, packageName, androidComponent)
+            .replaceCustomVariables(customVariablesMap)
+            .run {
+                if (fileType == FileType.LAYOUT_XML)
+                    toLowerCase()
+                else
+                    this
+            }
 
     private fun String.replaceVariables(
         screenName: String,
@@ -43,6 +58,13 @@ data class ScreenElement(
             .replace(Variable.ANDROID_COMPONENT_NAME.value, androidComponent)
             .replace(Variable.ANDROID_COMPONENT_NAME_LOWER_CASE.value, androidComponent.decapitalize())
 
+    private fun String.replaceCustomVariables(variables: Map<CustomVariable, String>): String {
+        var updatedString = this
+        variables.forEach { (variable, text) ->
+            updatedString = replace("%${variable.name}%", text)
+        }
+        return updatedString
+    }
 
     companion object {
         fun getDefault(categoryId: Int) = ScreenElement(

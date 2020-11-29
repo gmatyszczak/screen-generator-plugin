@@ -47,14 +47,15 @@ class OkClickedReducerImplTest : BaseReducerTest() {
         val screenName = "Test"
         val packageName = "com.test"
 
-        reducer(packageName, screenName, AndroidComponent.ACTIVITY.ordinal, moduleDomain, category)
+        reducer(packageName, screenName, AndroidComponent.ACTIVITY.ordinal, moduleDomain, category, emptyMap())
 
         verify(fileCreatorMock).createScreenFiles(
             packageName,
             screenName,
             AndroidComponent.ACTIVITY,
             moduleDomain,
-            category
+            category,
+            emptyMap()
         )
         verify(effectMock).emit(NewScreenEffect.Close)
     }
