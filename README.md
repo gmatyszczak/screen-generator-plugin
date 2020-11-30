@@ -20,15 +20,23 @@ Here's also link to plugin: [https://plugins.jetbrains.com/plugin/12020-screen-g
 
 ## How to use it?
 
-Set up all files that your architecture requires to create a new screen in Preferences -> Other Settings ->  Screen Generator Plugin
+First you need to set up templates of the files that you would like to generate with this plugin. To do that go to Preferences -> Other Settings ->  Screen Generator Plugin. 
+
+This is how the settings screen look like: 
 
 ![Settings](screens/settings.png)
+
+You can have multiple categories of your templates for different architectures or components, e.g. MVP, MVVM etc. For each category you can set up screen elements, which basically are file templates which will be generated for you. 
+
+For each screen element you can define some basic information.
 
 To find out what are available variables to put in your templates, simply click Help link in Settings.
 
 ![Help](screens/help.png)
 
-Once you are done, you can create now a new screen by clicking File -> New -> Screen from the top menu or simply by right-clicking on any package in your project structure and choosing New -> Screen. 
+You can also define your own custom variables for each category. Then use it in template - simply put `%myCustomVariable%` and plugin will replace it with value which you provide while generating new screen.
+
+Once you are done, you can create a new screen by clicking File -> New -> Screen from the top menu or simply by right-clicking on any package in your project structure and choosing New -> Screen. 
 
 ![New Screen](screens/new_screen.png)
 
