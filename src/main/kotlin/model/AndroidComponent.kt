@@ -1,9 +1,9 @@
 package model
 
 enum class AndroidComponent(val displayName: String) {
+    NONE("None"),
     ACTIVITY("Activity"),
-    FRAGMENT("Fragment"),
-    NONE("None");
+    FRAGMENT("Fragment");
 
     override fun toString() = displayName
 }
