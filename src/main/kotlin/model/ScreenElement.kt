@@ -61,7 +61,7 @@ data class ScreenElement(
     private fun String.replaceCustomVariables(variables: Map<CustomVariable, String>): String {
         var updatedString = this
         variables.forEach { (variable, text) ->
-            updatedString = replace("%${variable.name}%", text)
+            updatedString = updatedString.replace("%${variable.name}%", text)
         }
         return updatedString
     }
