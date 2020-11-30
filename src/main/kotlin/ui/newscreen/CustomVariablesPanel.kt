@@ -1,5 +1,6 @@
 package ui.newscreen
 
+import com.intellij.ui.IdeBorderFactory
 import model.CustomVariable
 import ui.settings.widget.constraintsLeft
 import ui.settings.widget.constraintsRight
@@ -17,10 +18,13 @@ class CustomVariablesPanel : JPanel() {
 
     init {
         layout = GridBagLayout()
+        border = IdeBorderFactory.createTitledBorder("Custom Variables", false)
+        isVisible = false
     }
 
     fun render(state: NewScreenState) {
         if (textFieldsMap.keys != state.selectedCategory?.customVariables) {
+            isVisible = state.selectedCategory?.customVariables?.isNotEmpty() ?: false
             removeAll()
             val newMap = mutableMapOf<CustomVariable, JTextField>()
             state.selectedCategory?.customVariables?.forEachIndexed { index, customVariable ->
