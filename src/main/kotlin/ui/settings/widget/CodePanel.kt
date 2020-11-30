@@ -4,10 +4,12 @@ import com.intellij.lang.Language
 import com.intellij.openapi.project.Project
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.LanguageTextField
+import com.intellij.ui.components.JBScrollPane
 import model.FileType
 import ui.settings.SettingsState
 import util.addTextChangeListener
 import util.updateText
+import java.awt.Dimension
 import java.awt.GridLayout
 import javax.swing.BoxLayout
 import javax.swing.BoxLayout.Y_AXIS
@@ -24,15 +26,12 @@ class CodePanel(
     private val templateTextField = createLanguageTextField(language)
     private val sampleTextField = createLanguageTextField(language, isEnabled = false)
 
-    private val templatePanel: JPanel
-    private val samplePanel: JPanel
-
     private var listenersBlocked = false
 
     init {
         layout = GridLayout(2, 1)
-        templatePanel = createTemplatePanel()
-        samplePanel = createSamplePanel()
+        val templatePanel = createTemplatePanel()
+        val samplePanel = createSamplePanel()
         add(templatePanel)
         add(samplePanel)
         templateTextField.addTextChangeListener { if (!listenersBlocked) onTemplateTextChanged?.invoke(it) }
@@ -42,14 +41,14 @@ class CodePanel(
         JPanel().apply {
             border = IdeBorderFactory.createTitledBorder("Code Template", false)
             layout = BoxLayout(this, Y_AXIS)
-            add(templateTextField)
+            add(JBScrollPane(templateTextField))
         }
 
     private fun createSamplePanel() =
         JPanel().apply {
             border = IdeBorderFactory.createTitledBorder("Sample Code", false)
             layout = BoxLayout(this, Y_AXIS)
-            add(sampleTextField)
+            add(JBScrollPane(sampleTextField))
         }
 
     private fun createLanguageTextField(language: Language, isEnabled: Boolean = true) =
@@ -77,9 +76,11 @@ class CodePanel(
     }
 
     private fun setEnabledAll(isEnabled: Boolean) {
-        components.forEach {
-            it.isEnabled = isEnabled
-            (it as JPanel).components.filter { it != sampleTextField }.forEach { it.isEnabled = isEnabled }
-        }
+        templateTextField.isEnabled = isEnabled
+    }
+
+    override fun getPreferredSize(): Dimension? {
+        val original = super.getPreferredSize()
+        return Dimension(original.width, 600)
     }
 }
