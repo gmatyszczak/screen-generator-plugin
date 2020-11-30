@@ -13,7 +13,7 @@ class ScreenElementTest {
     fun `on body`() {
         assertEquals(
                 "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestActivity : AppCompatActivity",
-                kotlinScreenElement.body("Test", "com.test", "Activity")
+                kotlinScreenElement.body("Test", "com.test", "Activity", emptyMap())
         )
     }
 
@@ -22,7 +22,7 @@ class ScreenElementTest {
         val screenElement = ScreenElement("Presenter", Variable.NAME_LOWER_CASE.value, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
         assertEquals(
                 "testScreen",
-                screenElement.body("TestScreen", "com.test", "Activity")
+                screenElement.body("TestScreen", "com.test", "Activity", emptyMap())
         )
     }
 
@@ -31,7 +31,7 @@ class ScreenElementTest {
         val screenElement = ScreenElement("Presenter", Variable.ANDROID_COMPONENT_NAME_LOWER_CASE.value, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
         assertEquals(
                 "activity",
-                screenElement.body("TestScreen", "com.test", "Activity")
+                screenElement.body("TestScreen", "com.test", "Activity", emptyMap())
         )
     }
 
@@ -39,7 +39,7 @@ class ScreenElementTest {
     fun `when file type is kotlin on file name`() {
         assertEquals(
                 "TestPresenter",
-                kotlinScreenElement.fileName("Test", "com.test", "Activity")
+                kotlinScreenElement.fileName("Test", "com.test", "Activity", emptyMap())
         )
     }
 
@@ -47,7 +47,7 @@ class ScreenElementTest {
     fun `when file type is xml on file name`() {
         assertEquals(
                 "activity_test",
-                xmlScreenElement.fileName("Test", "com.test", "Activity")
+                xmlScreenElement.fileName("Test", "com.test", "Activity", emptyMap())
         )
     }
 

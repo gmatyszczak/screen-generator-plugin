@@ -39,7 +39,7 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
             <separator />
             <action id="NewScreenAction"
-                    class="ui.newscreen.NewScreenAction"
+                    class="ui.newscreen.NewScreenAnAction"
                     text="Screen"
                     description="Screen Generator Plugin"/>
         </group>

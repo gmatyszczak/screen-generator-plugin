@@ -83,6 +83,30 @@ abstract class SettingsModule {
     @Binds
     abstract fun bindChangeSourceSetReducer(reducer: ChangeSourceSetReducerImpl): ChangeSourceSetReducer
 
+    @Binds
+    abstract fun bindChangeCategoryNameReducer(reducer: ChangeCategoryNameReducerImpl): ChangeCategoryNameReducer
+
+    @Binds
+    abstract fun bindUpdateCategoryReducer(reducer: UpdateCategoryReducerImpl): UpdateCategoryReducer
+
+    @Binds
+    abstract fun bindAddCustomVariableReducer(reducer: AddCustomVariableReducerImpl): AddCustomVariableReducer
+
+    @Binds
+    abstract fun bindSelectCustomVariableReducer(reducer: SelectCustomVariableReducerImpl): SelectCustomVariableReducer
+
+    @Binds
+    abstract fun bindRemoveCustomVariableReducer(reducer: RemoveCustomVariableReducerImpl): RemoveCustomVariableReducer
+
+    @Binds
+    abstract fun bindMoveDownCustomVariableReducer(reducer: MoveDownCustomVariableReducerImpl): MoveDownCustomVariableReducer
+
+    @Binds
+    abstract fun bindMoveUpCustomVariableReducer(reducer: MoveUpCustomVariableReducerImpl): MoveUpCustomVariableReducer
+
+    @Binds
+    abstract fun bindChangeCustomVariableNameReducer(reducer: ChangeCustomVariableNameReducerImpl): ChangeCustomVariableNameReducer
+
     companion object {
 
         @Provides

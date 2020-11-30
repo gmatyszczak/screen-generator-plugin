@@ -40,7 +40,7 @@ class FileCreatorImplTest {
     private lateinit var fileCreator: FileCreatorImpl
 
     private val testKotlinTemplate =
-        "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity"
+        "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}%customVariable%${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity"
     private val testXmlTemplate = "<FrameLayout></FrameLayout>"
     private val screenElements = mutableListOf(
         ScreenElement(
@@ -55,7 +55,7 @@ class FileCreatorImplTest {
             "Fragment",
             "test",
             FileType.KOTLIN,
-            FileType.KOTLIN.defaultFileName,
+            "%customVariable%",
             AndroidComponent.FRAGMENT,
             subdirectory = "abc/def"
         ),
@@ -79,7 +79,14 @@ class FileCreatorImplTest {
         whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
         whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
 
-        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.ACTIVITY, module, category)
+        fileCreator.createScreenFiles(
+            "com.test",
+            "Test",
+            AndroidComponent.ACTIVITY,
+            module,
+            category,
+            mapOf(CustomVariable("customVariable") to "Custom")
+        )
 
         inOrder(codeDirectoryMock) {
             verify(codeDirectoryMock).findSubdirectory("com")
@@ -88,7 +95,7 @@ class FileCreatorImplTest {
             verify(codeDirectoryMock).addFile(
                 File(
                     "TestActivity",
-                    "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestActivity : AppCompatActivity",
+                    "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestCustomActivity : AppCompatActivity",
                     FileType.KOTLIN
                 )
             )
@@ -137,7 +144,14 @@ class FileCreatorImplTest {
         whenever(codeDirectoryMock.createSubdirectory("def")) doReturn codeDirectoryMock
 
 
-        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.FRAGMENT, module, category)
+        fileCreator.createScreenFiles(
+            "com.test",
+            "Test",
+            AndroidComponent.FRAGMENT,
+            module,
+            category,
+            mapOf(CustomVariable("customVariable") to "Custom")
+        )
 
         inOrder(codeDirectoryMock) {
             verify(codeDirectoryMock).findSubdirectory("com")
@@ -147,7 +161,7 @@ class FileCreatorImplTest {
             verify(codeDirectoryMock).createSubdirectory("abc")
             verify(codeDirectoryMock).findSubdirectory("def")
             verify(codeDirectoryMock).createSubdirectory("def")
-            verify(codeDirectoryMock).addFile(File("TestFragment", "test", FileType.KOTLIN))
+            verify(codeDirectoryMock).addFile(File("Custom", "test", FileType.KOTLIN))
             verify(codeDirectoryMock).findSubdirectory("com")
             verify(codeDirectoryMock).findSubdirectory("test")
             verify(codeDirectoryMock).createSubdirectory("test")
@@ -189,7 +203,7 @@ class FileCreatorImplTest {
         whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
         whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
 
-        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.NONE, module, category)
+        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.NONE, module, category, emptyMap())
 
         inOrder(codeDirectoryMock) {
             verify(codeDirectoryMock).findSubdirectory("com")

@@ -1,6 +1,7 @@
 package ui.settings
 
 import model.CategoryScreenElements
+import model.CustomVariable
 import model.ScreenElement
 
 data class SettingsState(
@@ -10,6 +11,7 @@ data class SettingsState(
     val sampleCode: String = "",
     val categories: List<CategoryScreenElements> = emptyList(),
     val selectedCategoryIndex: Int? = null,
+    val selectedCustomVariableIndex: Int? = null,
 ) {
 
     val selectedElement: ScreenElement?
@@ -24,6 +26,14 @@ data class SettingsState(
         get() =
             if (selectedCategoryIndex != null) {
                 categories[selectedCategoryIndex]
+            } else {
+                null
+            }
+
+    val selectedCustomVariable: CustomVariable?
+        get() =
+            if (selectedCategoryIndex != null && selectedCustomVariableIndex != null) {
+                categories[selectedCategoryIndex].category.customVariables[selectedCustomVariableIndex]
             } else {
                 null
             }

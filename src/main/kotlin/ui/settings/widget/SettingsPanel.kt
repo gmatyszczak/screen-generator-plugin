@@ -17,6 +17,9 @@ class SettingsPanel(project: Project) : JPanel() {
     val screenElementsPanel = ScreenElementsPanel()
     val categoriesPanel = CategoriesPanel()
     val screenElementDetailsPanel = ScreenElementDetailsPanel()
+    val customVariablesPanel = CustomVariablesPanel()
+    val customVariableDetailsPanel = CustomVariableDetailsPanel()
+    val categoryDetailsPanel = CategoryDetailsPanel()
     val codePanels: Map<FileType, CodePanel>
 
     var onTemplateTextChanged: ((String) -> Unit)? = null
@@ -36,11 +39,27 @@ class SettingsPanel(project: Project) : JPanel() {
         val contentPanel = JPanel().apply {
             layout = BorderLayout()
 
-            val leftPanel = JBSplitter(0.5f).apply {
-                firstComponent = categoriesPanel
-                secondComponent = screenElementsPanel
+            val topPanel = JPanel().apply {
+                layout = BoxLayout(this, BoxLayout.Y_AXIS)
+
+                add(JBSplitter(0.3f).apply {
+                    firstComponent = categoriesPanel
+                    secondComponent = JBSplitter(0.4f).apply {
+                        firstComponent = customVariablesPanel
+                        secondComponent = JPanel().apply {
+                            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                            add(categoryDetailsPanel)
+                            add(customVariableDetailsPanel)
+                        }
+                    }
+                })
+                add(JBSplitter(0.3f).apply {
+                    firstComponent = screenElementsPanel
+                    secondComponent = screenElementDetailsPanel
+                })
             }
-            addSplitter(leftPanel, screenElementDetailsPanel)
+
+            add(topPanel, BorderLayout.PAGE_START)
             codePanels = mapOf(
                 FileType.KOTLIN to CodePanel(project, KotlinLanguage.INSTANCE, FileType.KOTLIN),
                 FileType.LAYOUT_XML to CodePanel(project, XMLLanguage.INSTANCE, FileType.LAYOUT_XML)
@@ -55,15 +74,11 @@ class SettingsPanel(project: Project) : JPanel() {
         add(contentPanel, BorderLayout.CENTER)
     }
 
-    private fun JPanel.addSplitter(leftPanel: JPanel, rightPanel: JPanel) {
-        add(JBSplitter(0.4f).apply {
-            firstComponent = leftPanel
-            secondComponent = rightPanel
-        }, BorderLayout.PAGE_START)
-    }
-
     fun render(state: SettingsState) {
         categoriesPanel.render(state)
+        categoryDetailsPanel.render(state)
+        customVariablesPanel.render(state)
+        customVariableDetailsPanel.render(state)
         screenElementsPanel.render(state)
         screenElementDetailsPanel.render(state)
         codePanels.values.forEach { it.render(state) }

@@ -29,6 +29,13 @@ class SettingsViewModel @Inject constructor(
     private val moveDownCategoryReducer: MoveDownCategoryReducer,
     private val changeSubdirectoryReducer: ChangeSubdirectoryReducer,
     private val changeSourceSetReducer: ChangeSourceSetReducer,
+    private val changeCategoryNameReducer: ChangeCategoryNameReducer,
+    private val addCustomVariableReducer: AddCustomVariableReducer,
+    private val selectCustomVariableReducer: SelectCustomVariableReducer,
+    private val removeCustomVariableReducer: RemoveCustomVariableReducer,
+    private val moveDownCustomVariableReducer: MoveDownCustomVariableReducer,
+    private val moveUpCustomVariableReducer: MoveUpCustomVariableReducer,
+    private val changeCustomVariableNameReducer: ChangeCustomVariableNameReducer,
 ) {
 
     init {
@@ -56,6 +63,13 @@ class SettingsViewModel @Inject constructor(
         is SettingsAction.MoveDownCategory -> moveDownCategoryReducer(action.index)
         is SettingsAction.ChangeSubdirectory -> changeSubdirectoryReducer(action.text)
         is SettingsAction.ChangeSourceSet -> changeSourceSetReducer(action.text)
+        is SettingsAction.ChangeCategoryName -> changeCategoryNameReducer(action.text)
+        is SettingsAction.AddCustomVariable -> addCustomVariableReducer()
+        is SettingsAction.SelectCustomVariable -> selectCustomVariableReducer(action.index)
+        is SettingsAction.RemoveCustomVariable -> removeCustomVariableReducer(action.index)
+        is SettingsAction.MoveDownCustomVariable -> moveDownCustomVariableReducer(action.index)
+        is SettingsAction.MoveUpCustomVariable -> moveUpCustomVariableReducer(action.index)
+        is SettingsAction.ChangeCustomVariableName -> changeCustomVariableNameReducer(action.text)
     }
 }
 
@@ -64,7 +78,8 @@ fun ScreenElement.renderSampleFileName() =
         fileName(
             SAMPLE_SCREEN_NAME,
             SAMPLE_PACKAGE_NAME,
-            SAMPLE_ANDROID_COMPONENT
+            SAMPLE_ANDROID_COMPONENT,
+            emptyMap()
         )
     }.${fileType.extension}"
 
@@ -72,5 +87,6 @@ fun ScreenElement.renderSampleCode() =
     body(
         SAMPLE_SCREEN_NAME,
         SAMPLE_PACKAGE_NAME,
-        SAMPLE_ANDROID_COMPONENT
+        SAMPLE_ANDROID_COMPONENT,
+        emptyMap()
     )

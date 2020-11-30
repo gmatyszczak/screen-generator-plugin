@@ -4,15 +4,15 @@ import com.intellij.ui.CollectionListModel
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
-import model.Category
+import model.CustomVariable
 import ui.settings.SettingsState
 import java.awt.GridLayout
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
 
-class CategoriesPanel : JPanel() {
+class CustomVariablesPanel : JPanel() {
 
-    private val listModel = CollectionListModel<Category>()
+    private val listModel = CollectionListModel<CustomVariable>()
     val list = JBList(listModel).apply {
         selectionMode = ListSelectionModel.SINGLE_SELECTION
     }
@@ -27,7 +27,7 @@ class CategoriesPanel : JPanel() {
     private var listenersBlocked = false
 
     init {
-        border = IdeBorderFactory.createTitledBorder("Category", false)
+        border = IdeBorderFactory.createTitledBorder("Custom Variables", false)
         layout = GridLayout(1, 1)
         toolbarDecorator.apply {
             setAddAction { onAddClicked?.invoke() }
@@ -41,18 +41,25 @@ class CategoriesPanel : JPanel() {
 
     fun render(state: SettingsState) {
         listenersBlocked = true
-        state.categories.forEachIndexed { index, categoryScreenElements ->
-            if (index < listModel.size && listModel.getElementAt(index) != categoryScreenElements.category) {
-                listModel.setElementAt(categoryScreenElements.category, index)
-            } else if (index >= listModel.size) {
-                listModel.add(categoryScreenElements.category)
+        val selectedCategoryScreenElements = state.selectedCategoryScreenElements
+        if (selectedCategoryScreenElements != null) {
+            selectedCategoryScreenElements.category.customVariables.forEachIndexed { index, customVariable ->
+                if (index < listModel.size && listModel.getElementAt(index) != customVariable) {
+                    listModel.setElementAt(customVariable, index)
+                } else if (index >= listModel.size) {
+                    listModel.add(customVariable)
+                }
             }
-        }
-        if (listModel.size > state.categories.size) {
-            listModel.removeRange(state.categories.size, listModel.size - 1)
-        }
-        if (state.selectedCategoryIndex != null && list.selectedIndex != state.selectedCategoryIndex) {
-            list.selectedIndex = state.selectedCategoryIndex
+            if (listModel.size > selectedCategoryScreenElements.category.customVariables.size) {
+                listModel.removeRange(selectedCategoryScreenElements.category.customVariables.size, listModel.size - 1)
+            }
+            if (state.selectedCustomVariableIndex != null && list.selectedIndex != state.selectedCustomVariableIndex) {
+                list.selectedIndex = state.selectedCustomVariableIndex
+            } else if (state.selectedCustomVariableIndex == null) {
+                list.clearSelection()
+            }
+        } else {
+            listModel.removeAll()
         }
         listenersBlocked = false
     }
