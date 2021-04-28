@@ -9,7 +9,7 @@ import javax.inject.Inject
 interface SourceRootRepository {
 
     fun findCodeSourceRoot(module: Module, sourceSet: String = DEFAULT_SOURCE_SET): SourceRoot?
-    fun findResourcesSourceRoot(module: Module): SourceRoot
+    fun findResourcesSourceRoot(module: Module): SourceRoot?
 }
 
 class SourceRootRepositoryImpl @Inject constructor(
@@ -26,7 +26,7 @@ class SourceRootRepositoryImpl @Inject constructor(
         }
 
     override fun findResourcesSourceRoot(module: Module) =
-        projectStructure.findSourceRoots(module).first {
+        projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
             pathTrimmed.contains("src", true)
                     && pathTrimmed.contains("main", true)
@@ -34,5 +34,5 @@ class SourceRootRepositoryImpl @Inject constructor(
         }
 
     private fun String.removeModulePathPrefix(module: Module) =
-        removePrefix(projectStructure.getProjectPath() + "/" + module.nameWithoutPrefix)
+        removePrefix(projectStructure.getProjectPath() + "/" + module.nameWithoutPrefix.replace(".", "/"))
 }

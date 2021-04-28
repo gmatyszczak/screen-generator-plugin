@@ -42,7 +42,9 @@ class FileCreatorImpl @Inject constructor(
                     )
                     if (it.fileType == FileType.LAYOUT_XML) {
                         val resourcesSubdirectory = findResourcesSubdirectory(module)
-                        addFile(resourcesSubdirectory, file, it.subdirectory)
+                        if (resourcesSubdirectory != null) {
+                            addFile(resourcesSubdirectory, file, it.subdirectory)
+                        }
                     } else {
                         val codeSubdirectory = findCodeSubdirectory(packageName, module, it.sourceSet)
                         if (codeSubdirectory != null) {
@@ -76,7 +78,7 @@ class FileCreatorImpl @Inject constructor(
         }
 
     private fun findResourcesSubdirectory(module: Module) =
-        sourceRootRepository.findResourcesSourceRoot(module).directory.run {
+        sourceRootRepository.findResourcesSourceRoot(module)?.directory?.run {
             findSubdirectory(LAYOUT_DIRECTORY) ?: createSubdirectory(LAYOUT_DIRECTORY)
         }
 }
