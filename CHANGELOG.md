@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.1] - 2021-04-28
+### Fixed
+- Issue with nested modules ([Issue #17](https://github.com/gmatyszczak/screen-generator-plugin/issues/17))
+
 ## [1.2.0] - 2020-11-30
 ### Added
 - Support for multiple categories of screen elements ([Issue #7](https://github.com/gmatyszczak/screen-generator-plugin/issues/7), [Issue #12](https://github.com/gmatyszczak/screen-generator-plugin/issues/12))
