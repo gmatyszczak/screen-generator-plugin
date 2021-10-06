@@ -1,3 +1,4 @@
+import org.jetbrains.compose.compose
 import org.jetbrains.intellij.ideaDir
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -7,6 +8,7 @@ plugins {
     id("org.jetbrains.intellij") version "1.2.0"
     id("idea")
     kotlin("kapt") version "1.5.31"
+    id("org.jetbrains.compose") version "1.0.0-alpha4-build385"
 }
 
 group = "screengenerator"
@@ -14,6 +16,8 @@ version = "1.2.1"
 
 repositories {
     mavenCentral()
+    google()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
 }
 
 dependencies {
@@ -21,6 +25,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.2")
     implementation("com.google.dagger:dagger:2.39.1")
     kapt("com.google.dagger:dagger-compiler:2.39.1")
+    implementation(compose.desktop.currentOs)
 
     testImplementation("junit:junit:4.12")
     testImplementation("org.mockito:mockito-core:2.23.4")
