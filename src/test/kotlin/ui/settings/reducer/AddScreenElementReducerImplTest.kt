@@ -6,11 +6,11 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import ui.settings.SettingsState
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class AddScreenElementReducerImplTest : BaseReducerTest() {
