@@ -4,7 +4,8 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     id("org.jetbrains.intellij") version "1.3.0"
-    kotlin("kapt")  version "1.6.10"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    kotlin("kapt") version "1.6.10"
 }
 
 group = "screengenerator"
