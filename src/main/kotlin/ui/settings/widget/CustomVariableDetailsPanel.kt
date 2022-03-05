@@ -37,5 +37,3 @@ class CustomVariableDetailsPanel : JPanel() {
         listenersBlocked = false
     }
 }
-
-

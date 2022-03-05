@@ -42,21 +42,25 @@ class SettingsPanel(project: Project) : JPanel() {
             val topPanel = JPanel().apply {
                 layout = BoxLayout(this, BoxLayout.Y_AXIS)
 
-                add(JBSplitter(0.3f).apply {
-                    firstComponent = categoriesPanel
-                    secondComponent = JBSplitter(0.4f).apply {
-                        firstComponent = customVariablesPanel
-                        secondComponent = JPanel().apply {
-                            layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                            add(categoryDetailsPanel)
-                            add(customVariableDetailsPanel)
+                add(
+                    JBSplitter(0.3f).apply {
+                        firstComponent = categoriesPanel
+                        secondComponent = JBSplitter(0.4f).apply {
+                            firstComponent = customVariablesPanel
+                            secondComponent = JPanel().apply {
+                                layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                                add(categoryDetailsPanel)
+                                add(customVariableDetailsPanel)
+                            }
                         }
                     }
-                })
-                add(JBSplitter(0.3f).apply {
-                    firstComponent = screenElementsPanel
-                    secondComponent = screenElementDetailsPanel
-                })
+                )
+                add(
+                    JBSplitter(0.3f).apply {
+                        firstComponent = screenElementsPanel
+                        secondComponent = screenElementDetailsPanel
+                    }
+                )
             }
 
             add(topPanel, BorderLayout.PAGE_START)
@@ -64,10 +68,13 @@ class SettingsPanel(project: Project) : JPanel() {
                 FileType.KOTLIN to CodePanel(project, KotlinLanguage.INSTANCE, FileType.KOTLIN),
                 FileType.LAYOUT_XML to CodePanel(project, XMLLanguage.INSTANCE, FileType.LAYOUT_XML)
             )
-            add(JPanel().apply {
-                layout = BoxLayout(this, BoxLayout.Y_AXIS)
-                codePanels.forEach { (_, panel) -> add(panel) }
-            }, BorderLayout.CENTER)
+            add(
+                JPanel().apply {
+                    layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                    codePanels.forEach { (_, panel) -> add(panel) }
+                },
+                BorderLayout.CENTER
+            )
         }
 
         add(helpPanel, BorderLayout.PAGE_START)

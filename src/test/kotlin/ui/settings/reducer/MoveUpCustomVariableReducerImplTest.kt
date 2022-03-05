@@ -53,7 +53,8 @@ class MoveUpCustomVariableReducerImplTest : BaseReducerTest() {
                                 CustomVariable("test2"),
                                 CustomVariable("test1")
                             )
-                        ), listOf(ScreenElement(name = "test"))
+                        ),
+                        listOf(ScreenElement(name = "test"))
                     )
                 )
             ),

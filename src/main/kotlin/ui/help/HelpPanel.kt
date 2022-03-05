@@ -15,11 +15,13 @@ class HelpPanel : JPanel() {
         val panel = JPanel().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             Variable.values().forEach {
-                add(JPanel().apply {
-                    layout = FlowLayout(FlowLayout.LEADING)
-                    add(JTextField(it.value).apply { isEditable = false })
-                    add(JLabel(" - ${it.description}"))
-                })
+                add(
+                    JPanel().apply {
+                        layout = FlowLayout(FlowLayout.LEADING)
+                        add(JTextField(it.value).apply { isEditable = false })
+                        add(JLabel(" - ${it.description}"))
+                    }
+                )
             }
         }
         add(JLabel("Available variables in templates:"), BorderLayout.NORTH)

@@ -9,8 +9,10 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import model.Settings
 import java.io.Serializable
 
-@State(name = "ScreenGeneratorConfiguration",
-        storages = [Storage(value = "screenGeneratorConfiguration.xml")])
+@State(
+    name = "ScreenGeneratorConfiguration",
+    storages = [Storage(value = "screenGeneratorConfiguration.xml")]
+)
 class ScreenGeneratorComponent : Serializable, PersistentStateComponent<ScreenGeneratorComponent> {
 
     companion object {

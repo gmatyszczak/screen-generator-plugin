@@ -33,5 +33,4 @@ class PackageExtractorImpl @Inject constructor(
         } else {
             this
         }
-
 }

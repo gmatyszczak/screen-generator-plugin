@@ -53,7 +53,8 @@ class SettingsTest {
                     elementRepository,
                     elementLayout
                 )
-            ), Settings()
+            ),
+            Settings()
         )
     }
 }

@@ -52,7 +52,8 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
                                 CustomVariable("test"),
                                 CustomVariable.getDefault()
                             )
-                        ), listOf(ScreenElement(name = "test"))
+                        ),
+                        listOf(ScreenElement(name = "test"))
                     )
                 )
             ),

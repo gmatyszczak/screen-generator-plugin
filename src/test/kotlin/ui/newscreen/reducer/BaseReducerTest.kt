@@ -15,5 +15,4 @@ abstract class BaseReducerTest {
     protected lateinit var effectMock: MutableSharedFlow<NewScreenEffect>
 
     protected val state = MutableStateFlow(NewScreenState())
-
 }

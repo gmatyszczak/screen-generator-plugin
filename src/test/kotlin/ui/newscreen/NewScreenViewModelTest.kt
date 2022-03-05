@@ -65,5 +65,4 @@ class NewScreenViewModelTest {
         verify(initReducerMock).invoke()
         verify(categoryIndexChangedReducerMock).invoke(100)
     }
-
 }

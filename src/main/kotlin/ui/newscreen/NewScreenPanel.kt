@@ -14,7 +14,6 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
 
-
 class NewScreenPanel : JPanel() {
 
     val nameTextField = JTextField()
@@ -31,20 +30,22 @@ class NewScreenPanel : JPanel() {
 
     init {
         layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        add(JPanel().apply {
-            layout = GridBagLayout()
-            add(JLabel("Name:"), constraintsLeft(0, 0))
-            add(nameTextField, constraintsRight(1, 0))
-            add(JLabel("Category:"), constraintsLeft(0, 1))
-            add(categoryComboBox, constraintsRight(1, 1))
-            add(JLabel("Module:"), constraintsLeft(0, 2))
-            add(moduleComboBox, constraintsRight(1, 2))
-            add(JLabel("Package:"), constraintsLeft(0, 3))
-            add(packageTextField, constraintsRight(1, 3))
-            add(JLabel("Android Component:"), constraintsLeft(0, 4))
-            add(androidComponentComboBox, constraintsRight(1, 4))
-            categoryComboBox.addActionListener { if (!listenersBlocked) onCategoryIndexChanged?.invoke(categoryComboBox.selectedIndex) }
-        })
+        add(
+            JPanel().apply {
+                layout = GridBagLayout()
+                add(JLabel("Name:"), constraintsLeft(0, 0))
+                add(nameTextField, constraintsRight(1, 0))
+                add(JLabel("Category:"), constraintsLeft(0, 1))
+                add(categoryComboBox, constraintsRight(1, 1))
+                add(JLabel("Module:"), constraintsLeft(0, 2))
+                add(moduleComboBox, constraintsRight(1, 2))
+                add(JLabel("Package:"), constraintsLeft(0, 3))
+                add(packageTextField, constraintsRight(1, 3))
+                add(JLabel("Android Component:"), constraintsLeft(0, 4))
+                add(androidComponentComboBox, constraintsRight(1, 4))
+                categoryComboBox.addActionListener { if (!listenersBlocked) onCategoryIndexChanged?.invoke(categoryComboBox.selectedIndex) }
+            }
+        )
         add(customVariablesPanel)
     }
 

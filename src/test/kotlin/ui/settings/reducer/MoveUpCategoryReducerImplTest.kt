@@ -52,6 +52,5 @@ class MoveUpCategoryReducerImplTest : BaseReducerTest() {
         )
 
         verify(selectCategoryReducerMock).invoke(0)
-
     }
 }

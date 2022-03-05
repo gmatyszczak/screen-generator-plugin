@@ -23,7 +23,6 @@ class OkClickedReducerImplTest : BaseReducerTest() {
     @Mock
     private lateinit var writeActionDispatcherMock: WriteActionDispatcher
 
-
     private lateinit var reducer: OkClickedReducerImpl
 
     private val moduleName = "domain"

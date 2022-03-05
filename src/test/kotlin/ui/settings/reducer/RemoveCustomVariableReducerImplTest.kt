@@ -49,7 +49,8 @@ class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
                     CategoryScreenElements(
                         Category(
                             customVariables = emptyList()
-                        ), listOf(ScreenElement(name = "test"))
+                        ),
+                        listOf(ScreenElement(name = "test"))
                     )
                 )
             ),

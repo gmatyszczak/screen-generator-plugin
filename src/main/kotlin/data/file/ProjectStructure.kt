@@ -17,8 +17,8 @@ interface ProjectStructure {
 class ProjectStructureImpl @Inject constructor(private val project: Project) : ProjectStructure {
 
     override fun findSourceRoots(module: Module) =
-            ModuleManager.getInstance(project).findModuleByName(module.name)?.sourceRoots?.map { SourceRootImpl(project, it) }
-                    ?: throw IllegalStateException("${module.name} module doesn't exist!")
+        ModuleManager.getInstance(project).findModuleByName(module.name)?.sourceRoots?.map { SourceRootImpl(project, it) }
+            ?: throw IllegalStateException("${module.name} module doesn't exist!")
 
     override fun getAllModules() = ModuleManager.getInstance(project).modules.map { it.name }
 
