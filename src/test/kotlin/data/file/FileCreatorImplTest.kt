@@ -6,6 +6,13 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
+import model.AndroidComponent
+import model.Category
+import model.CustomVariable
+import model.FileType
+import model.Module
+import model.ScreenElement
+import model.Variable
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
