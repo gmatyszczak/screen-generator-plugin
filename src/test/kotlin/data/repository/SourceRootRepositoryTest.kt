@@ -9,7 +9,7 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class SourceRootRepositoryImplTest {
+class SourceRootRepositoryTest {
 
     val projectStructureMock: ProjectStructure = mockk()
     val sourceRootBuildMock: SourceRoot = mockk()
@@ -22,7 +22,7 @@ class SourceRootRepositoryImplTest {
     val moduleName = "presentation"
     val module = Module("MyApplication.$moduleName", moduleName)
     lateinit var sourceRoots: List<SourceRoot>
-    val sourceRootRepository = SourceRootRepositoryImpl(projectStructureMock)
+    val sourceRootRepository = SourceRootRepository(projectStructureMock)
 
     @BeforeEach
     fun setUp() {

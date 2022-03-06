@@ -11,24 +11,12 @@ import javax.inject.Inject
 
 private const val LAYOUT_DIRECTORY = "layout"
 
-interface FileCreator {
-
-    fun createScreenFiles(
-        packageName: String,
-        screenName: String,
-        androidComponent: AndroidComponent,
-        module: Module,
-        category: Category,
-        customVariablesMap: Map<CustomVariable, String>
-    )
-}
-
-class FileCreatorImpl @Inject constructor(
+class FileCreator @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val sourceRootRepository: SourceRootRepository
-) : FileCreator {
+) {
 
-    override fun createScreenFiles(
+    fun createScreenFiles(
         packageName: String,
         screenName: String,
         androidComponent: AndroidComponent,

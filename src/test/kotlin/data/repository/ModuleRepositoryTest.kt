@@ -7,10 +7,10 @@ import model.Module
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
-class ModuleRepositoryImplTest {
+class ModuleRepositoryTest {
 
     val projectStructureMock: ProjectStructure = mockk()
-    val moduleRepository = ModuleRepositoryImpl(projectStructureMock)
+    val moduleRepository = ModuleRepository(projectStructureMock)
 
     @Test
     fun `when project name not included in module names on get all modules`() {

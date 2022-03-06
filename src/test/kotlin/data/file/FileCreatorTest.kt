@@ -14,7 +14,7 @@ import model.ScreenElement
 import model.Variable
 import org.junit.jupiter.api.Test
 
-class FileCreatorImplTest {
+class FileCreatorTest {
 
     val module = Module("app", "app")
     val settingsRepositoryMock: SettingsRepository = mockk()
@@ -23,7 +23,7 @@ class FileCreatorImplTest {
     val codeDirectoryMock: Directory = mockk(relaxUnitFun = true)
     val resourcesDirectoryMock: Directory = mockk(relaxUnitFun = true)
     val sourceRootRepositoryMock: SourceRootRepository = mockk()
-    val fileCreator = FileCreatorImpl(settingsRepositoryMock, sourceRootRepositoryMock)
+    val fileCreator = FileCreator(settingsRepositoryMock, sourceRootRepositoryMock)
 
     val testKotlinTemplate =
         "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}%customVariable%${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity"

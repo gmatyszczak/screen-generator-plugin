@@ -3,8 +3,6 @@ package ui.settings.dagger
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import data.repository.SettingsRepository
-import data.repository.SettingsRepositoryImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -73,9 +71,6 @@ import javax.inject.Singleton
 
 @Module
 abstract class SettingsModule {
-
-    @Binds
-    abstract fun bindSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
 
     @Binds
     abstract fun bindSelectScreenElementReducer(reducer: SelectScreenElementReducerImpl): SelectScreenElementReducer

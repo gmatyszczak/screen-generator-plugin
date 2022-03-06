@@ -4,16 +4,11 @@ import data.file.ProjectStructure
 import model.Module
 import javax.inject.Inject
 
-interface ModuleRepository {
-
-    fun getAllModules(): List<Module>
-}
-
-class ModuleRepositoryImpl @Inject constructor(
+class ModuleRepository @Inject constructor(
     private val projectStructure: ProjectStructure
-) : ModuleRepository {
+) {
 
-    override fun getAllModules() =
+    fun getAllModules() =
         projectStructure.getAllModules()
             .filter { it != projectStructure.getProjectName() }
             .map {

@@ -4,20 +4,12 @@ import com.intellij.openapi.project.Project
 import data.ScreenGeneratorComponent
 import model.Category
 import model.CategoryScreenElements
-import model.ScreenElement
 import model.Settings
 import javax.inject.Inject
 
-interface SettingsRepository {
-    fun loadCategoriesWithScreenElements(): List<CategoryScreenElements>
-    fun update(settings: Settings)
-    fun loadCategories(): List<Category>
-    fun loadScreenElements(categoryId: Int): List<ScreenElement>
-}
+class SettingsRepository @Inject constructor(private val project: Project) {
 
-class SettingsRepositoryImpl @Inject constructor(private val project: Project) : SettingsRepository {
-
-    override fun loadCategoriesWithScreenElements(): List<CategoryScreenElements> {
+    fun loadCategoriesWithScreenElements(): List<CategoryScreenElements> {
         val settings = loadSettings()
         return settings.categories.map { category ->
             CategoryScreenElements(
@@ -27,13 +19,13 @@ class SettingsRepositoryImpl @Inject constructor(private val project: Project) :
         }
     }
 
-    override fun update(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
+    fun update(settings: Settings) = ScreenGeneratorComponent.getInstance(project).run {
         this.settings = settings
     }
 
-    override fun loadCategories() = loadSettings().categories
+    fun loadCategories(): List<Category> = loadSettings().categories
 
-    override fun loadScreenElements(categoryId: Int) =
+    fun loadScreenElements(categoryId: Int) =
         loadSettings().screenElements.filter { it.categoryId == categoryId }
 
     private fun loadSettings() = ScreenGeneratorComponent.getInstance(project).settings
