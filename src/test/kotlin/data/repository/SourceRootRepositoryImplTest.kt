@@ -5,7 +5,7 @@ import data.file.SourceRoot
 import io.mockk.every
 import io.mockk.mockk
 import model.Module
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -49,35 +49,35 @@ class SourceRootRepositoryImplTest {
     fun `when source roots not empty on find code source root`() {
         every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
-        assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot(module))
+        sourceRootRepository.findCodeSourceRoot(module) shouldBeEqualTo sourceRootSrcMock
     }
 
     @Test
     fun `when source roots empty on find code source root`() {
         every { projectStructureMock.findSourceRoots(module) } returns emptyList()
 
-        assertEquals(null, sourceRootRepository.findCodeSourceRoot(module))
+        sourceRootRepository.findCodeSourceRoot(module) shouldBeEqualTo null
     }
 
     @Test
     fun `when source roots not empty on find resources source root`() {
         every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
-        assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(module))
+        sourceRootRepository.findResourcesSourceRoot(module) shouldBeEqualTo sourceRootResMock
     }
 
     @Test
     fun `when source roots empty on find resources source root`() {
         every { projectStructureMock.findSourceRoots(module) } returns emptyList()
 
-        assertEquals(null, sourceRootRepository.findResourcesSourceRoot(module))
+        sourceRootRepository.findResourcesSourceRoot(module) shouldBeEqualTo null
     }
 
     @Test
     fun `on find test code source root`() {
         every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
-        assertEquals(sourceRootTestMock, sourceRootRepository.findCodeSourceRoot(module, "test"))
+        sourceRootRepository.findCodeSourceRoot(module, "test") shouldBeEqualTo sourceRootTestMock
     }
 
     @Test
@@ -88,6 +88,6 @@ class SourceRootRepositoryImplTest {
         val nestedModule = Module("MyApplication.$nestedModuleName", nestedModuleName)
         every { projectStructureMock.findSourceRoots(nestedModule) } returns listOf(sourceRoot)
 
-        assertEquals(sourceRoot, sourceRootRepository.findCodeSourceRoot(nestedModule, "main"))
+        sourceRootRepository.findCodeSourceRoot(nestedModule, "main") shouldBeEqualTo sourceRoot
     }
 }

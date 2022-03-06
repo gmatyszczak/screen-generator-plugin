@@ -5,7 +5,7 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -24,13 +24,10 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
     fun `when screen elements empty on invoke`() {
         reducer.invoke(0)
 
-        assertEquals(
-            SettingsState(
-                selectedElementIndex = null,
-                fileNameRendered = "",
-                sampleCode = ""
-            ),
-            state.value
+        state.value shouldBeEqualTo SettingsState(
+            selectedElementIndex = null,
+            fileNameRendered = "",
+            sampleCode = ""
         )
     }
 
@@ -44,13 +41,10 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(10)
 
-        assertEquals(
-            initialState.copy(
-                selectedElementIndex = null,
-                fileNameRendered = "",
-                sampleCode = ""
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedElementIndex = null,
+            fileNameRendered = "",
+            sampleCode = ""
         )
     }
 
@@ -69,13 +63,10 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(0)
 
-        assertEquals(
-            initialState.copy(
-                selectedElementIndex = 0,
-                fileNameRendered = "test.kt",
-                sampleCode = "test"
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedElementIndex = 0,
+            fileNameRendered = "test.kt",
+            sampleCode = "test"
         )
     }
 }

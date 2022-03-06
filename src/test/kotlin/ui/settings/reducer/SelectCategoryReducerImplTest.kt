@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsEffect
@@ -47,11 +47,8 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
     fun `when index out of bounds on invoke`() {
         reducer.invoke(10)
 
-        assertEquals(
-            initialState.copy(
-                selectedCategoryIndex = null
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCategoryIndex = null
         )
         verify { selectScreenElementReducerMock.invoke(-1) }
         verify { selectCustomVariableReducerMock.invoke(-1) }
@@ -61,11 +58,8 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
     fun `when index in  bounds on invoke`() = runBlockingTest {
         reducer.invoke(0)
 
-        assertEquals(
-            initialState.copy(
-                selectedCategoryIndex = 0
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCategoryIndex = 0
         )
         verify { selectScreenElementReducerMock.invoke(0) }
         verify { selectCustomVariableReducerMock.invoke(-1) }

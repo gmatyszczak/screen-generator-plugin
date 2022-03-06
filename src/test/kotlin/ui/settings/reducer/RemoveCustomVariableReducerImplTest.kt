@@ -9,7 +9,7 @@ import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -33,29 +33,27 @@ class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = RemoveCustomVariableReducerImpl(state, effectMock, TestCoroutineScope(), selectCustomVariableReducerMock)
+        reducer =
+            RemoveCustomVariableReducerImpl(state, effectMock, TestCoroutineScope(), selectCustomVariableReducerMock)
     }
 
     @Test
     fun `when selected category not null on invoke`() {
         reducer.invoke(0)
 
-        assertEquals(
-            SettingsState(
-                selectedCategoryIndex = 0,
-                isModified = true,
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(
-                            customVariables = emptyList()
-                        ),
-                        listOf(ScreenElement(name = "test"))
-                    )
+        state.value shouldBeEqualTo SettingsState(
+            selectedCategoryIndex = 0,
+            isModified = true,
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(
+                        customVariables = emptyList()
+                    ),
+                    listOf(ScreenElement(name = "test"))
                 )
-            ),
-            state.value
+            )
         )
-        verify {selectCustomVariableReducerMock.invoke(0) }
+        verify { selectCustomVariableReducerMock.invoke(0) }
     }
 
     @Test
@@ -64,10 +62,7 @@ class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(10)
 
-        assertEquals(
-            SettingsState(),
-            state.value
-        )
+        state.value shouldBeEqualTo SettingsState()
         verify { selectCustomVariableReducerMock wasNot Called }
     }
 }

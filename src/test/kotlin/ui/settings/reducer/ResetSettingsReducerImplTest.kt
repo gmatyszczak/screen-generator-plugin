@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
@@ -33,12 +33,9 @@ class ResetSettingsReducerImplTest : BaseReducerTest() {
 
         reducer.invoke()
 
-        assertEquals(
-            SettingsState(
-                categories = categories,
-                selectedCategoryIndex = 0
-            ),
-            state.value
+        state.value shouldBeEqualTo SettingsState(
+            categories = categories,
+            selectedCategoryIndex = 0
         )
     }
 
@@ -49,12 +46,9 @@ class ResetSettingsReducerImplTest : BaseReducerTest() {
 
         reducer.invoke()
 
-        assertEquals(
-            SettingsState(
-                categories = emptyList(),
-                selectedCategoryIndex = null
-            ),
-            state.value
+        state.value shouldBeEqualTo SettingsState(
+            categories = emptyList(),
+            selectedCategoryIndex = null
         )
     }
 }

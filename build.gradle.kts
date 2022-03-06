@@ -23,6 +23,7 @@ dependencies {
     kapt("com.google.dagger:dagger-compiler:2.41")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation("org.amshove.kluent:kluent:1.68")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
 }
 

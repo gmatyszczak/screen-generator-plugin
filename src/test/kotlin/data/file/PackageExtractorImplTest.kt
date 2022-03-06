@@ -4,7 +4,7 @@ import data.repository.SourceRootRepository
 import io.mockk.every
 import io.mockk.mockk
 import model.Module
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -24,7 +24,7 @@ class PackageExtractorImplTest {
     fun `when current path is null on extract from current path`() {
         packageExtractor = PackageExtractorImpl(null, sourceRootRepositoryMock)
 
-        assertEquals("", packageExtractor.extractFromCurrentPath())
+        packageExtractor.extractFromCurrentPath() shouldBeEqualTo ""
     }
 
     @Test
@@ -33,7 +33,7 @@ class PackageExtractorImplTest {
 
         packageExtractor = PackageExtractorImpl(CurrentPath("src", true, module), sourceRootRepositoryMock)
 
-        assertEquals("", packageExtractor.extractFromCurrentPath())
+        packageExtractor.extractFromCurrentPath() shouldBeEqualTo ""
     }
 
     @Test
@@ -42,7 +42,7 @@ class PackageExtractorImplTest {
 
         packageExtractor = PackageExtractorImpl(CurrentPath("src", false, module), sourceRootRepositoryMock)
 
-        assertEquals("", packageExtractor.extractFromCurrentPath())
+        packageExtractor.extractFromCurrentPath() shouldBeEqualTo ""
     }
 
     @Test
@@ -51,7 +51,7 @@ class PackageExtractorImplTest {
 
         packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example", true, module), sourceRootRepositoryMock)
 
-        assertEquals("com.example", packageExtractor.extractFromCurrentPath())
+        packageExtractor.extractFromCurrentPath() shouldBeEqualTo "com.example"
     }
 
     @Test
@@ -61,6 +61,6 @@ class PackageExtractorImplTest {
         packageExtractor =
             PackageExtractorImpl(CurrentPath("src/com/example/test.kt", false, module), sourceRootRepositoryMock)
 
-        assertEquals("com.example", packageExtractor.extractFromCurrentPath())
+        packageExtractor.extractFromCurrentPath() shouldBeEqualTo "com.example"
     }
 }

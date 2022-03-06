@@ -36,7 +36,7 @@ class ChangeSourceSetReducerImplTest : BaseReducerTest() {
 
         reducer.invoke("test")
 
-        verify {updateScreenElementReducerMock.invoke(ScreenElement(sourceSet = "test")) }
+        verify { updateScreenElementReducerMock.invoke(ScreenElement(sourceSet = "test")) }
     }
 
     @Test

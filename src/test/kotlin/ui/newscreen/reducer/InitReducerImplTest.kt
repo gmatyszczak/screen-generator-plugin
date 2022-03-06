@@ -9,7 +9,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.Module
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.newscreen.NewScreenState
@@ -49,15 +49,12 @@ class InitReducerImplTest : BaseReducerTest() {
 
         reducer()
 
-        assertEquals(
-            NewScreenState(
-                packageName,
-                listOf(moduleApp, moduleDomain),
-                moduleDomain,
-                listOf(category),
-                category
-            ),
-            state.value
+        state.value shouldBeEqualTo NewScreenState(
+            packageName,
+            listOf(moduleApp, moduleDomain),
+            moduleDomain,
+            listOf(category),
+            category
         )
     }
 }

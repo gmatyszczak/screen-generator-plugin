@@ -9,7 +9,7 @@ import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import model.Settings
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -41,7 +41,7 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
     fun `on invoke`() {
         reducer.invoke()
 
-        assertEquals(initialState.copy(isModified = false), state.value)
+        state.value shouldBeEqualTo initialState.copy(isModified = false)
         verify {
             settingsRepositoryMock.update(
                 Settings(

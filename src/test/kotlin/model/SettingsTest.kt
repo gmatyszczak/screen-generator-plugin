@@ -1,6 +1,6 @@
 package model
 
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class SettingsTest {
@@ -43,18 +43,16 @@ class SettingsTest {
             FileType.LAYOUT_XML,
             FileType.LAYOUT_XML.defaultFileName
         )
-        assertEquals(
-            Settings(
-                mutableListOf(
-                    elementActivity,
-                    elementFragment,
-                    elementViewModel,
-                    elementViewModelTest,
-                    elementRepository,
-                    elementLayout
-                )
-            ),
-            Settings()
+
+        Settings() shouldBeEqualTo Settings(
+            mutableListOf(
+                elementActivity,
+                elementFragment,
+                elementViewModel,
+                elementViewModelTest,
+                elementRepository,
+                elementLayout
+            )
         )
     }
 }

@@ -9,7 +9,7 @@ import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -39,23 +39,20 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
     fun `when selected category not null on invoke`() {
         reducer.invoke()
 
-        assertEquals(
-            SettingsState(
-                selectedCategoryIndex = 0,
-                isModified = true,
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(
-                            customVariables = listOf(
-                                CustomVariable("test"),
-                                CustomVariable.getDefault()
-                            )
-                        ),
-                        listOf(ScreenElement(name = "test"))
-                    )
+        state.value shouldBeEqualTo SettingsState(
+            selectedCategoryIndex = 0,
+            isModified = true,
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(
+                        customVariables = listOf(
+                            CustomVariable("test"),
+                            CustomVariable.getDefault()
+                        )
+                    ),
+                    listOf(ScreenElement(name = "test"))
                 )
-            ),
-            state.value
+            )
         )
         verify { selectCustomVariableReducerMock.invoke(1) }
     }
@@ -66,10 +63,7 @@ class AddCustomVariableReducerImplTest : BaseReducerTest() {
 
         reducer.invoke()
 
-        assertEquals(
-            SettingsState(),
-            state.value
-        )
+        state.value shouldBeEqualTo SettingsState()
         verify { selectCustomVariableReducerMock wasNot Called }
     }
 }

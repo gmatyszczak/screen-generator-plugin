@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -36,16 +36,13 @@ class AddCategoryReducerImplTest : BaseReducerTest() {
     fun `on invoke`() {
         reducer.invoke()
 
-        assertEquals(
-            SettingsState(
-                isModified = true,
-                categories = listOf(
-                    categoryScreenElement, CategoryScreenElements(Category.getDefault(1), emptyList())
-                ),
-                selectedElementIndex = null,
-                selectedCategoryIndex = 1
+        state.value shouldBeEqualTo SettingsState(
+            isModified = true,
+            categories = listOf(
+                categoryScreenElement, CategoryScreenElements(Category.getDefault(1), emptyList())
             ),
-            state.value
+            selectedElementIndex = null,
+            selectedCategoryIndex = 1
         )
         verify { selectScreenElementReducerMock.invoke(-1) }
     }

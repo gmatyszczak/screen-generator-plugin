@@ -1,6 +1,6 @@
 package model
 
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class ScreenElementTest {
@@ -14,20 +14,20 @@ class ScreenElementTest {
 
     @Test
     fun `on body`() {
-        assertEquals(
-            "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestActivity : AppCompatActivity",
-            kotlinScreenElement.body("Test", "com.test", "Activity", emptyMap())
-        )
+        kotlinScreenElement.body(
+            "Test",
+            "com.test",
+            "Activity",
+            emptyMap()
+        ) shouldBeEqualTo "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestActivity : AppCompatActivity"
     }
 
     @Test
     fun `when contains name lower case variable on body`() {
         val screenElement =
             ScreenElement("Presenter", Variable.NAME_LOWER_CASE.value, FileType.KOTLIN, FileType.KOTLIN.defaultFileName)
-        assertEquals(
-            "testScreen",
-            screenElement.body("TestScreen", "com.test", "Activity", emptyMap())
-        )
+
+        screenElement.body("TestScreen", "com.test", "Activity", emptyMap()) shouldBeEqualTo "testScreen"
     }
 
     @Test
@@ -38,60 +38,45 @@ class ScreenElementTest {
             FileType.KOTLIN,
             FileType.KOTLIN.defaultFileName
         )
-        assertEquals(
-            "activity",
-            screenElement.body("TestScreen", "com.test", "Activity", emptyMap())
-        )
+        screenElement.body("TestScreen", "com.test", "Activity", emptyMap()) shouldBeEqualTo "activity"
     }
 
     @Test
     fun `when file type is kotlin on file name`() {
-        assertEquals(
-            "TestPresenter",
-            kotlinScreenElement.fileName("Test", "com.test", "Activity", emptyMap())
-        )
+        kotlinScreenElement.fileName("Test", "com.test", "Activity", emptyMap()) shouldBeEqualTo "TestPresenter"
     }
 
     @Test
     fun `when file type is xml on file name`() {
-        assertEquals(
-            "activity_test",
-            xmlScreenElement.fileName("Test", "com.test", "Activity", emptyMap())
-        )
+        xmlScreenElement.fileName("Test", "com.test", "Activity", emptyMap()) shouldBeEqualTo "activity_test"
     }
 
     @Test
     fun `on get default`() {
-        assertEquals(
-            ScreenElement(
-                "UnnamedElement",
-                FileType.KOTLIN.defaultTemplate,
-                FileType.KOTLIN,
-                FileType.KOTLIN.defaultFileName,
-                AndroidComponent.NONE,
-                10
-            ),
-            ScreenElement.getDefault(10)
+        ScreenElement.getDefault(10) shouldBeEqualTo ScreenElement(
+            "UnnamedElement",
+            FileType.KOTLIN.defaultTemplate,
+            FileType.KOTLIN,
+            FileType.KOTLIN.defaultFileName,
+            AndroidComponent.NONE,
+            10
         )
     }
 
     @Test
     fun `when custom variables not empty on body`() {
-        assertEquals(
-            "custom1custom2",
-            ScreenElement(
-                "UnnamedElement",
-                "%custom1%%custom2%",
-                FileType.KOTLIN,
-                FileType.KOTLIN.defaultFileName,
-                AndroidComponent.NONE,
-                10
-            ).body(
-                "Test",
-                "com.test",
-                "Activity",
-                mapOf(CustomVariable("custom1") to "custom1", CustomVariable("custom2") to "custom2")
-            ),
-        )
+        ScreenElement(
+            "UnnamedElement",
+            "%custom1%%custom2%",
+            FileType.KOTLIN,
+            FileType.KOTLIN.defaultFileName,
+            AndroidComponent.NONE,
+            10
+        ).body(
+            "Test",
+            "com.test",
+            "Activity",
+            mapOf(CustomVariable("custom1") to "custom1", CustomVariable("custom2") to "custom2")
+        ) shouldBeEqualTo "custom1custom2"
     }
 }

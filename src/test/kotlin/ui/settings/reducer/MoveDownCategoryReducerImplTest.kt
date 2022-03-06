@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
@@ -41,14 +41,10 @@ class MoveDownCategoryReducerImplTest : BaseReducerTest() {
     fun `on invoke`() {
         reducer.invoke(0)
 
-        assertEquals(
-            initialState.copy(
-                categories = listOf(categoryScreenElement2, categoryScreenElement1),
-                isModified = true
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            categories = listOf(categoryScreenElement2, categoryScreenElement1),
+            isModified = true
         )
-
         verify { selectCategoryReducerMock.invoke(1) }
     }
 }

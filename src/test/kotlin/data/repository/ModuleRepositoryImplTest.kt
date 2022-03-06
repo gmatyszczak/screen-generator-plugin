@@ -4,7 +4,7 @@ import data.file.ProjectStructure
 import io.mockk.every
 import io.mockk.mockk
 import model.Module
-import org.junit.Assert.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
 
 class ModuleRepositoryImplTest {
@@ -17,9 +17,9 @@ class ModuleRepositoryImplTest {
         every { projectStructureMock.getProjectName() } returns "Application"
         every { projectStructureMock.getAllModules() } returns listOf("Application", "app", "domain")
 
-        assertEquals(
-            listOf(Module("app", "app"), Module("domain", "domain")),
-            moduleRepository.getAllModules()
+        moduleRepository.getAllModules() shouldBeEqualTo listOf(
+            Module("app", "app"),
+            Module("domain", "domain")
         )
     }
 
@@ -32,9 +32,9 @@ class ModuleRepositoryImplTest {
             "Application.domain"
         )
 
-        assertEquals(
-            listOf(Module("Application.app", "app"), Module("Application.domain", "domain")),
-            moduleRepository.getAllModules()
+        moduleRepository.getAllModules() shouldBeEqualTo listOf(
+            Module("Application.app", "app"),
+            Module("Application.domain", "domain")
         )
     }
 }
