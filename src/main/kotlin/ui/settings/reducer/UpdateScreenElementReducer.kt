@@ -1,43 +1,35 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import model.CategoryScreenElements
-import model.ScreenElement
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
 import javax.inject.Inject
 
-interface UpdateScreenElementReducer {
-
-    operator fun invoke(updatedElement: ScreenElement)
-}
-
-class UpdateScreenElementReducerImpl @Inject constructor(
+class UpdateScreenElementReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-) : BaseReducer(state, effect, scope), UpdateScreenElementReducer {
+) : Reducer.Blocking<UpdateScreenElement> {
 
-    override fun invoke(updatedElement: ScreenElement) {
-        pushState {
-            val categoryScreenElements = categories[selectedCategoryIndex!!]
+    override fun invoke(action: UpdateScreenElement) {
+        state.update { state ->
+            val categoryScreenElements = state.categories[state.selectedCategoryIndex!!]
             val newScreenElements = categoryScreenElements.screenElements.toMutableList()
-                .apply { set(selectedElementIndex!!, updatedElement) }
-            val newCategories = categories.toMutableList()
+                .apply { set(state.selectedElementIndex!!, action.element) }
+            val newCategories = state.categories.toMutableList()
                 .apply {
                     set(
-                        selectedCategoryIndex,
+                        state.selectedCategoryIndex,
                         CategoryScreenElements(categoryScreenElements.category, newScreenElements)
                     )
                 }
-            copy(
+            state.copy(
                 categories = newCategories,
-                fileNameRendered = updatedElement.renderSampleFileName(),
-                sampleCode = updatedElement.renderSampleCode(),
+                fileNameRendered = action.element.renderSampleFileName(),
+                sampleCode = action.element.renderSampleCode(),
                 isModified = true
             )
         }

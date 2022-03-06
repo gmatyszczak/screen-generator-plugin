@@ -1,29 +1,33 @@
 package ui.settings.reducer
 
-import io.mockk.Called
-import io.mockk.mockk
-import io.mockk.verify
-import kotlinx.coroutines.test.TestCoroutineScope
+import app.cash.turbine.test
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.runBlockingTest
 import model.Category
 import model.CategoryScreenElements
 import model.FileType
 import model.ScreenElement
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeFileType
 import ui.settings.SettingsState
 
-class ChangeFileTypeReducerImplTest : BaseReducerTest() {
+class ChangeFileTypeReducerTest {
 
-    val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
-    lateinit var reducer: ChangeFileTypeReducerImpl
+    val state = MutableStateFlow(SettingsState())
+    val actionFlow = MutableSharedFlow<SettingsAction>()
+    lateinit var reducer: ChangeFileTypeReducer
 
     @BeforeEach
     fun setup() {
-        reducer = ChangeFileTypeReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)
+        reducer = ChangeFileTypeReducer(state, actionFlow)
     }
 
     @Test
-    fun `if selected element not null on invoke`() {
+    fun `if selected element not null on invoke`() = runBlockingTest {
         state.value = SettingsState(
             categories = listOf(
                 CategoryScreenElements(
@@ -35,23 +39,17 @@ class ChangeFileTypeReducerImplTest : BaseReducerTest() {
             selectedCategoryIndex = 0
         )
 
-        reducer.invoke(FileType.LAYOUT_XML.ordinal)
+        actionFlow.test {
+            reducer.invoke(ChangeFileType(FileType.LAYOUT_XML.ordinal))
 
-        verify {
-            updateScreenElementReducerMock.invoke(
+            awaitItem() shouldBeEqualTo SettingsAction.UpdateScreenElement(
                 ScreenElement(
                     fileType = FileType.LAYOUT_XML,
                     fileNameTemplate = FileType.LAYOUT_XML.defaultFileName,
                     template = FileType.LAYOUT_XML.defaultTemplate,
                 )
             )
+            cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun `if selected element null on invoke`() {
-        reducer.invoke(FileType.LAYOUT_XML.ordinal)
-
-        verify { updateScreenElementReducerMock wasNot Called }
     }
 }

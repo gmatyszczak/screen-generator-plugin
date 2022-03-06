@@ -1,28 +1,30 @@
 package ui.settings.reducer
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction.SelectCustomVariable
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
-class SelectCustomVariableReducerImplTest : BaseReducerTest() {
+class SelectCustomVariableReducerTest {
 
-    lateinit var reducer: SelectCustomVariableReducerImpl
+    val state = MutableStateFlow(SettingsState())
+    lateinit var reducer: SelectCustomVariableReducer
 
     @BeforeEach
     fun setup() {
-        reducer = SelectCustomVariableReducerImpl(state, effectMock, TestCoroutineScope())
+        reducer = SelectCustomVariableReducer(state)
     }
 
     @Test
     fun `when custom variables empty on invoke`() {
-        reducer.invoke(0)
+        reducer.invoke(SelectCustomVariable(0))
 
         state.value shouldBeEqualTo SettingsState(
             selectedCustomVariableIndex = null,
@@ -37,7 +39,7 @@ class SelectCustomVariableReducerImplTest : BaseReducerTest() {
         )
         state.value = initialState
 
-        reducer.invoke(10)
+        reducer.invoke(SelectCustomVariable(10))
 
         state.value shouldBeEqualTo initialState.copy(
             selectedCustomVariableIndex = null,
@@ -57,7 +59,7 @@ class SelectCustomVariableReducerImplTest : BaseReducerTest() {
         )
         state.value = initialState
 
-        reducer.invoke(0)
+        reducer.invoke(SelectCustomVariable(0))
 
         state.value shouldBeEqualTo initialState.copy(
             selectedCustomVariableIndex = 0

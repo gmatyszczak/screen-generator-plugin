@@ -1,36 +1,28 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import model.Category
+import kotlinx.coroutines.flow.update
 import model.CategoryScreenElements
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction.UpdateCategory
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface UpdateCategoryReducer {
+class UpdateCategoryReducer @Inject constructor(
+    private val state: MutableStateFlow<SettingsState>,
+) : Reducer.Blocking<UpdateCategory> {
 
-    operator fun invoke(updatedCategory: Category)
-}
-
-class UpdateCategoryReducerImpl @Inject constructor(
-    state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-) : BaseReducer(state, effect, scope), UpdateCategoryReducer {
-
-    override fun invoke(updatedCategory: Category) {
-        pushState {
-            val categoryScreenElements = categories[selectedCategoryIndex!!]
-            val newCategories = categories.toMutableList()
+    override fun invoke(action: UpdateCategory) {
+        state.update {
+            val categoryScreenElements = it.categories[it.selectedCategoryIndex!!]
+            val newCategories = it.categories.toMutableList()
                 .apply {
                     set(
-                        selectedCategoryIndex,
-                        CategoryScreenElements(updatedCategory, categoryScreenElements.screenElements)
+                        it.selectedCategoryIndex,
+                        CategoryScreenElements(action.category, categoryScreenElements.screenElements)
                     )
                 }
-            copy(
+            it.copy(
                 categories = newCategories,
                 isModified = true
             )

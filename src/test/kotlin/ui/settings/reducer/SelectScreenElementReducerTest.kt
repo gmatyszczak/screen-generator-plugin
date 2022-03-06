@@ -1,28 +1,30 @@
 package ui.settings.reducer
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction.SelectScreenElement
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
-class SelectScreenElementReducerImplTest : BaseReducerTest() {
+class SelectScreenElementReducerTest {
 
-    lateinit var reducer: SelectScreenElementReducerImpl
+    val state = MutableStateFlow(SettingsState())
+    lateinit var reducer: SelectScreenElementReducer
 
     @BeforeEach
     fun setup() {
-        reducer = SelectScreenElementReducerImpl(state, effectMock, TestCoroutineScope())
+        reducer = SelectScreenElementReducer(state)
     }
 
     @Test
     fun `when screen elements empty on invoke`() {
-        reducer.invoke(0)
+        reducer.invoke(SelectScreenElement(0))
 
         state.value shouldBeEqualTo SettingsState(
             selectedElementIndex = null,
@@ -39,7 +41,7 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
         )
         state.value = initialState
 
-        reducer.invoke(10)
+        reducer.invoke(SelectScreenElement(10))
 
         state.value shouldBeEqualTo initialState.copy(
             selectedElementIndex = null,
@@ -61,7 +63,7 @@ class SelectScreenElementReducerImplTest : BaseReducerTest() {
         )
         state.value = initialState
 
-        reducer.invoke(0)
+        reducer.invoke(SelectScreenElement(0))
 
         state.value shouldBeEqualTo initialState.copy(
             selectedElementIndex = 0,

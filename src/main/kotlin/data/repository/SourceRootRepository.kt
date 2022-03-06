@@ -13,17 +13,17 @@ class SourceRootRepository @Inject constructor(
         projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
             pathTrimmed.contains("src", true) &&
-                    pathTrimmed.contains(sourceSet) &&
-                    !pathTrimmed.contains("assets", true) &&
-                    !pathTrimmed.contains("res", true)
+                pathTrimmed.contains(sourceSet) &&
+                !pathTrimmed.contains("assets", true) &&
+                !pathTrimmed.contains("res", true)
         }
 
     fun findResourcesSourceRoot(module: Module) =
         projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
             pathTrimmed.contains("src", true) &&
-                    pathTrimmed.contains("main", true) &&
-                    pathTrimmed.contains("res", true)
+                pathTrimmed.contains("main", true) &&
+                pathTrimmed.contains("res", true)
         }
 
     private fun String.removeModulePathPrefix(module: Module) =

@@ -1,27 +1,20 @@
 package ui.settings.reducer
 
 import data.repository.SettingsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import model.Settings
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction.ApplySettings
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ApplySettingsReducer {
-
-    operator fun invoke()
-}
-
-class ApplySettingsReducerImpl @Inject constructor(
+class ApplySettingsReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
     private val settingsRepository: SettingsRepository
-) : BaseReducer(state, effect, scope), ApplySettingsReducer {
+) : Reducer.Blocking<ApplySettings> {
 
-    override fun invoke() {
+    override fun invoke(action: ApplySettings) {
         val newSettings = state.value.run {
             Settings(
                 screenElements = categories.flatMap { it.screenElements }.toMutableList(),
@@ -29,6 +22,6 @@ class ApplySettingsReducerImpl @Inject constructor(
             )
         }
         settingsRepository.update(newSettings)
-        pushState { copy(isModified = false) }
+        state.update { it.copy(isModified = false) }
     }
 }

@@ -1,30 +1,27 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.settings.SettingsAction.SelectCustomVariable
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface SelectCustomVariableReducer {
-    operator fun invoke(index: Int)
-}
+class SelectCustomVariableReducer @Inject constructor(
+    private val state: MutableStateFlow<SettingsState>,
+) : Reducer.Blocking<SelectCustomVariable> {
 
-class SelectCustomVariableReducerImpl @Inject constructor(
-    state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope
-) : BaseReducer(state, effect, scope), SelectCustomVariableReducer {
-
-    override fun invoke(index: Int) = pushState {
-        val customVariables = selectedCategoryIndex?.let { categories[it].category.customVariables } ?: emptyList()
-        val selectedIndex =
-            if (customVariables.isNotEmpty() && index in customVariables.indices) {
-                index
-            } else {
-                null
-            }
-        copy(selectedCustomVariableIndex = selectedIndex)
+    override fun invoke(action: SelectCustomVariable) {
+        state.update { state ->
+            val customVariables =
+                state.selectedCategoryIndex?.let { state.categories[it].category.customVariables } ?: emptyList()
+            val selectedIndex =
+                if (customVariables.isNotEmpty() && action.index in customVariables.indices) {
+                    action.index
+                } else {
+                    null
+                }
+            state.copy(selectedCustomVariableIndex = selectedIndex)
+        }
     }
 }

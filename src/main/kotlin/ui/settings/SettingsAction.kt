@@ -1,5 +1,8 @@
 package ui.settings
 
+import model.Category
+import model.ScreenElement
+
 sealed class SettingsAction {
 
     object ApplySettings : SettingsAction()
@@ -26,6 +29,8 @@ sealed class SettingsAction {
     data class MoveDownCustomVariable(val index: Int) : SettingsAction()
     data class MoveUpCustomVariable(val index: Int) : SettingsAction()
     data class ChangeCustomVariableName(val text: String) : SettingsAction()
+    data class UpdateScreenElement(val element: ScreenElement) : SettingsAction()
+    data class UpdateCategory(val category: Category) : SettingsAction()
 
     object ClickHelp : SettingsAction()
     object AddCategory : SettingsAction()

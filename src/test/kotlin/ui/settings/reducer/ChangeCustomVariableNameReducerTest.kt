@@ -1,6 +1,6 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
@@ -8,15 +8,17 @@ import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction.ChangeCustomVariableName
 import ui.settings.SettingsState
 
-class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
+class ChangeCustomVariableNameReducerTest {
 
-    lateinit var reducer: ChangeCustomVariableNameReducerImpl
+    val state = MutableStateFlow(SettingsState())
+    lateinit var reducer: ChangeCustomVariableNameReducer
 
     @BeforeEach
     fun setup() {
-        reducer = ChangeCustomVariableNameReducerImpl(state, effectMock, TestCoroutineScope())
+        reducer = ChangeCustomVariableNameReducer(state)
     }
 
     @Test
@@ -34,7 +36,7 @@ class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
             selectedCustomVariableIndex = 0
         )
 
-        reducer.invoke("test2")
+        reducer.invoke(ChangeCustomVariableName("test2"))
 
         state.value shouldBeEqualTo SettingsState(
             categories = listOf(
@@ -53,7 +55,7 @@ class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 
     @Test
     fun `if selected element null on invoke`() {
-        reducer.invoke("test")
+        reducer.invoke(ChangeCustomVariableName("test"))
 
         state.value shouldBeEqualTo SettingsState()
     }

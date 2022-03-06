@@ -4,7 +4,6 @@ import data.repository.SettingsRepository
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
@@ -12,13 +11,14 @@ import model.Settings
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction.ApplySettings
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
-class ApplySettingsReducerImplTest : BaseReducerTest() {
+class ApplySettingsReducerTest : BaseReducerTest() {
 
     val settingsRepositoryMock: SettingsRepository = mockk(relaxUnitFun = true)
-    lateinit var reducer: ApplySettingsReducerImpl
+    lateinit var reducer: ApplySettingsReducer
 
     val categoryScreenElement = CategoryScreenElements(
         Category(),
@@ -34,12 +34,12 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
     @BeforeEach
     fun setUp() {
         state.value = initialState
-        reducer = ApplySettingsReducerImpl(state, effectMock, TestCoroutineScope(), settingsRepositoryMock)
+        reducer = ApplySettingsReducer(state, settingsRepositoryMock)
     }
 
     @Test
     fun `on invoke`() {
-        reducer.invoke()
+        reducer.invoke(ApplySettings)
 
         state.value shouldBeEqualTo initialState.copy(isModified = false)
         verify {

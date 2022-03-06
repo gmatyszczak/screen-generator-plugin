@@ -1,33 +1,30 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import model.FileType
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeFileType
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ChangeFileTypeReducer {
-
-    operator fun invoke(index: Int)
-}
-
-class ChangeFileTypeReducerImpl @Inject constructor(
+class ChangeFileTypeReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val updateScreenElementReducer: UpdateScreenElementReducer
-) : BaseReducer(state, effect, scope), ChangeFileTypeReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<ChangeFileType> {
 
-    override fun invoke(index: Int) {
-        state.value.selectedElement?.let {
-            val newFileType = FileType.values()[index]
-            updateScreenElementReducer(
-                it.copy(
-                    fileType = newFileType,
-                    fileNameTemplate = newFileType.defaultFileName,
-                    template = newFileType.defaultTemplate
+    override suspend fun invoke(action: ChangeFileType) {
+        state.value.selectedElement?.let { screenElement ->
+            val newFileType = FileType.values()[action.index]
+            actionFlow.emit(
+                UpdateScreenElement(
+                    screenElement.copy(
+                        fileType = newFileType,
+                        fileNameTemplate = newFileType.defaultFileName,
+                        template = newFileType.defaultTemplate
+                    )
                 )
             )
         }

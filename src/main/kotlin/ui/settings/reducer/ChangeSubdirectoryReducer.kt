@@ -1,27 +1,22 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeSubdirectory
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ChangeSubdirectoryReducer {
-
-    operator fun invoke(text: String)
-}
-
-class ChangeSubdirectoryReducerImpl @Inject constructor(
+class ChangeSubdirectoryReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val updateScreenElementReducer: UpdateScreenElementReducer
-) : BaseReducer(state, effect, scope), ChangeSubdirectoryReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<ChangeSubdirectory> {
 
-    override fun invoke(text: String) {
-        state.value.selectedElement?.let {
-            updateScreenElementReducer(it.copy(subdirectory = text))
+    override suspend fun invoke(action: ChangeSubdirectory) {
+        state.value.selectedElement?.let { screenElement ->
+            actionFlow.emit(UpdateScreenElement(screenElement.copy(subdirectory = action.text)))
         }
     }
 }

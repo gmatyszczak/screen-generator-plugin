@@ -1,23 +1,27 @@
 package ui.settings.reducer
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
+import ui.settings.renderSampleCode
+import ui.settings.renderSampleFileName
 
 @ExperimentalCoroutinesApi
-class UpdateCategoryReducerImplTest : BaseReducerTest() {
+class UpdateScreenElementReducerTest {
 
-    lateinit var reducer: UpdateCategoryReducerImpl
+    val state = MutableStateFlow(SettingsState())
+    lateinit var reducer: UpdateScreenElementReducer
 
     @BeforeEach
     fun setup() {
-        reducer = UpdateCategoryReducerImpl(state, effectMock, TestCoroutineScope())
+        reducer = UpdateScreenElementReducer(state)
     }
 
     @Test
@@ -25,24 +29,27 @@ class UpdateCategoryReducerImplTest : BaseReducerTest() {
         val initialState = SettingsState(
             categories = listOf(
                 CategoryScreenElements(
-                    Category(name = "test1"),
-                    listOf(ScreenElement())
+                    Category(),
+                    listOf(ScreenElement(name = "test1"))
                 )
             ),
+            selectedElementIndex = 0,
             selectedCategoryIndex = 0
         )
-        val updatedCategory = Category(name = "test2")
+        val updatedElement = ScreenElement(name = "test2")
 
         state.value = initialState
-        reducer.invoke(updatedCategory)
+        reducer.invoke(UpdateScreenElement(updatedElement))
 
         state.value shouldBeEqualTo initialState.copy(
             categories = listOf(
                 CategoryScreenElements(
-                    updatedCategory,
-                    listOf(ScreenElement())
+                    Category(),
+                    listOf(updatedElement)
                 )
             ),
+            fileNameRendered = updatedElement.renderSampleFileName(),
+            sampleCode = updatedElement.renderSampleCode(),
             isModified = true
         )
     }

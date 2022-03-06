@@ -1,27 +1,22 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeTemplate
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ChangeTemplateReducer {
-
-    operator fun invoke(text: String)
-}
-
-class ChangeTemplateReducerImpl @Inject constructor(
+class ChangeTemplateReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val updateScreenElementReducer: UpdateScreenElementReducer
-) : BaseReducer(state, effect, scope), ChangeTemplateReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<ChangeTemplate> {
 
-    override fun invoke(text: String) {
-        state.value.selectedElement?.let {
-            updateScreenElementReducer(it.copy(template = text))
+    override suspend fun invoke(action: ChangeTemplate) {
+        state.value.selectedElement?.let { screenElement ->
+            actionFlow.emit(UpdateScreenElement(screenElement.copy(template = action.text)))
         }
     }
 }

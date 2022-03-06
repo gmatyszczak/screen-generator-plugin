@@ -1,44 +1,41 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.SelectCategory
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface SelectCategoryReducer {
-    operator fun invoke(index: Int)
-}
-
-class SelectCategoryReducerImpl @Inject constructor(
+class SelectCategoryReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val selectScreenElementReducer: SelectScreenElementReducer,
-    private val selectCustomVariableReducer: SelectCustomVariableReducer
-) : BaseReducer(state, effect, scope), SelectCategoryReducer {
+    private val effect: MutableSharedFlow<SettingsEffect>,
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<SelectCategory> {
 
-    override fun invoke(index: Int) {
+    override suspend fun invoke(action: SelectCategory) {
         val selectedIndex =
-            if (state.value.categories.isNotEmpty() && index in state.value.categories.indices) {
-                index
+            if (state.value.categories.isNotEmpty() && action.index in state.value.categories.indices) {
+                action.index
             } else {
                 null
             }
         val selectedCategory = selectedIndex?.let { state.value.categories[selectedIndex] }
         val selectedElement = selectedCategory?.screenElements?.firstOrNull()
-        pushState {
-            copy(
+        state.update {
+            it.copy(
                 selectedCategoryIndex = selectedIndex
             )
         }
-        selectCustomVariableReducer(-1)
+        actionFlow.emit(SettingsAction.SelectCustomVariable(-1))
         if (selectedElement != null) {
-            selectScreenElementReducer(0)
-            pushEffect(SettingsEffect.SelectScreenElement(0))
+            actionFlow.emit(SettingsAction.SelectScreenElement(0))
+            effect.emit(SettingsEffect.SelectScreenElement(0))
         } else {
-            selectScreenElementReducer(-1)
+            actionFlow.emit(SettingsAction.SelectScreenElement(-1))
         }
     }
 }
