@@ -7,7 +7,33 @@ import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import ui.settings.reducer.*
+import ui.settings.reducer.AddCategoryReducer
+import ui.settings.reducer.AddCustomVariableReducer
+import ui.settings.reducer.AddScreenElementReducer
+import ui.settings.reducer.ApplySettingsReducer
+import ui.settings.reducer.ChangeAndroidComponentReducer
+import ui.settings.reducer.ChangeCategoryNameReducer
+import ui.settings.reducer.ChangeCustomVariableNameReducer
+import ui.settings.reducer.ChangeFileNameReducer
+import ui.settings.reducer.ChangeFileTypeReducer
+import ui.settings.reducer.ChangeNameReducer
+import ui.settings.reducer.ChangeSourceSetReducer
+import ui.settings.reducer.ChangeSubdirectoryReducer
+import ui.settings.reducer.ChangeTemplateReducer
+import ui.settings.reducer.ClickHelpReducer
+import ui.settings.reducer.MoveDownCategoryReducer
+import ui.settings.reducer.MoveDownCustomVariableReducer
+import ui.settings.reducer.MoveDownScreenElementReducer
+import ui.settings.reducer.MoveUpCategoryReducer
+import ui.settings.reducer.MoveUpCustomVariableReducer
+import ui.settings.reducer.MoveUpScreenElementReducer
+import ui.settings.reducer.RemoveCategoryReducer
+import ui.settings.reducer.RemoveCustomVariableReducer
+import ui.settings.reducer.RemoveScreenElementReducer
+import ui.settings.reducer.ResetSettingsReducer
+import ui.settings.reducer.SelectCategoryReducer
+import ui.settings.reducer.SelectCustomVariableReducer
+import ui.settings.reducer.SelectScreenElementReducer
 
 @RunWith(MockitoJUnitRunner::class)
 class SettingsViewModelTest {
@@ -197,7 +223,6 @@ class SettingsViewModelTest {
 
         verify(addCategoryReducerMock).invoke()
     }
-
 
     @Test
     fun `when SelectCategory on invoke`() {

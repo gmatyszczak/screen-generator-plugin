@@ -63,7 +63,8 @@ class InitReducerImplTest : BaseReducerTest() {
                 moduleDomain,
                 listOf(category),
                 category
-            ), state.value
+            ),
+            state.value
         )
     }
 }

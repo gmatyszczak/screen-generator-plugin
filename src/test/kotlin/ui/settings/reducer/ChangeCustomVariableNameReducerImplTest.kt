@@ -5,10 +5,10 @@ import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import ui.settings.SettingsState
-import kotlin.test.assertEquals
 
 class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 

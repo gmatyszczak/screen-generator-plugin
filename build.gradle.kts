@@ -3,8 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("org.jetbrains.intellij") version "1.3.0"
-    kotlin("kapt")  version "1.6.10"
+    id("org.jetbrains.intellij") version "1.4.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+    kotlin("kapt") version "1.6.10"
 }
 
 group = "screengenerator"
@@ -18,8 +19,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.2")
-    implementation("com.google.dagger:dagger:2.40.5")
-    kapt("com.google.dagger:dagger-compiler:2.40.5")
+    implementation("com.google.dagger:dagger:2.41")
+    kapt("com.google.dagger:dagger-compiler:2.41")
 
     testImplementation("junit:junit:4.12")
     testImplementation("org.mockito:mockito-core:2.23.4")
@@ -28,7 +29,7 @@ dependencies {
 }
 
 intellij {
-    version.set("2021.3")
+    version.set("2021.1.1")
     plugins.set(listOf("org.jetbrains.kotlin"))
     intellij.updateSinceUntilBuild.set(false)
 }

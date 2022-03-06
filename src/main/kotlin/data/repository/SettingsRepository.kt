@@ -22,7 +22,8 @@ class SettingsRepositoryImpl @Inject constructor(private val project: Project) :
         return settings.categories.map { category ->
             CategoryScreenElements(
                 category,
-                settings.screenElements.filter { it.categoryId == category.id })
+                settings.screenElements.filter { it.categoryId == category.id }
+            )
         }
     }
 

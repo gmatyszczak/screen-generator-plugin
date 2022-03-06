@@ -15,5 +15,4 @@ abstract class BaseReducerTest {
     protected lateinit var effectMock: MutableSharedFlow<SettingsEffect>
 
     protected val state = MutableStateFlow(SettingsState())
-
 }

@@ -5,12 +5,12 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class UpdateScreenElementReducerImplTest : BaseReducerTest() {

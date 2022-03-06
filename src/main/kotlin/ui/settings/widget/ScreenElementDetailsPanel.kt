@@ -34,10 +34,10 @@ class ScreenElementDetailsPanel : JPanel() {
     private val androidComponentComboBox = ComboBox(AndroidComponent.values())
 
     private val subdirectoryLabel = JLabel("Subdirectory:")
-    private val subdirectoryTextField= JTextField()
+    private val subdirectoryTextField = JTextField()
 
     private val sourceSetLabel = JLabel("Source Set:")
-    private val sourceSetTextField= JTextField()
+    private val sourceSetTextField = JTextField()
 
     private var listenersBlocked = false
 
@@ -49,22 +49,31 @@ class ScreenElementDetailsPanel : JPanel() {
         add(fileNameLabel, constraintsLeft(0, 1))
         add(fileNameTextField, constraintsRight(1, 1))
         add(fileTypeLabel, constraintsLeft(0, 2))
-        add(fileTypeComboBox, constraintsRight(1, 2).apply {
-            gridwidth = 1
-            fill = GridBagConstraints.NONE
-            anchor = GridBagConstraints.LINE_START
-        })
-        add(fileNameSampleLabel, constraintsRight(2, 2).apply {
-            gridwidth = 1
-            weightx /= 2
-            anchor = GridBagConstraints.LINE_END
-            fill = GridBagConstraints.NONE
-        })
+        add(
+            fileTypeComboBox,
+            constraintsRight(1, 2).apply {
+                gridwidth = 1
+                fill = GridBagConstraints.NONE
+                anchor = GridBagConstraints.LINE_START
+            }
+        )
+        add(
+            fileNameSampleLabel,
+            constraintsRight(2, 2).apply {
+                gridwidth = 1
+                weightx /= 2
+                anchor = GridBagConstraints.LINE_END
+                fill = GridBagConstraints.NONE
+            }
+        )
         add(androidComponentLabel, constraintsLeft(0, 3))
-        add(androidComponentComboBox, constraintsRight(1, 3).apply {
-            fill = GridBagConstraints.NONE
-            anchor = GridBagConstraints.LINE_START
-        })
+        add(
+            androidComponentComboBox,
+            constraintsRight(1, 3).apply {
+                fill = GridBagConstraints.NONE
+                anchor = GridBagConstraints.LINE_START
+            }
+        )
         add(subdirectoryLabel, constraintsLeft(0, 4))
         add(subdirectoryTextField, constraintsRight(1, 4))
         add(sourceSetLabel, constraintsLeft(0, 5))
@@ -100,5 +109,3 @@ class ScreenElementDetailsPanel : JPanel() {
         listenersBlocked = false
     }
 }
-
-

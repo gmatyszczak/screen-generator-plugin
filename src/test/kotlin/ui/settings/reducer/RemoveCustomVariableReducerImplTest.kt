@@ -8,11 +8,11 @@ import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import ui.settings.SettingsState
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
@@ -49,7 +49,8 @@ class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
                     CategoryScreenElements(
                         Category(
                             customVariables = emptyList()
-                        ), listOf(ScreenElement(name = "test"))
+                        ),
+                        listOf(ScreenElement(name = "test"))
                     )
                 )
             ),

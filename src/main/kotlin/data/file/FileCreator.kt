@@ -2,7 +2,11 @@ package data.file
 
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
-import model.*
+import model.AndroidComponent
+import model.Category
+import model.CustomVariable
+import model.FileType
+import model.Module
 import javax.inject.Inject
 
 private const val LAYOUT_DIRECTORY = "layout"
@@ -52,7 +56,6 @@ class FileCreatorImpl @Inject constructor(
                         }
                     }
                 }
-
         }
     }
 

@@ -37,5 +37,3 @@ class CategoryDetailsPanel : JPanel() {
         listenersBlocked = false
     }
 }
-
-

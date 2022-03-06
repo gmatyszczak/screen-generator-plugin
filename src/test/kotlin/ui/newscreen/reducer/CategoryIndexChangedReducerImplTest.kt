@@ -30,7 +30,8 @@ class CategoryIndexChangedReducerImplTest : BaseReducerTest() {
             NewScreenState(
                 categories = listOf(Category(), Category(name = "test")),
                 selectedCategory = Category(name = "test")
-            ), state.value
+            ),
+            state.value
         )
     }
 }

@@ -46,6 +46,5 @@ class RemoveCategoryReducerImplTest : BaseReducerTest() {
         )
 
         verify(selectCategoryReducerMock).invoke(0)
-
     }
 }

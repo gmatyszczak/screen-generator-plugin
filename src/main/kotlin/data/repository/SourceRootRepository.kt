@@ -19,18 +19,18 @@ class SourceRootRepositoryImpl @Inject constructor(
     override fun findCodeSourceRoot(module: Module, sourceSet: String) =
         projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
-            pathTrimmed.contains("src", true)
-                    && pathTrimmed.contains(sourceSet)
-                    && !pathTrimmed.contains("assets", true)
-                    && !pathTrimmed.contains("res", true)
+            pathTrimmed.contains("src", true) &&
+                pathTrimmed.contains(sourceSet) &&
+                !pathTrimmed.contains("assets", true) &&
+                !pathTrimmed.contains("res", true)
         }
 
     override fun findResourcesSourceRoot(module: Module) =
         projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
-            pathTrimmed.contains("src", true)
-                    && pathTrimmed.contains("main", true)
-                    && pathTrimmed.contains("res", true)
+            pathTrimmed.contains("src", true) &&
+                pathTrimmed.contains("main", true) &&
+                pathTrimmed.contains("res", true)
         }
 
     private fun String.removeModulePathPrefix(module: Module) =
