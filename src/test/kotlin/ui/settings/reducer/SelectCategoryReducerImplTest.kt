@@ -10,8 +10,8 @@ import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
@@ -31,7 +31,7 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
         categories = listOf(categoryScreenElement)
     )
 
-    @Before
+    @BeforeEach
     fun setup() {
         state.value = initialState
         reducer = SelectCategoryReducerImpl(

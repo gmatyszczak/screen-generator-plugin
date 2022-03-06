@@ -5,7 +5,7 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import model.Category
 import model.Module
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import ui.newscreen.reducer.CategoryIndexChangedReducer
 import ui.newscreen.reducer.InitReducer
 import ui.newscreen.reducer.OkClickedReducer

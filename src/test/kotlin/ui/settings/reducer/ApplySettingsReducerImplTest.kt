@@ -10,8 +10,8 @@ import model.CategoryScreenElements
 import model.ScreenElement
 import model.Settings
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
@@ -31,7 +31,7 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
         isModified = true
     )
 
-    @Before
+    @BeforeEach
     fun setUp() {
         state.value = initialState
         reducer = ApplySettingsReducerImpl(state, effectMock, TestCoroutineScope(), settingsRepositoryMock)

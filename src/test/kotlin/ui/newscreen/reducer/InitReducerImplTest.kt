@@ -10,8 +10,8 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.Module
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.newscreen.NewScreenState
 
 class InitReducerImplTest : BaseReducerTest() {
@@ -28,7 +28,7 @@ class InitReducerImplTest : BaseReducerTest() {
 
     lateinit var reducer: InitReducerImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = InitReducerImpl(
             state,

@@ -8,8 +8,8 @@ import model.AndroidComponent
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeAndroidComponentReducerImplTest : BaseReducerTest() {
@@ -17,7 +17,7 @@ class ChangeAndroidComponentReducerImplTest : BaseReducerTest() {
     val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
     lateinit var reducer: ChangeAndroidComponentReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer =
             ChangeAndroidComponentReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)

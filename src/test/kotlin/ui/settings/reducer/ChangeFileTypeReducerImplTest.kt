@@ -8,8 +8,8 @@ import model.Category
 import model.CategoryScreenElements
 import model.FileType
 import model.ScreenElement
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeFileTypeReducerImplTest : BaseReducerTest() {
@@ -17,7 +17,7 @@ class ChangeFileTypeReducerImplTest : BaseReducerTest() {
     val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
     lateinit var reducer: ChangeFileTypeReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeFileTypeReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)
     }

@@ -6,15 +6,15 @@ import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 
     lateinit var reducer: ChangeCustomVariableNameReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeCustomVariableNameReducerImpl(state, effectMock, TestCoroutineScope())
     }

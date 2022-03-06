@@ -4,8 +4,8 @@ import io.mockk.coVerify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsEffect
 
 @ExperimentalCoroutinesApi
@@ -13,7 +13,7 @@ class ClickHelpReducerImplTest : BaseReducerTest() {
 
     lateinit var reducer: ClickHelpReducerImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = ClickHelpReducerImpl(state, effectMock, TestCoroutineScope())
     }

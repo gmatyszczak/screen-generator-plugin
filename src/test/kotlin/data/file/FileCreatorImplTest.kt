@@ -12,7 +12,7 @@ import model.FileType
 import model.Module
 import model.ScreenElement
 import model.Variable
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class FileCreatorImplTest {
 

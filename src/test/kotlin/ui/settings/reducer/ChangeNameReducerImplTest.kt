@@ -7,8 +7,8 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeNameReducerImplTest : BaseReducerTest() {
@@ -16,7 +16,7 @@ class ChangeNameReducerImplTest : BaseReducerTest() {
     val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
     private lateinit var reducer: ChangeNameReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeNameReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)
     }

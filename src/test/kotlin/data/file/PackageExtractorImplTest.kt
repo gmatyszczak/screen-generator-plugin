@@ -5,8 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import model.Module
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class PackageExtractorImplTest {
 
@@ -15,9 +15,9 @@ class PackageExtractorImplTest {
     val sourceRootMock: SourceRoot = mockk()
     lateinit var packageExtractor: PackageExtractorImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        every { sourceRootRepositoryMock.findCodeSourceRoot(module) }  returns sourceRootMock
+        every { sourceRootRepositoryMock.findCodeSourceRoot(module) } returns sourceRootMock
     }
 
     @Test
@@ -58,7 +58,8 @@ class PackageExtractorImplTest {
     fun `when current path is file on extract from current path`() {
         every { sourceRootMock.path } returns "src"
 
-        packageExtractor = PackageExtractorImpl(CurrentPath("src/com/example/test.kt", false, module), sourceRootRepositoryMock)
+        packageExtractor =
+            PackageExtractorImpl(CurrentPath("src/com/example/test.kt", false, module), sourceRootRepositoryMock)
 
         assertEquals("com.example", packageExtractor.extractFromCurrentPath())
     }

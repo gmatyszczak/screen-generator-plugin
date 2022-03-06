@@ -8,8 +8,8 @@ import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
@@ -26,7 +26,7 @@ class AddCategoryReducerImplTest : BaseReducerTest() {
         categories = listOf(categoryScreenElement)
     )
 
-    @Before
+    @BeforeEach
     fun setup() {
         state.value = initialState
         reducer = AddCategoryReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)

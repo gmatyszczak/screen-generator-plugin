@@ -12,8 +12,8 @@ import kotlinx.coroutines.test.runBlockingTest
 import model.AndroidComponent
 import model.Category
 import model.Module
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.newscreen.NewScreenEffect
 
 class OkClickedReducerImplTest : BaseReducerTest() {
@@ -26,7 +26,7 @@ class OkClickedReducerImplTest : BaseReducerTest() {
 
     lateinit var reducer: OkClickedReducerImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = OkClickedReducerImpl(
             state,

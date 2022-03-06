@@ -9,7 +9,7 @@ import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi

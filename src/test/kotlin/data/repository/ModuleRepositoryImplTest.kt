@@ -5,7 +5,7 @@ import io.mockk.every
 import io.mockk.mockk
 import model.Module
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ModuleRepositoryImplTest {
 

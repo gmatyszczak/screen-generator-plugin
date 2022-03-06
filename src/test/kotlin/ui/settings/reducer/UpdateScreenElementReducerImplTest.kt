@@ -6,8 +6,8 @@ import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
@@ -17,7 +17,7 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
 
     lateinit var reducer: UpdateScreenElementReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = UpdateScreenElementReducerImpl(state, effectMock, TestCoroutineScope())
     }

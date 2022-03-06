@@ -6,8 +6,8 @@ import io.mockk.every
 import io.mockk.mockk
 import model.Module
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class SourceRootRepositoryImplTest {
 
@@ -24,7 +24,7 @@ class SourceRootRepositoryImplTest {
     lateinit var sourceRoots: List<SourceRoot>
     val sourceRootRepository = SourceRootRepositoryImpl(projectStructureMock)
 
-    @Before
+    @BeforeEach
     fun setUp() {
         every { sourceRootBuildMock.path } returns "/User/MyApplication/$moduleName/build/"
         every { sourceRootTestMock.path } returns "/User/MyApplication/$moduleName/src/test"

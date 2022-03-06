@@ -2,7 +2,7 @@ package ui.settings
 
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import ui.settings.reducer.AddCategoryReducer
 import ui.settings.reducer.AddCustomVariableReducer
 import ui.settings.reducer.AddScreenElementReducer

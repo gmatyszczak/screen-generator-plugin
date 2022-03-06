@@ -7,8 +7,8 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeTemplateReducerImplTest : BaseReducerTest() {
@@ -16,7 +16,7 @@ class ChangeTemplateReducerImplTest : BaseReducerTest() {
     val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
     lateinit var reducer: ChangeTemplateReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeTemplateReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)
     }

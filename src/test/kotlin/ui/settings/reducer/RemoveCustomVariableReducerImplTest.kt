@@ -10,8 +10,8 @@ import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
@@ -30,7 +30,7 @@ class RemoveCustomVariableReducerImplTest : BaseReducerTest() {
         selectedCategoryIndex = 0
     )
 
-    @Before
+    @BeforeEach
     fun setup() {
         state.value = initialState
         reducer = RemoveCustomVariableReducerImpl(state, effectMock, TestCoroutineScope(), selectCustomVariableReducerMock)
