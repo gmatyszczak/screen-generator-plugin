@@ -15,7 +15,7 @@ import ui.settings.renderSampleFileName
 @ExperimentalCoroutinesApi
 class UpdateScreenElementReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: UpdateScreenElementReducerImpl
+    lateinit var reducer: UpdateScreenElementReducerImpl
 
     @Before
     fun setup() {

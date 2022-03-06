@@ -13,7 +13,7 @@ import ui.settings.SettingsState
 @ExperimentalCoroutinesApi
 class UpdateCategoryReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: UpdateCategoryReducerImpl
+    lateinit var reducer: UpdateCategoryReducerImpl
 
     @Before
     fun setup() {

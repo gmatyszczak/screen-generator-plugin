@@ -1,6 +1,8 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
@@ -10,26 +12,22 @@ import model.ScreenElement
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class SelectCategoryReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var selectScreenElementReducerMock: SelectScreenElementReducer
+    val selectScreenElementReducerMock: SelectScreenElementReducer = mockk(relaxUnitFun = true)
+    val selectCustomVariableReducerMock: SelectCustomVariableReducer = mockk(relaxUnitFun = true)
 
-    @Mock
-    private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
+    lateinit var reducer: SelectCategoryReducerImpl
 
-    private lateinit var reducer: SelectCategoryReducerImpl
-
-    private val categoryScreenElement = CategoryScreenElements(
+    val categoryScreenElement = CategoryScreenElements(
         Category(),
         listOf(ScreenElement(name = "test"))
     )
-    private val initialState = SettingsState(
+    val initialState = SettingsState(
         categories = listOf(categoryScreenElement)
     )
 
@@ -55,8 +53,8 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
             ),
             state.value
         )
-        verify(selectScreenElementReducerMock).invoke(-1)
-        verify(selectCustomVariableReducerMock).invoke(-1)
+        verify { selectScreenElementReducerMock.invoke(-1) }
+        verify { selectCustomVariableReducerMock.invoke(-1) }
     }
 
     @Test
@@ -69,8 +67,8 @@ class SelectCategoryReducerImplTest : BaseReducerTest() {
             ),
             state.value
         )
-        verify(selectScreenElementReducerMock).invoke(0)
-        verify(selectCustomVariableReducerMock).invoke(-1)
-        verify(effectMock).emit(SettingsEffect.SelectScreenElement(0))
+        verify { selectScreenElementReducerMock.invoke(0) }
+        verify { selectCustomVariableReducerMock.invoke(-1) }
+        coVerify { effectMock.emit(SettingsEffect.SelectScreenElement(0)) }
     }
 }

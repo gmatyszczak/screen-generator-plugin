@@ -1,22 +1,20 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import io.mockk.Called
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import ui.settings.SettingsState
 
 class ChangeSourceSetReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var updateScreenElementReducerMock: UpdateScreenElementReducer
-
-    private lateinit var reducer: ChangeSourceSetReducerImpl
+    val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: ChangeSourceSetReducerImpl
 
     @Before
     fun setup() {
@@ -38,13 +36,13 @@ class ChangeSourceSetReducerImplTest : BaseReducerTest() {
 
         reducer.invoke("test")
 
-        verify(updateScreenElementReducerMock).invoke(ScreenElement(sourceSet = "test"))
+        verify {updateScreenElementReducerMock.invoke(ScreenElement(sourceSet = "test")) }
     }
 
     @Test
     fun `if selected element null on invoke`() {
         reducer.invoke("test")
 
-        verifyZeroInteractions(updateScreenElementReducerMock)
+        verify { updateScreenElementReducerMock wasNot Called }
     }
 }

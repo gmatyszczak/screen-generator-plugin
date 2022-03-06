@@ -1,22 +1,20 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import io.mockk.Called
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import ui.settings.SettingsState
 
 class ChangeCategoryNameReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var updateCategoryReducerMock: UpdateCategoryReducer
-
-    private lateinit var reducer: ChangeCategoryNameReducerImpl
+    val updateCategoryReducerMock: UpdateCategoryReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: ChangeCategoryNameReducerImpl
 
     @Before
     fun setup() {
@@ -37,13 +35,13 @@ class ChangeCategoryNameReducerImplTest : BaseReducerTest() {
 
         reducer.invoke("test")
 
-        verify(updateCategoryReducerMock).invoke(Category(name = "test"))
+        verify { updateCategoryReducerMock.invoke(Category(name = "test")) }
     }
 
     @Test
     fun `if selected element null on invoke`() {
         reducer.invoke("test")
 
-        verifyZeroInteractions(updateCategoryReducerMock)
+        verify { updateCategoryReducerMock wasNot Called }
     }
 }

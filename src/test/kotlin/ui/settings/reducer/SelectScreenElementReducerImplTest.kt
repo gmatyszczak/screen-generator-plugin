@@ -13,7 +13,7 @@ import ui.settings.SettingsState
 @ExperimentalCoroutinesApi
 class SelectScreenElementReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: SelectScreenElementReducerImpl
+    lateinit var reducer: SelectScreenElementReducerImpl
 
     @Before
     fun setup() {

@@ -13,7 +13,7 @@ import ui.settings.SettingsState
 @ExperimentalCoroutinesApi
 class SelectCustomVariableReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: SelectCustomVariableReducerImpl
+    lateinit var reducer: SelectCustomVariableReducerImpl
 
     @Before
     fun setup() {

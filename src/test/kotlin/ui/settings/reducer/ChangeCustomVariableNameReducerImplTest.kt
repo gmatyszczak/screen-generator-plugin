@@ -12,7 +12,7 @@ import ui.settings.SettingsState
 
 class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: ChangeCustomVariableNameReducerImpl
+    lateinit var reducer: ChangeCustomVariableNameReducerImpl
 
     @Before
     fun setup() {

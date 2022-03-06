@@ -1,62 +1,39 @@
 package data.repository
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import data.file.ProjectStructure
 import data.file.SourceRoot
+import io.mockk.every
+import io.mockk.mockk
 import model.Module
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class SourceRootRepositoryImplTest {
 
-    @Mock
-    private lateinit var projectStructureMock: ProjectStructure
-
-    @Mock
-    private lateinit var sourceRootBuildMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootTestMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootAndroidTestMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootResMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootSrcMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootAssetsMock: SourceRoot
-
-    @Mock
-    private lateinit var sourceRootDebugResMock: SourceRoot
-
-    private val moduleName = "presentation"
-    private val module = Module("MyApplication.$moduleName", moduleName)
-    private lateinit var sourceRoots: List<SourceRoot>
-
-    @InjectMocks
-    private lateinit var sourceRootRepository: SourceRootRepositoryImpl
+    val projectStructureMock: ProjectStructure = mockk()
+    val sourceRootBuildMock: SourceRoot = mockk()
+    val sourceRootTestMock: SourceRoot = mockk()
+    val sourceRootAndroidTestMock: SourceRoot = mockk()
+    val sourceRootResMock: SourceRoot = mockk()
+    val sourceRootSrcMock: SourceRoot = mockk()
+    val sourceRootAssetsMock: SourceRoot = mockk()
+    val sourceRootDebugResMock: SourceRoot = mockk()
+    val moduleName = "presentation"
+    val module = Module("MyApplication.$moduleName", moduleName)
+    lateinit var sourceRoots: List<SourceRoot>
+    val sourceRootRepository = SourceRootRepositoryImpl(projectStructureMock)
 
     @Before
     fun setUp() {
-        whenever(sourceRootBuildMock.path).thenReturn("/User/MyApplication/$moduleName/build/")
-        whenever(sourceRootTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/test")
-        whenever(sourceRootAndroidTestMock.path).thenReturn("/User/MyApplication/$moduleName/src/androidTest")
-        whenever(sourceRootResMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/res")
-        whenever(sourceRootDebugResMock.path).thenReturn("/User/MyApplication/$moduleName/src/debug/res")
-        whenever(sourceRootAssetsMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/assets")
-        whenever(sourceRootSrcMock.path).thenReturn("/User/MyApplication/$moduleName/src/main/java")
-        whenever(projectStructureMock.getProjectPath()).thenReturn("/User/MyApplication")
+        every { sourceRootBuildMock.path } returns "/User/MyApplication/$moduleName/build/"
+        every { sourceRootTestMock.path } returns "/User/MyApplication/$moduleName/src/test"
+        every { sourceRootAndroidTestMock.path } returns "/User/MyApplication/$moduleName/src/androidTest"
+        every { sourceRootResMock.path } returns "/User/MyApplication/$moduleName/src/main/res"
+        every { sourceRootDebugResMock.path } returns "/User/MyApplication/$moduleName/src/debug/res"
+        every { sourceRootAssetsMock.path } returns "/User/MyApplication/$moduleName/src/main/assets"
+        every { sourceRootSrcMock.path } returns "/User/MyApplication/$moduleName/src/main/java"
+        every { projectStructureMock.getProjectPath() } returns "/User/MyApplication"
         sourceRoots = listOf(
             sourceRootBuildMock,
             sourceRootTestMock,
@@ -70,35 +47,35 @@ class SourceRootRepositoryImplTest {
 
     @Test
     fun `when source roots not empty on find code source root`() {
-        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(sourceRoots)
+        every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
         assertEquals(sourceRootSrcMock, sourceRootRepository.findCodeSourceRoot(module))
     }
 
     @Test
     fun `when source roots empty on find code source root`() {
-        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(emptyList())
+        every { projectStructureMock.findSourceRoots(module) } returns emptyList()
 
         assertEquals(null, sourceRootRepository.findCodeSourceRoot(module))
     }
 
     @Test
     fun `when source roots not empty on find resources source root`() {
-        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(sourceRoots)
+        every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
         assertEquals(sourceRootResMock, sourceRootRepository.findResourcesSourceRoot(module))
     }
 
     @Test
     fun `when source roots empty on find resources source root`() {
-        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(emptyList())
+        every { projectStructureMock.findSourceRoots(module) } returns emptyList()
 
         assertEquals(null, sourceRootRepository.findResourcesSourceRoot(module))
     }
 
     @Test
     fun `on find test code source root`() {
-        whenever(projectStructureMock.findSourceRoots(module)).thenReturn(sourceRoots)
+        every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
         assertEquals(sourceRootTestMock, sourceRootRepository.findCodeSourceRoot(module, "test"))
     }
@@ -106,10 +83,10 @@ class SourceRootRepositoryImplTest {
     @Test
     fun `when nested module on find code source root`() {
         val nestedModuleName = "feature.module"
-        val sourceRoot: SourceRoot = mock()
-        whenever(sourceRoot.path).thenReturn("/User/MyApplication/feature/module/src/main/java")
+        val sourceRoot: SourceRoot = mockk()
+        every { sourceRoot.path } returns "/User/MyApplication/feature/module/src/main/java"
         val nestedModule = Module("MyApplication.$nestedModuleName", nestedModuleName)
-        whenever(projectStructureMock.findSourceRoots(nestedModule)).thenReturn(listOf(sourceRoot))
+        every { projectStructureMock.findSourceRoots(nestedModule) } returns listOf(sourceRoot)
 
         assertEquals(sourceRoot, sourceRootRepository.findCodeSourceRoot(nestedModule, "main"))
     }

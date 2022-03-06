@@ -1,11 +1,10 @@
 package data.file
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import data.repository.SettingsRepository
 import data.repository.SourceRootRepository
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verifySequence
 import model.AndroidComponent
 import model.Category
 import model.CustomVariable
@@ -14,41 +13,22 @@ import model.Module
 import model.ScreenElement
 import model.Variable
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 
-@RunWith(MockitoJUnitRunner::class)
 class FileCreatorImplTest {
 
-    @Mock
-    private lateinit var settingsRepositoryMock: SettingsRepository
+    val module = Module("app", "app")
+    val settingsRepositoryMock: SettingsRepository = mockk()
+    val codeSourceRootMock: SourceRoot = mockk()
+    val resourcesSourceRootMock: SourceRoot = mockk()
+    val codeDirectoryMock: Directory = mockk(relaxUnitFun = true)
+    val resourcesDirectoryMock: Directory = mockk(relaxUnitFun = true)
+    val sourceRootRepositoryMock: SourceRootRepository = mockk()
+    val fileCreator = FileCreatorImpl(settingsRepositoryMock, sourceRootRepositoryMock)
 
-    @Mock
-    private lateinit var codeSourceRootMock: SourceRoot
-
-    @Mock
-    private lateinit var resourcesSourceRootMock: SourceRoot
-
-    @Mock
-    private lateinit var codeDirectoryMock: Directory
-
-    @Mock
-    private lateinit var resourcesDirectoryMock: Directory
-
-    @Mock
-    private lateinit var sourceRootRepositoryMock: SourceRootRepository
-
-    private val module = Module("app", "app")
-
-    @InjectMocks
-    private lateinit var fileCreator: FileCreatorImpl
-
-    private val testKotlinTemplate =
+    val testKotlinTemplate =
         "package ${Variable.PACKAGE_NAME.value}\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass ${Variable.NAME.value}%customVariable%${Variable.ANDROID_COMPONENT_NAME.value} : AppCompatActivity"
-    private val testXmlTemplate = "<FrameLayout></FrameLayout>"
-    private val screenElements = mutableListOf(
+    val testXmlTemplate = "<FrameLayout></FrameLayout>"
+    val screenElements = mutableListOf(
         ScreenElement(
             "Activity",
             testKotlinTemplate,
@@ -69,21 +49,21 @@ class FileCreatorImplTest {
         ScreenElement("View", testXmlTemplate, FileType.LAYOUT_XML, FileType.LAYOUT_XML.defaultFileName)
     )
 
-    private val category = Category(id = 0)
+    val category = Category(id = 0)
 
     @Test
     fun `when android component is activity on create screen files`() {
-        whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
-        whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
-        whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module, "test")).thenReturn(codeSourceRootMock)
-        whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
-        whenever(sourceRootRepositoryMock.findResourcesSourceRoot(module)).thenReturn(resourcesSourceRootMock)
-        whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
-        whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
-        whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
-        whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
+        every { codeDirectoryMock.findSubdirectory("com") } returns codeDirectoryMock
+        every { codeDirectoryMock.findSubdirectory("test") } returns null
+        every { codeDirectoryMock.createSubdirectory("test") } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findCodeSourceRoot(module, "test") } returns codeSourceRootMock
+        every { codeSourceRootMock.directory } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findCodeSourceRoot(module) } returns codeSourceRootMock
+        every { sourceRootRepositoryMock.findResourcesSourceRoot(module) } returns resourcesSourceRootMock
+        every { resourcesSourceRootMock.directory } returns resourcesDirectoryMock
+        every { resourcesDirectoryMock.findSubdirectory("layout") } returns null
+        every { resourcesDirectoryMock.createSubdirectory("layout") } returns resourcesDirectoryMock
+        every { settingsRepositoryMock.loadScreenElements(0) } returns screenElements
 
         fileCreator.createScreenFiles(
             "com.test",
@@ -94,60 +74,58 @@ class FileCreatorImplTest {
             mapOf(CustomVariable("customVariable") to "Custom")
         )
 
-        inOrder(codeDirectoryMock) {
-            verify(codeDirectoryMock).findSubdirectory("com")
-            verify(codeDirectoryMock).findSubdirectory("test")
-            verify(codeDirectoryMock).createSubdirectory("test")
-            verify(codeDirectoryMock).addFile(
+        verifySequence {
+            codeDirectoryMock.findSubdirectory("com")
+            codeDirectoryMock.findSubdirectory("test")
+            codeDirectoryMock.createSubdirectory("test")
+            codeDirectoryMock.addFile(
                 File(
                     "TestActivity",
                     "package com.test\n\nimport androidx.appcompat.app.AppCompatActivity\n\nclass TestCustomActivity : AppCompatActivity",
                     FileType.KOTLIN
                 )
             )
-            verify(codeDirectoryMock).findSubdirectory("com")
-            verify(codeDirectoryMock).findSubdirectory("test")
-            verify(codeDirectoryMock).createSubdirectory("test")
-            verify(codeDirectoryMock).addFile(
+            codeDirectoryMock.findSubdirectory("com")
+            codeDirectoryMock.findSubdirectory("test")
+            codeDirectoryMock.createSubdirectory("test")
+
+            codeDirectoryMock.addFile(
                 File(
                     "TestPresenter",
                     "test",
                     FileType.KOTLIN
                 )
             )
-            verifyNoMoreInteractions()
         }
-        inOrder(resourcesDirectoryMock) {
-            verify(resourcesDirectoryMock).findSubdirectory("layout")
-            verify(resourcesDirectoryMock).createSubdirectory("layout")
-            verify(resourcesDirectoryMock).addFile(
+        verifySequence {
+            resourcesDirectoryMock.findSubdirectory("layout")
+            resourcesDirectoryMock.createSubdirectory("layout")
+            resourcesDirectoryMock.addFile(
                 File(
                     "activity_test",
                     "<FrameLayout></FrameLayout>",
                     FileType.LAYOUT_XML
                 )
             )
-            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(codeDirectoryMock, resourcesDirectoryMock)
     }
 
     @Test
     fun `when android component is fragment on create screen files`() {
-        whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
-        whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
-        whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
-        whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findResourcesSourceRoot(module)).thenReturn(resourcesSourceRootMock)
-        whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
-        whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
-        whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
-        whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
-        whenever(codeDirectoryMock.findSubdirectory("abc")) doReturn null
-        whenever(codeDirectoryMock.createSubdirectory("abc")) doReturn codeDirectoryMock
-        whenever(codeDirectoryMock.findSubdirectory("def")) doReturn null
-        whenever(codeDirectoryMock.createSubdirectory("def")) doReturn codeDirectoryMock
+        every { codeDirectoryMock.findSubdirectory("com") } returns codeDirectoryMock
+        every { codeDirectoryMock.findSubdirectory("test") } returns null
+        every { codeDirectoryMock.createSubdirectory("test") } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findCodeSourceRoot(module) } returns codeSourceRootMock
+        every { codeSourceRootMock.directory } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findResourcesSourceRoot(module) } returns resourcesSourceRootMock
+        every { resourcesSourceRootMock.directory } returns resourcesDirectoryMock
+        every { resourcesDirectoryMock.findSubdirectory("layout") } returns null
+        every { resourcesDirectoryMock.createSubdirectory("layout") } returns resourcesDirectoryMock
+        every { settingsRepositoryMock.loadScreenElements(0) } returns screenElements
+        every { codeDirectoryMock.findSubdirectory("abc") } returns null
+        every { codeDirectoryMock.createSubdirectory("abc") } returns codeDirectoryMock
+        every { codeDirectoryMock.findSubdirectory("def") } returns null
+        every { codeDirectoryMock.createSubdirectory("def") } returns codeDirectoryMock
 
         fileCreator.createScreenFiles(
             "com.test",
@@ -158,84 +136,83 @@ class FileCreatorImplTest {
             mapOf(CustomVariable("customVariable") to "Custom")
         )
 
-        inOrder(codeDirectoryMock) {
-            verify(codeDirectoryMock).findSubdirectory("com")
-            verify(codeDirectoryMock).findSubdirectory("test")
-            verify(codeDirectoryMock).createSubdirectory("test")
-            verify(codeDirectoryMock).findSubdirectory("abc")
-            verify(codeDirectoryMock).createSubdirectory("abc")
-            verify(codeDirectoryMock).findSubdirectory("def")
-            verify(codeDirectoryMock).createSubdirectory("def")
-            verify(codeDirectoryMock).addFile(File("Custom", "test", FileType.KOTLIN))
-            verify(codeDirectoryMock).findSubdirectory("com")
-            verify(codeDirectoryMock).findSubdirectory("test")
-            verify(codeDirectoryMock).createSubdirectory("test")
-            verify(codeDirectoryMock).addFile(
+        verifySequence {
+            codeDirectoryMock.findSubdirectory("com")
+            codeDirectoryMock.findSubdirectory("test")
+            codeDirectoryMock.createSubdirectory("test")
+            codeDirectoryMock.findSubdirectory("abc")
+            codeDirectoryMock.createSubdirectory("abc")
+            codeDirectoryMock.findSubdirectory("def")
+            codeDirectoryMock.createSubdirectory("def")
+            codeDirectoryMock.addFile(File("Custom", "test", FileType.KOTLIN))
+            codeDirectoryMock.findSubdirectory("com")
+            codeDirectoryMock.findSubdirectory("test")
+            codeDirectoryMock.createSubdirectory("test")
+            codeDirectoryMock.addFile(
                 File(
                     "TestPresenter",
                     "test",
                     FileType.KOTLIN
                 )
             )
-            verifyNoMoreInteractions()
         }
-        inOrder(resourcesDirectoryMock) {
-            verify(resourcesDirectoryMock).findSubdirectory("layout")
-            verify(resourcesDirectoryMock).createSubdirectory("layout")
-            verify(resourcesDirectoryMock).addFile(
+        verifySequence {
+            resourcesDirectoryMock.findSubdirectory("layout")
+            resourcesDirectoryMock.createSubdirectory("layout")
+            resourcesDirectoryMock.addFile(
                 File(
                     "fragment_test",
                     "<FrameLayout></FrameLayout>",
                     FileType.LAYOUT_XML
                 )
             )
-            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(codeDirectoryMock)
-        verifyNoMoreInteractions(resourcesDirectoryMock)
     }
 
     @Test
     fun `when android component is none on create screen files`() {
-        whenever(codeDirectoryMock.findSubdirectory("com")).thenReturn(codeDirectoryMock)
-        whenever(codeDirectoryMock.findSubdirectory("test")).thenReturn(null)
-        whenever(codeDirectoryMock.createSubdirectory("test")).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findCodeSourceRoot(module)).thenReturn(codeSourceRootMock)
-        whenever(codeSourceRootMock.directory).thenReturn(codeDirectoryMock)
-        whenever(sourceRootRepositoryMock.findResourcesSourceRoot(module)).thenReturn(resourcesSourceRootMock)
-        whenever(resourcesSourceRootMock.directory).thenReturn(resourcesDirectoryMock)
-        whenever(resourcesDirectoryMock.findSubdirectory("layout")).thenReturn(null)
-        whenever(resourcesDirectoryMock.createSubdirectory("layout")).thenReturn(resourcesDirectoryMock)
-        whenever(settingsRepositoryMock.loadScreenElements(0)).thenReturn(screenElements)
+        every { codeDirectoryMock.findSubdirectory("com") } returns codeDirectoryMock
+        every { codeDirectoryMock.findSubdirectory("test") } returns null
+        every { codeDirectoryMock.createSubdirectory("test") } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findCodeSourceRoot(module) } returns codeSourceRootMock
+        every { codeSourceRootMock.directory } returns codeDirectoryMock
+        every { sourceRootRepositoryMock.findResourcesSourceRoot(module) } returns resourcesSourceRootMock
+        every { resourcesSourceRootMock.directory } returns resourcesDirectoryMock
+        every { resourcesDirectoryMock.findSubdirectory("layout") } returns null
+        every { resourcesDirectoryMock.createSubdirectory("layout") } returns resourcesDirectoryMock
+        every { settingsRepositoryMock.loadScreenElements(0) } returns screenElements
 
-        fileCreator.createScreenFiles("com.test", "Test", AndroidComponent.NONE, module, category, emptyMap())
+        fileCreator.createScreenFiles(
+            "com.test",
+            "Test",
+            AndroidComponent.NONE,
+            module,
+            category,
+            emptyMap()
+        )
 
-        inOrder(codeDirectoryMock) {
-            verify(codeDirectoryMock).findSubdirectory("com")
-            verify(codeDirectoryMock).findSubdirectory("test")
-            verify(codeDirectoryMock).createSubdirectory("test")
-            verify(codeDirectoryMock).addFile(
+        verifySequence {
+            codeDirectoryMock.findSubdirectory("com")
+            codeDirectoryMock.findSubdirectory("test")
+            codeDirectoryMock.createSubdirectory("test")
+            codeDirectoryMock.addFile(
                 File(
                     "TestPresenter",
                     "test",
                     FileType.KOTLIN
                 )
             )
-            verifyNoMoreInteractions()
         }
-        inOrder(resourcesDirectoryMock) {
-            verify(resourcesDirectoryMock).findSubdirectory("layout")
-            verify(resourcesDirectoryMock).createSubdirectory("layout")
-            verify(resourcesDirectoryMock).addFile(
+        verifySequence {
+            resourcesDirectoryMock.findSubdirectory("layout")
+            resourcesDirectoryMock.createSubdirectory("layout")
+            resourcesDirectoryMock.addFile(
                 File(
                     "none_test",
                     "<FrameLayout></FrameLayout>",
                     FileType.LAYOUT_XML
                 )
             )
-            verifyNoMoreInteractions()
         }
-        verifyNoMoreInteractions(codeDirectoryMock)
-        verifyNoMoreInteractions(resourcesDirectoryMock)
     }
 }

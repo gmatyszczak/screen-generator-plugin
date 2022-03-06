@@ -1,6 +1,8 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
@@ -10,19 +12,16 @@ import model.ScreenElement
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class MoveDownScreenElementReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var selectScreenElementReducerMock: SelectScreenElementReducer
+    val selectScreenElementReducerMock: SelectScreenElementReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: MoveDownScreenElementReducerImpl
 
-    private lateinit var reducer: MoveDownScreenElementReducerImpl
-
-    private val initialState = SettingsState(
+    val initialState = SettingsState(
         categories = listOf(
             CategoryScreenElements(
                 Category(),
@@ -62,7 +61,7 @@ class MoveDownScreenElementReducerImplTest : BaseReducerTest() {
             ),
             state.value
         )
-        verify(effectMock).emit(SettingsEffect.SelectScreenElement(1))
-        verify(selectScreenElementReducerMock).invoke(1)
+        coVerify { effectMock.emit(SettingsEffect.SelectScreenElement(1)) }
+        verify { selectScreenElementReducerMock.invoke(1) }
     }
 }

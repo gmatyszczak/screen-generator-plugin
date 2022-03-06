@@ -1,7 +1,8 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import io.mockk.Called
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
@@ -11,25 +12,23 @@ import model.ScreenElement
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class MoveDownCustomVariableReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: MoveDownCustomVariableReducerImpl
+    val selectCustomVariableReducerMock: SelectCustomVariableReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: MoveDownCustomVariableReducerImpl
 
-    private val categoryScreenElement = CategoryScreenElements(
+    val categoryScreenElement = CategoryScreenElements(
         Category(customVariables = listOf(CustomVariable("test1"), CustomVariable("test2"))),
         listOf(ScreenElement(name = "test"))
     )
-    private val initialState = SettingsState(
+
+    val initialState = SettingsState(
         categories = listOf(categoryScreenElement),
         selectedCategoryIndex = 0
     )
-
-    @Mock
-    private lateinit var selectCustomVariableReducerMock: SelectCustomVariableReducer
 
     @Before
     fun setup() {
@@ -60,7 +59,7 @@ class MoveDownCustomVariableReducerImplTest : BaseReducerTest() {
             ),
             state.value
         )
-        verify(selectCustomVariableReducerMock).invoke(1)
+        verify { selectCustomVariableReducerMock.invoke(1) }
     }
 
     @Test
@@ -73,6 +72,6 @@ class MoveDownCustomVariableReducerImplTest : BaseReducerTest() {
             SettingsState(),
             state.value
         )
-        verifyZeroInteractions(selectCustomVariableReducerMock)
+        verify { selectCustomVariableReducerMock wasNot Called }
     }
 }
