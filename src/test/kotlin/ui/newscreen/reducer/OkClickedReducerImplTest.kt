@@ -1,35 +1,32 @@
 package ui.newscreen.reducer
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import data.file.FileCreator
 import data.file.WriteActionDispatcher
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.invoke
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
 import model.AndroidComponent
 import model.Category
 import model.Module
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.newscreen.NewScreenEffect
 
 class OkClickedReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var fileCreatorMock: FileCreator
+    val moduleName = "domain"
+    val moduleDomain = Module("MyApplication.$moduleName", moduleName)
+    val category = Category()
+    val fileCreatorMock: FileCreator = mockk(relaxUnitFun = true)
+    val writeActionDispatcherMock: WriteActionDispatcher = mockk()
 
-    @Mock
-    private lateinit var writeActionDispatcherMock: WriteActionDispatcher
+    lateinit var reducer: OkClickedReducerImpl
 
-    private lateinit var reducer: OkClickedReducerImpl
-
-    private val moduleName = "domain"
-    private val moduleDomain = Module("MyApplication.$moduleName", moduleName)
-    private val category = Category()
-
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = OkClickedReducerImpl(
             state,
@@ -42,20 +39,24 @@ class OkClickedReducerImplTest : BaseReducerTest() {
 
     @Test
     fun `on invoke`() = runBlockingTest {
-        whenever(writeActionDispatcherMock.dispatch(any())).thenAnswer { (it.arguments[0] as () -> Unit).invoke() }
+        every { writeActionDispatcherMock.dispatch(captureLambda()) } answers {
+            lambda<() -> Unit>().invoke()
+        }
         val screenName = "Test"
         val packageName = "com.test"
 
         reducer(packageName, screenName, AndroidComponent.ACTIVITY.ordinal, moduleDomain, category, emptyMap())
 
-        verify(fileCreatorMock).createScreenFiles(
-            packageName,
-            screenName,
-            AndroidComponent.ACTIVITY,
-            moduleDomain,
-            category,
-            emptyMap()
-        )
-        verify(effectMock).emit(NewScreenEffect.Close)
+        verify {
+            fileCreatorMock.createScreenFiles(
+                packageName,
+                screenName,
+                AndroidComponent.ACTIVITY,
+                moduleDomain,
+                category,
+                emptyMap()
+            )
+        }
+        coVerify { effectMock.emit(NewScreenEffect.Close) }
     }
 }

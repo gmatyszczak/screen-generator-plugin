@@ -2,16 +2,16 @@ package ui.newscreen.reducer
 
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.newscreen.NewScreenState
 
 class CategoryIndexChangedReducerImplTest : BaseReducerTest() {
 
     private lateinit var reducer: CategoryIndexChangedReducerImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = CategoryIndexChangedReducerImpl(
             state,
@@ -26,12 +26,9 @@ class CategoryIndexChangedReducerImplTest : BaseReducerTest() {
 
         reducer(1)
 
-        assertEquals(
-            NewScreenState(
-                categories = listOf(Category(), Category(name = "test")),
-                selectedCategory = Category(name = "test")
-            ),
-            state.value
+        state.value shouldBeEqualTo NewScreenState(
+            categories = listOf(Category(), Category(name = "test")),
+            selectedCategory = Category(name = "test")
         )
     }
 }

@@ -1,26 +1,24 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class RemoveScreenElementReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var selectScreenElementReducerMock: SelectScreenElementReducer
+    val selectScreenElementReducerMock: SelectScreenElementReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: RemoveScreenElementReducerImpl
 
-    private lateinit var reducer: RemoveScreenElementReducerImpl
-
-    private val initialState = SettingsState(
+    val initialState = SettingsState(
         categories = listOf(
             CategoryScreenElements(
                 Category(),
@@ -33,31 +31,29 @@ class RemoveScreenElementReducerImplTest : BaseReducerTest() {
         selectedCategoryIndex = 0
     )
 
-    @Before
+    @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = RemoveScreenElementReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)
+        reducer =
+            RemoveScreenElementReducerImpl(state, effectMock, TestCoroutineScope(), selectScreenElementReducerMock)
     }
 
     @Test
     fun `on invoke`() {
         reducer.invoke(0)
 
-        assertEquals(
-            SettingsState(
-                isModified = true,
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(),
-                        listOf(
-                            ScreenElement(name = "test2")
-                        )
+        state.value shouldBeEqualTo SettingsState(
+            isModified = true,
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(),
+                    listOf(
+                        ScreenElement(name = "test2")
                     )
-                ),
-                selectedCategoryIndex = 0
+                )
             ),
-            state.value
+            selectedCategoryIndex = 0
         )
-        verify(selectScreenElementReducerMock).invoke(0)
+        verify { selectScreenElementReducerMock.invoke(0) }
     }
 }

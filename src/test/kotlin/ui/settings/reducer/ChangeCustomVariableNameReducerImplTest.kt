@@ -5,16 +5,16 @@ import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
 import model.ScreenElement
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: ChangeCustomVariableNameReducerImpl
+    lateinit var reducer: ChangeCustomVariableNameReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeCustomVariableNameReducerImpl(state, effectMock, TestCoroutineScope())
     }
@@ -36,21 +36,18 @@ class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
 
         reducer.invoke("test2")
 
-        assertEquals(
-            SettingsState(
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(
-                            customVariables = listOf(CustomVariable("test2"))
-                        ),
-                        listOf(ScreenElement())
-                    )
-                ),
-                selectedCategoryIndex = 0,
-                selectedCustomVariableIndex = 0,
-                isModified = true
+        state.value shouldBeEqualTo SettingsState(
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(
+                        customVariables = listOf(CustomVariable("test2"))
+                    ),
+                    listOf(ScreenElement())
+                )
             ),
-            state.value
+            selectedCategoryIndex = 0,
+            selectedCustomVariableIndex = 0,
+            isModified = true
         )
     }
 
@@ -58,6 +55,6 @@ class ChangeCustomVariableNameReducerImplTest : BaseReducerTest() {
     fun `if selected element null on invoke`() {
         reducer.invoke("test")
 
-        assertEquals(SettingsState(), state.value)
+        state.value shouldBeEqualTo SettingsState()
     }
 }

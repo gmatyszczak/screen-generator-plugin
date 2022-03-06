@@ -1,25 +1,23 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import io.mockk.Called
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.FileType
 import model.ScreenElement
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 class ChangeFileTypeReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var updateScreenElementReducerMock: UpdateScreenElementReducer
+    val updateScreenElementReducerMock: UpdateScreenElementReducer = mockk(relaxUnitFun = true)
+    lateinit var reducer: ChangeFileTypeReducerImpl
 
-    private lateinit var reducer: ChangeFileTypeReducerImpl
-
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = ChangeFileTypeReducerImpl(state, effectMock, TestCoroutineScope(), updateScreenElementReducerMock)
     }
@@ -39,19 +37,21 @@ class ChangeFileTypeReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(FileType.LAYOUT_XML.ordinal)
 
-        verify(updateScreenElementReducerMock).invoke(
-            ScreenElement(
-                fileType = FileType.LAYOUT_XML,
-                fileNameTemplate = FileType.LAYOUT_XML.defaultFileName,
-                template = FileType.LAYOUT_XML.defaultTemplate,
+        verify {
+            updateScreenElementReducerMock.invoke(
+                ScreenElement(
+                    fileType = FileType.LAYOUT_XML,
+                    fileNameTemplate = FileType.LAYOUT_XML.defaultFileName,
+                    template = FileType.LAYOUT_XML.defaultTemplate,
+                )
             )
-        )
+        }
     }
 
     @Test
     fun `if selected element null on invoke`() {
         reducer.invoke(FileType.LAYOUT_XML.ordinal)
 
-        verifyZeroInteractions(updateScreenElementReducerMock)
+        verify { updateScreenElementReducerMock wasNot Called }
     }
 }

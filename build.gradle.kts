@@ -21,10 +21,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.2")
     implementation("com.google.dagger:dagger:2.41")
     kapt("com.google.dagger:dagger-compiler:2.41")
-
-    testImplementation("junit:junit:4.12")
-    testImplementation("org.mockito:mockito-core:2.23.4")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation("org.amshove.kluent:kluent:1.68")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
 }
 
@@ -49,5 +48,9 @@ tasks {
 
     runPluginVerifier {
         ideVersions.set(listOf("IU-182.5262.2"))
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
     }
 }

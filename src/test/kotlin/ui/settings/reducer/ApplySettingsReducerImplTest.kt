@@ -1,39 +1,37 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
 import data.repository.SettingsRepository
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
 import model.Settings
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class ApplySettingsReducerImplTest : BaseReducerTest() {
 
-    @Mock
-    private lateinit var settingsRepositoryMock: SettingsRepository
+    val settingsRepositoryMock: SettingsRepository = mockk(relaxUnitFun = true)
+    lateinit var reducer: ApplySettingsReducerImpl
 
-    private lateinit var reducer: ApplySettingsReducerImpl
-
-    private val categoryScreenElement = CategoryScreenElements(
+    val categoryScreenElement = CategoryScreenElements(
         Category(),
         listOf(ScreenElement(name = "test"))
     )
 
-    private val initialState = SettingsState(
+    val initialState = SettingsState(
         categories = listOf(categoryScreenElement),
         selectedCategoryIndex = 0,
         isModified = true
     )
 
-    @Before
+    @BeforeEach
     fun setUp() {
         state.value = initialState
         reducer = ApplySettingsReducerImpl(state, effectMock, TestCoroutineScope(), settingsRepositoryMock)
@@ -43,12 +41,14 @@ class ApplySettingsReducerImplTest : BaseReducerTest() {
     fun `on invoke`() {
         reducer.invoke()
 
-        assertEquals(initialState.copy(isModified = false), state.value)
-        verify(settingsRepositoryMock).update(
-            Settings(
-                screenElements = initialState.categories.flatMap { it.screenElements }.toMutableList(),
-                categories = initialState.categories.map { it.category }.toMutableList()
+        state.value shouldBeEqualTo initialState.copy(isModified = false)
+        verify {
+            settingsRepositoryMock.update(
+                Settings(
+                    screenElements = initialState.categories.flatMap { it.screenElements }.toMutableList(),
+                    categories = initialState.categories.map { it.category }.toMutableList()
+                )
             )
-        )
+        }
     }
 }

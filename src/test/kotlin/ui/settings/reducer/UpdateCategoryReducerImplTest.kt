@@ -5,17 +5,17 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class UpdateCategoryReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: UpdateCategoryReducerImpl
+    lateinit var reducer: UpdateCategoryReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = UpdateCategoryReducerImpl(state, effectMock, TestCoroutineScope())
     }
@@ -36,17 +36,14 @@ class UpdateCategoryReducerImplTest : BaseReducerTest() {
         state.value = initialState
         reducer.invoke(updatedCategory)
 
-        assertEquals(
-            initialState.copy(
-                categories = listOf(
-                    CategoryScreenElements(
-                        updatedCategory,
-                        listOf(ScreenElement())
-                    )
-                ),
-                isModified = true
+        state.value shouldBeEqualTo initialState.copy(
+            categories = listOf(
+                CategoryScreenElements(
+                    updatedCategory,
+                    listOf(ScreenElement())
+                )
             ),
-            state.value
+            isModified = true
         )
     }
 }

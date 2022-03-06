@@ -5,9 +5,9 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.ScreenElement
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 import ui.settings.renderSampleCode
 import ui.settings.renderSampleFileName
@@ -15,9 +15,9 @@ import ui.settings.renderSampleFileName
 @ExperimentalCoroutinesApi
 class UpdateScreenElementReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: UpdateScreenElementReducerImpl
+    lateinit var reducer: UpdateScreenElementReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = UpdateScreenElementReducerImpl(state, effectMock, TestCoroutineScope())
     }
@@ -39,19 +39,16 @@ class UpdateScreenElementReducerImplTest : BaseReducerTest() {
         state.value = initialState
         reducer.invoke(updatedElement)
 
-        assertEquals(
-            initialState.copy(
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(),
-                        listOf(updatedElement)
-                    )
-                ),
-                fileNameRendered = updatedElement.renderSampleFileName(),
-                sampleCode = updatedElement.renderSampleCode(),
-                isModified = true
+        state.value shouldBeEqualTo initialState.copy(
+            categories = listOf(
+                CategoryScreenElements(
+                    Category(),
+                    listOf(updatedElement)
+                )
             ),
-            state.value
+            fileNameRendered = updatedElement.renderSampleFileName(),
+            sampleCode = updatedElement.renderSampleCode(),
+            isModified = true
         )
     }
 }

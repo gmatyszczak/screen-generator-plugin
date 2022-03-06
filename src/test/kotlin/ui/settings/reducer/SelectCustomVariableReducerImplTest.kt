@@ -5,17 +5,17 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import model.Category
 import model.CategoryScreenElements
 import model.CustomVariable
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class SelectCustomVariableReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: SelectCustomVariableReducerImpl
+    lateinit var reducer: SelectCustomVariableReducerImpl
 
-    @Before
+    @BeforeEach
     fun setup() {
         reducer = SelectCustomVariableReducerImpl(state, effectMock, TestCoroutineScope())
     }
@@ -24,11 +24,8 @@ class SelectCustomVariableReducerImplTest : BaseReducerTest() {
     fun `when custom variables empty on invoke`() {
         reducer.invoke(0)
 
-        assertEquals(
-            SettingsState(
-                selectedCustomVariableIndex = null,
-            ),
-            state.value
+        state.value shouldBeEqualTo SettingsState(
+            selectedCustomVariableIndex = null,
         )
     }
 
@@ -42,11 +39,8 @@ class SelectCustomVariableReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(10)
 
-        assertEquals(
-            initialState.copy(
-                selectedCustomVariableIndex = null,
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCustomVariableIndex = null,
         )
     }
 
@@ -65,11 +59,8 @@ class SelectCustomVariableReducerImplTest : BaseReducerTest() {
 
         reducer.invoke(0)
 
-        assertEquals(
-            initialState.copy(
-                selectedCustomVariableIndex = 0
-            ),
-            state.value
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCustomVariableIndex = 0
         )
     }
 }

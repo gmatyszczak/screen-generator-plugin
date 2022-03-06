@@ -1,19 +1,19 @@
 package ui.settings.reducer
 
-import com.nhaarman.mockitokotlin2.verify
+import io.mockk.coVerify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import ui.settings.SettingsEffect
 
 @ExperimentalCoroutinesApi
 class ClickHelpReducerImplTest : BaseReducerTest() {
 
-    private lateinit var reducer: ClickHelpReducerImpl
+    lateinit var reducer: ClickHelpReducerImpl
 
-    @Before
+    @BeforeEach
     fun setUp() {
         reducer = ClickHelpReducerImpl(state, effectMock, TestCoroutineScope())
     }
@@ -22,6 +22,6 @@ class ClickHelpReducerImplTest : BaseReducerTest() {
     fun `on invoke`() = runBlockingTest {
         reducer.invoke()
 
-        verify(effectMock).emit(SettingsEffect.ShowHelp)
+        coVerify { effectMock.emit(SettingsEffect.ShowHelp) }
     }
 }

@@ -1,43 +1,40 @@
 package data.repository
 
-import com.nhaarman.mockitokotlin2.whenever
 import data.file.ProjectStructure
+import io.mockk.every
+import io.mockk.mockk
 import model.Module
-import org.junit.Assert.assertEquals
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.amshove.kluent.shouldBeEqualTo
+import org.junit.jupiter.api.Test
 
-@RunWith(MockitoJUnitRunner::class)
 class ModuleRepositoryImplTest {
 
-    @Mock
-    private lateinit var projectStructureMock: ProjectStructure
-
-    @InjectMocks
-    private lateinit var moduleRepository: ModuleRepositoryImpl
+    val projectStructureMock: ProjectStructure = mockk()
+    val moduleRepository = ModuleRepositoryImpl(projectStructureMock)
 
     @Test
     fun `when project name not included in module names on get all modules`() {
-        whenever(projectStructureMock.getProjectName()).thenReturn("Application")
-        whenever(projectStructureMock.getAllModules()).thenReturn(listOf("Application", "app", "domain"))
+        every { projectStructureMock.getProjectName() } returns "Application"
+        every { projectStructureMock.getAllModules() } returns listOf("Application", "app", "domain")
 
-        assertEquals(
-            listOf(Module("app", "app"), Module("domain", "domain")),
-            moduleRepository.getAllModules()
+        moduleRepository.getAllModules() shouldBeEqualTo listOf(
+            Module("app", "app"),
+            Module("domain", "domain")
         )
     }
 
     @Test
     fun `when project name  included in module names on get all modules`() {
-        whenever(projectStructureMock.getProjectName()).thenReturn("Application")
-        whenever(projectStructureMock.getAllModules()).thenReturn(listOf("Application", "Application.app", "Application.domain"))
+        every { projectStructureMock.getProjectName() } returns "Application"
+        every { projectStructureMock.getAllModules() } returns listOf(
+            "Application",
+            "Application.app",
+            "Application.domain"
+        )
 
-        assertEquals(
-            listOf(Module("Application.app", "app"), Module("Application.domain", "domain")),
-            moduleRepository.getAllModules()
+        moduleRepository.getAllModules() shouldBeEqualTo listOf(
+            Module("Application.app", "app"),
+            Module("Application.domain", "domain")
         )
     }
 }
