@@ -25,6 +25,12 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.2")
     testImplementation("org.amshove.kluent:kluent:1.68")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("app.cash.turbine:turbine:0.7.0")
+}
+
+configurations {
+    compileClasspath.get().resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
+    testCompileClasspath.get().resolutionStrategy.sortArtifacts(ResolutionStrategy.SortOrder.DEPENDENCY_FIRST)
 }
 
 intellij {

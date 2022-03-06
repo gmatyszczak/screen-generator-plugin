@@ -1,26 +1,17 @@
 package ui.newscreen.reducer
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.newscreen.NewScreenEffect
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.newscreen.NewScreenAction.CategoryIndexChanged
 import ui.newscreen.NewScreenState
 import javax.inject.Inject
 
-interface CategoryIndexChangedReducer {
-
-    operator fun invoke(index: Int)
-}
-
-class CategoryIndexChangedReducerImpl @Inject constructor(
+class CategoryIndexChangedReducer @Inject constructor(
     private val state: MutableStateFlow<NewScreenState>,
-    effect: MutableSharedFlow<NewScreenEffect>,
-    scope: CoroutineScope,
-) : BaseReducer(state, effect, scope), CategoryIndexChangedReducer {
+) : Reducer.Blocking<CategoryIndexChanged> {
 
-    override fun invoke(index: Int) = pushState {
-        copy(
-            selectedCategory = categories[index]
-        )
+    override fun invoke(action: CategoryIndexChanged) {
+        state.update { it.copy(selectedCategory = it.categories[action.index]) }
     }
 }

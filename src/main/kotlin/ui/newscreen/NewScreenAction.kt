@@ -13,5 +13,8 @@ sealed class NewScreenAction {
         val category: Category,
         val customVariablesMap: Map<CustomVariable, String>
     ) : NewScreenAction()
+
     data class CategoryIndexChanged(val index: Int) : NewScreenAction()
+
+    object Init : NewScreenAction()
 }

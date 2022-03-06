@@ -1,29 +1,21 @@
 package ui.newscreen
 
-import ui.newscreen.reducer.CategoryIndexChangedReducer
-import ui.newscreen.reducer.InitReducer
-import ui.newscreen.reducer.OkClickedReducer
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import ui.core.Reducer
+import ui.core.ViewModel
 import javax.inject.Inject
+import javax.inject.Provider
 
 class NewScreenViewModel @Inject constructor(
-    initReducer: InitReducer,
-    private val okClickedReducer: OkClickedReducer,
-    private val categoryIndexChangedReducer: CategoryIndexChangedReducer
-) {
+    state: MutableStateFlow<NewScreenState>,
+    effect: MutableSharedFlow<NewScreenEffect>,
+    actionFlow: MutableSharedFlow<NewScreenAction>,
+    reducers: Map<Class<out NewScreenAction>, @JvmSuppressWildcards Provider<Reducer>>,
+) : ViewModel<NewScreenState, NewScreenEffect, NewScreenAction>(state, effect, actionFlow, reducers) {
 
     init {
-        initReducer()
-    }
-
-    fun reduce(action: NewScreenAction) = when (action) {
-        is NewScreenAction.OkClicked -> okClickedReducer(
-            action.packageName,
-            action.screenName,
-            action.androidComponentIndex,
-            action.module,
-            action.category,
-            action.customVariablesMap
-        )
-        is NewScreenAction.CategoryIndexChanged -> categoryIndexChangedReducer(action.index)
+        launch { actionFlow.emit(NewScreenAction.Init) }
     }
 }

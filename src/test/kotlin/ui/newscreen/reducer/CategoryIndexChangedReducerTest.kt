@@ -1,30 +1,28 @@
 package ui.newscreen.reducer
 
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.newscreen.NewScreenAction.CategoryIndexChanged
 import ui.newscreen.NewScreenState
 
-class CategoryIndexChangedReducerImplTest : BaseReducerTest() {
+class CategoryIndexChangedReducerTest {
 
-    private lateinit var reducer: CategoryIndexChangedReducerImpl
+    val state = MutableStateFlow(NewScreenState())
+    lateinit var reducer: CategoryIndexChangedReducer
 
     @BeforeEach
     fun setUp() {
-        reducer = CategoryIndexChangedReducerImpl(
-            state,
-            effectMock,
-            TestCoroutineScope()
-        )
+        reducer = CategoryIndexChangedReducer(state)
     }
 
     @Test
     fun `on invoke`() {
         state.value = NewScreenState(categories = listOf(Category(), Category(name = "test")))
 
-        reducer(1)
+        reducer(CategoryIndexChanged(1))
 
         state.value shouldBeEqualTo NewScreenState(
             categories = listOf(Category(), Category(name = "test")),

@@ -6,15 +6,16 @@ import data.repository.ModuleRepository
 import data.repository.SettingsRepository
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.Category
 import model.Module
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.newscreen.NewScreenAction.Init
 import ui.newscreen.NewScreenState
 
-class InitReducerImplTest : BaseReducerTest() {
+class InitReducerTest {
 
     val packageName = "com.example"
     val moduleName = "domain"
@@ -22,32 +23,31 @@ class InitReducerImplTest : BaseReducerTest() {
     val moduleApp = Module("MyApplication.app", "app")
     val category = Category()
     val currentPath = CurrentPath("src", true, moduleDomain)
-    val packageExtractorMock: PackageExtractor = mockk()
-    val settingsRepositoryMock: SettingsRepository = mockk()
-    val moduleRepositoryMock: ModuleRepository = mockk()
+    val packageExtractor: PackageExtractor = mockk()
+    val settingsRepository: SettingsRepository = mockk()
+    val moduleRepository: ModuleRepository = mockk()
+    val state = MutableStateFlow(NewScreenState())
 
-    lateinit var reducer: InitReducerImpl
+    lateinit var reducer: InitReducer
 
     @BeforeEach
     fun setUp() {
-        reducer = InitReducerImpl(
+        reducer = InitReducer(
             state,
-            effectMock,
-            TestCoroutineScope(),
-            packageExtractorMock,
-            moduleRepositoryMock,
+            packageExtractor,
+            moduleRepository,
             currentPath,
-            settingsRepositoryMock
+            settingsRepository
         )
     }
 
     @Test
     fun `on invoke`() {
-        every { packageExtractorMock.extractFromCurrentPath() } returns packageName
-        every { moduleRepositoryMock.getAllModules() } returns listOf(moduleApp, moduleDomain)
-        every { settingsRepositoryMock.loadCategories() } returns listOf(category)
+        every { packageExtractor.extractFromCurrentPath() } returns packageName
+        every { moduleRepository.getAllModules() } returns listOf(moduleApp, moduleDomain)
+        every { settingsRepository.loadCategories() } returns listOf(category)
 
-        reducer()
+        reducer(Init)
 
         state.value shouldBeEqualTo NewScreenState(
             packageName,

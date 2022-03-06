@@ -4,35 +4,29 @@ import data.file.CurrentPath
 import data.file.PackageExtractor
 import data.repository.ModuleRepository
 import data.repository.SettingsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.newscreen.NewScreenEffect
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.newscreen.NewScreenAction.Init
 import ui.newscreen.NewScreenState
 import javax.inject.Inject
 
-interface InitReducer {
-
-    operator fun invoke()
-}
-
-class InitReducerImpl @Inject constructor(
+class InitReducer @Inject constructor(
     private val state: MutableStateFlow<NewScreenState>,
-    effect: MutableSharedFlow<NewScreenEffect>,
-    scope: CoroutineScope,
     private val packageExtractor: PackageExtractor,
     private val moduleRepository: ModuleRepository,
     private val currentPath: CurrentPath?,
     private val settingsRepository: SettingsRepository,
-) : BaseReducer(state, effect, scope), InitReducer {
+) : Reducer.Blocking<Init> {
 
-    override fun invoke() = pushState {
-        copy(
-            packageName = packageExtractor.extractFromCurrentPath(),
-            modules = moduleRepository.getAllModules(),
-            selectedModule = currentPath?.module,
-            categories = settingsRepository.loadCategories(),
-            selectedCategory = settingsRepository.loadCategories().first()
-        )
-    }
+    override fun invoke(action: Init) =
+        state.update {
+            it.copy(
+                packageName = packageExtractor.extractFromCurrentPath(),
+                modules = moduleRepository.getAllModules(),
+                selectedModule = currentPath?.module,
+                categories = settingsRepository.loadCategories(),
+                selectedCategory = settingsRepository.loadCategories().first()
+            )
+        }
 }

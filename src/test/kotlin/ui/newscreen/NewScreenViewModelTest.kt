@@ -1,63 +1,27 @@
 package ui.newscreen
 
+import app.cash.turbine.test
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import model.Category
-import model.Module
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.test.runBlockingTest
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
-import ui.newscreen.reducer.CategoryIndexChangedReducer
-import ui.newscreen.reducer.InitReducer
-import ui.newscreen.reducer.OkClickedReducer
+import ui.newscreen.NewScreenAction.Init
 
 @ExperimentalCoroutinesApi
 class NewScreenViewModelTest {
 
-    val initReducerMock: InitReducer = mockk(relaxUnitFun = true)
-    val okClickedReducerMock: OkClickedReducer = mockk(relaxUnitFun = true)
-    val categoryIndexChangedReducerMock: CategoryIndexChangedReducer = mockk(relaxUnitFun = true)
-    val viewModel = NewScreenViewModel(
-        initReducerMock,
-        okClickedReducerMock,
-        categoryIndexChangedReducerMock,
-    )
+    val actionFlow = MutableSharedFlow<NewScreenAction>()
+    lateinit var viewModel: NewScreenViewModel
 
     @Test
-    fun `on init`() {
-        verify { initReducerMock.invoke() }
-    }
+    fun `on init`() = runBlockingTest {
+        actionFlow.test {
+            viewModel = NewScreenViewModel(mockk(), mockk(), actionFlow, emptyMap())
 
-    @Test
-    fun `on OkClicked`() {
-        viewModel.reduce(
-            NewScreenAction.OkClicked(
-                "test",
-                "test",
-                0,
-                Module("", ""),
-                Category(),
-                emptyMap()
-            )
-        )
-
-        verify { initReducerMock.invoke() }
-        verify {
-            okClickedReducerMock.invoke(
-                "test",
-                "test",
-                0,
-                Module("", ""),
-                Category(),
-                emptyMap()
-            )
+            awaitItem() shouldBeEqualTo Init
+            cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun `on CategoryIndexChanged`() {
-        viewModel.reduce(NewScreenAction.CategoryIndexChanged(100))
-
-        verify { initReducerMock.invoke() }
-        verify { categoryIndexChangedReducerMock.invoke(100) }
     }
 }
