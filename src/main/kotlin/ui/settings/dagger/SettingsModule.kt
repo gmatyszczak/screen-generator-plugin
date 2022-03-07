@@ -3,166 +3,220 @@ package ui.settings.dagger
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import data.repository.SettingsRepository
-import data.repository.SettingsRepositoryImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
+import dagger.multibindings.IntoMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.AddCategory
+import ui.settings.SettingsAction.AddCustomVariable
+import ui.settings.SettingsAction.AddScreenElement
+import ui.settings.SettingsAction.ApplySettings
+import ui.settings.SettingsAction.ChangeAndroidComponent
+import ui.settings.SettingsAction.ChangeCategoryName
+import ui.settings.SettingsAction.ChangeCustomVariableName
+import ui.settings.SettingsAction.ChangeFileName
+import ui.settings.SettingsAction.ChangeFileType
+import ui.settings.SettingsAction.ChangeName
+import ui.settings.SettingsAction.ChangeSourceSet
+import ui.settings.SettingsAction.ChangeSubdirectory
+import ui.settings.SettingsAction.ChangeTemplate
+import ui.settings.SettingsAction.ClickHelp
+import ui.settings.SettingsAction.MoveDownCategory
+import ui.settings.SettingsAction.MoveDownCustomVariable
+import ui.settings.SettingsAction.MoveDownScreenElement
+import ui.settings.SettingsAction.MoveUpCategory
+import ui.settings.SettingsAction.MoveUpCustomVariable
+import ui.settings.SettingsAction.MoveUpScreenElement
+import ui.settings.SettingsAction.RemoveCategory
+import ui.settings.SettingsAction.RemoveCustomVariable
+import ui.settings.SettingsAction.RemoveScreenElement
+import ui.settings.SettingsAction.ResetSettings
+import ui.settings.SettingsAction.SelectCategory
+import ui.settings.SettingsAction.SelectCustomVariable
+import ui.settings.SettingsAction.SelectScreenElement
+import ui.settings.SettingsAction.UpdateCategory
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import ui.settings.reducer.AddCategoryReducer
-import ui.settings.reducer.AddCategoryReducerImpl
 import ui.settings.reducer.AddCustomVariableReducer
-import ui.settings.reducer.AddCustomVariableReducerImpl
 import ui.settings.reducer.AddScreenElementReducer
-import ui.settings.reducer.AddScreenElementReducerImpl
 import ui.settings.reducer.ApplySettingsReducer
-import ui.settings.reducer.ApplySettingsReducerImpl
 import ui.settings.reducer.ChangeAndroidComponentReducer
-import ui.settings.reducer.ChangeAndroidComponentReducerImpl
 import ui.settings.reducer.ChangeCategoryNameReducer
-import ui.settings.reducer.ChangeCategoryNameReducerImpl
 import ui.settings.reducer.ChangeCustomVariableNameReducer
-import ui.settings.reducer.ChangeCustomVariableNameReducerImpl
 import ui.settings.reducer.ChangeFileNameReducer
-import ui.settings.reducer.ChangeFileNameReducerImpl
 import ui.settings.reducer.ChangeFileTypeReducer
-import ui.settings.reducer.ChangeFileTypeReducerImpl
 import ui.settings.reducer.ChangeNameReducer
-import ui.settings.reducer.ChangeNameReducerImpl
 import ui.settings.reducer.ChangeSourceSetReducer
-import ui.settings.reducer.ChangeSourceSetReducerImpl
 import ui.settings.reducer.ChangeSubdirectoryReducer
-import ui.settings.reducer.ChangeSubdirectoryReducerImpl
 import ui.settings.reducer.ChangeTemplateReducer
-import ui.settings.reducer.ChangeTemplateReducerImpl
 import ui.settings.reducer.ClickHelpReducer
-import ui.settings.reducer.ClickHelpReducerImpl
 import ui.settings.reducer.MoveDownCategoryReducer
-import ui.settings.reducer.MoveDownCategoryReducerImpl
 import ui.settings.reducer.MoveDownCustomVariableReducer
-import ui.settings.reducer.MoveDownCustomVariableReducerImpl
 import ui.settings.reducer.MoveDownScreenElementReducer
-import ui.settings.reducer.MoveDownScreenElementReducerImpl
 import ui.settings.reducer.MoveUpCategoryReducer
-import ui.settings.reducer.MoveUpCategoryReducerImpl
 import ui.settings.reducer.MoveUpCustomVariableReducer
-import ui.settings.reducer.MoveUpCustomVariableReducerImpl
 import ui.settings.reducer.MoveUpScreenElementReducer
-import ui.settings.reducer.MoveUpScreenElementReducerImpl
 import ui.settings.reducer.RemoveCategoryReducer
-import ui.settings.reducer.RemoveCategoryReducerImpl
 import ui.settings.reducer.RemoveCustomVariableReducer
-import ui.settings.reducer.RemoveCustomVariableReducerImpl
 import ui.settings.reducer.RemoveScreenElementReducer
-import ui.settings.reducer.RemoveScreenElementReducerImpl
 import ui.settings.reducer.ResetSettingsReducer
-import ui.settings.reducer.ResetSettingsReducerImpl
 import ui.settings.reducer.SelectCategoryReducer
-import ui.settings.reducer.SelectCategoryReducerImpl
 import ui.settings.reducer.SelectCustomVariableReducer
-import ui.settings.reducer.SelectCustomVariableReducerImpl
 import ui.settings.reducer.SelectScreenElementReducer
-import ui.settings.reducer.SelectScreenElementReducerImpl
 import ui.settings.reducer.UpdateCategoryReducer
-import ui.settings.reducer.UpdateCategoryReducerImpl
 import ui.settings.reducer.UpdateScreenElementReducer
-import ui.settings.reducer.UpdateScreenElementReducerImpl
 import javax.inject.Singleton
 
 @Module
 abstract class SettingsModule {
 
     @Binds
-    abstract fun bindSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
+    @IntoMap
+    @SettingsActionKey(SelectScreenElement::class)
+    abstract fun bindSelectScreenElementReducer(reducer: SelectScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindSelectScreenElementReducer(reducer: SelectScreenElementReducerImpl): SelectScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(UpdateScreenElement::class)
+    abstract fun bindUpdateScreenElementReducer(reducer: UpdateScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindUpdateScreenElementReducer(reducer: UpdateScreenElementReducerImpl): UpdateScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(ApplySettings::class)
+    abstract fun bindApplySettingsReducer(reducer: ApplySettingsReducer): Reducer
 
     @Binds
-    abstract fun bindApplySettingsReducer(reducer: ApplySettingsReducerImpl): ApplySettingsReducer
+    @IntoMap
+    @SettingsActionKey(AddScreenElement::class)
+    abstract fun bindAddScreenElementReducer(reducer: AddScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindAddScreenElementReducer(reducer: AddScreenElementReducerImpl): AddScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(RemoveScreenElement::class)
+    abstract fun bindRemoveScreenElementReducer(reducer: RemoveScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindRemoveScreenElementReducer(reducer: RemoveScreenElementReducerImpl): RemoveScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(MoveDownScreenElement::class)
+    abstract fun bindMoveDownScreenElementReducer(reducer: MoveDownScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindMoveDownScreenElementReducer(reducer: MoveDownScreenElementReducerImpl): MoveDownScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(MoveUpScreenElement::class)
+    abstract fun bindMoveUpScreenElementReducer(reducer: MoveUpScreenElementReducer): Reducer
 
     @Binds
-    abstract fun bindMoveUpScreenElementReducer(reducer: MoveUpScreenElementReducerImpl): MoveUpScreenElementReducer
+    @IntoMap
+    @SettingsActionKey(ChangeName::class)
+    abstract fun bindChangeNameReducer(reducer: ChangeNameReducer): Reducer
 
     @Binds
-    abstract fun bindChangeNameReducer(reducer: ChangeNameReducerImpl): ChangeNameReducer
+    @IntoMap
+    @SettingsActionKey(ChangeFileName::class)
+    abstract fun bindChangeFileNameReducer(reducer: ChangeFileNameReducer): Reducer
 
     @Binds
-    abstract fun bindChangeFileNameReducer(reducer: ChangeFileNameReducerImpl): ChangeFileNameReducer
+    @IntoMap
+    @SettingsActionKey(ChangeTemplate::class)
+    abstract fun bindChangeTemplateReducer(reducer: ChangeTemplateReducer): Reducer
 
     @Binds
-    abstract fun bindChangeTemplateReducer(reducer: ChangeTemplateReducerImpl): ChangeTemplateReducer
+    @IntoMap
+    @SettingsActionKey(ChangeFileType::class)
+    abstract fun bindChangeFileTypeReducer(reducer: ChangeFileTypeReducer): Reducer
 
     @Binds
-    abstract fun bindChangeFileTypeReducer(reducer: ChangeFileTypeReducerImpl): ChangeFileTypeReducer
+    @IntoMap
+    @SettingsActionKey(ClickHelp::class)
+    abstract fun bindClickHelpReducer(reducer: ClickHelpReducer): Reducer
 
     @Binds
-    abstract fun bindClickHelpReducer(reducer: ClickHelpReducerImpl): ClickHelpReducer
+    @IntoMap
+    @SettingsActionKey(ResetSettings::class)
+    abstract fun bindResetSettingsReducer(reducer: ResetSettingsReducer): Reducer
 
     @Binds
-    abstract fun bindResetSettingsReducer(reducer: ResetSettingsReducerImpl): ResetSettingsReducer
+    @IntoMap
+    @SettingsActionKey(ChangeAndroidComponent::class)
+    abstract fun bindChangeAndroidComponentReducer(reducer: ChangeAndroidComponentReducer): Reducer
 
     @Binds
-    abstract fun bindChangeAndroidComponentReducer(reducer: ChangeAndroidComponentReducerImpl): ChangeAndroidComponentReducer
+    @IntoMap
+    @SettingsActionKey(AddCategory::class)
+    abstract fun bindAddCategoryReducer(reducer: AddCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindAddCategoryReducer(reducer: AddCategoryReducerImpl): AddCategoryReducer
+    @IntoMap
+    @SettingsActionKey(SelectCategory::class)
+    abstract fun bindSelectCategoryReducer(reducer: SelectCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindSelectCategoryReducer(reducer: SelectCategoryReducerImpl): SelectCategoryReducer
+    @IntoMap
+    @SettingsActionKey(RemoveCategory::class)
+    abstract fun bindRemoveCategoryReducer(reducer: RemoveCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindRemoveCategoryReducer(reducer: RemoveCategoryReducerImpl): RemoveCategoryReducer
+    @IntoMap
+    @SettingsActionKey(MoveUpCategory::class)
+    abstract fun bindMoveUpCategoryReducer(reducer: MoveUpCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindMoveUpCategoryReducer(reducer: MoveUpCategoryReducerImpl): MoveUpCategoryReducer
+    @IntoMap
+    @SettingsActionKey(MoveDownCategory::class)
+    abstract fun bindMoveDownCategoryReducer(reducer: MoveDownCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindMoveDownCategoryReducer(reducer: MoveDownCategoryReducerImpl): MoveDownCategoryReducer
+    @IntoMap
+    @SettingsActionKey(ChangeSubdirectory::class)
+    abstract fun bindChangeSubdirectoryReducer(reducer: ChangeSubdirectoryReducer): Reducer
 
     @Binds
-    abstract fun bindChangeSubdirectoryReducer(reducer: ChangeSubdirectoryReducerImpl): ChangeSubdirectoryReducer
+    @IntoMap
+    @SettingsActionKey(ChangeSourceSet::class)
+    abstract fun bindChangeSourceSetReducer(reducer: ChangeSourceSetReducer): Reducer
 
     @Binds
-    abstract fun bindChangeSourceSetReducer(reducer: ChangeSourceSetReducerImpl): ChangeSourceSetReducer
+    @IntoMap
+    @SettingsActionKey(ChangeCategoryName::class)
+    abstract fun bindChangeCategoryNameReducer(reducer: ChangeCategoryNameReducer): Reducer
 
     @Binds
-    abstract fun bindChangeCategoryNameReducer(reducer: ChangeCategoryNameReducerImpl): ChangeCategoryNameReducer
+    @IntoMap
+    @SettingsActionKey(UpdateCategory::class)
+    abstract fun bindUpdateCategoryReducer(reducer: UpdateCategoryReducer): Reducer
 
     @Binds
-    abstract fun bindUpdateCategoryReducer(reducer: UpdateCategoryReducerImpl): UpdateCategoryReducer
+    @IntoMap
+    @SettingsActionKey(AddCustomVariable::class)
+    abstract fun bindAddCustomVariableReducer(reducer: AddCustomVariableReducer): Reducer
 
     @Binds
-    abstract fun bindAddCustomVariableReducer(reducer: AddCustomVariableReducerImpl): AddCustomVariableReducer
+    @IntoMap
+    @SettingsActionKey(SelectCustomVariable::class)
+    abstract fun bindSelectCustomVariableReducer(reducer: SelectCustomVariableReducer): Reducer
 
     @Binds
-    abstract fun bindSelectCustomVariableReducer(reducer: SelectCustomVariableReducerImpl): SelectCustomVariableReducer
+    @IntoMap
+    @SettingsActionKey(RemoveCustomVariable::class)
+    abstract fun bindRemoveCustomVariableReducer(reducer: RemoveCustomVariableReducer): Reducer
 
     @Binds
-    abstract fun bindRemoveCustomVariableReducer(reducer: RemoveCustomVariableReducerImpl): RemoveCustomVariableReducer
+    @IntoMap
+    @SettingsActionKey(MoveDownCustomVariable::class)
+    abstract fun bindMoveDownCustomVariableReducer(reducer: MoveDownCustomVariableReducer): Reducer
 
     @Binds
-    abstract fun bindMoveDownCustomVariableReducer(reducer: MoveDownCustomVariableReducerImpl): MoveDownCustomVariableReducer
+    @IntoMap
+    @SettingsActionKey(MoveUpCustomVariable::class)
+    abstract fun bindMoveUpCustomVariableReducer(reducer: MoveUpCustomVariableReducer): Reducer
 
     @Binds
-    abstract fun bindMoveUpCustomVariableReducer(reducer: MoveUpCustomVariableReducerImpl): MoveUpCustomVariableReducer
-
-    @Binds
-    abstract fun bindChangeCustomVariableNameReducer(reducer: ChangeCustomVariableNameReducerImpl): ChangeCustomVariableNameReducer
+    @IntoMap
+    @SettingsActionKey(ChangeCustomVariableName::class)
+    abstract fun bindChangeCustomVariableNameReducer(reducer: ChangeCustomVariableNameReducer): Reducer
 
     companion object {
 
@@ -172,10 +226,10 @@ abstract class SettingsModule {
 
         @Provides
         @Singleton
-        fun provideEffect() = MutableSharedFlow<SettingsEffect>(replay = 0)
+        fun provideEffect() = MutableSharedFlow<SettingsEffect>()
 
         @Provides
         @Singleton
-        fun provideScope(): CoroutineScope = MainScope()
+        fun provideAction() = MutableSharedFlow<SettingsAction>()
     }
 }

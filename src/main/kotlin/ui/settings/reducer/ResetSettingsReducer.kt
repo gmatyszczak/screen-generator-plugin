@@ -1,30 +1,23 @@
 package ui.settings.reducer
 
 import data.repository.SettingsRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.settings.SettingsAction.ResetSettings
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ResetSettingsReducer {
-
-    operator fun invoke()
-}
-
-class ResetSettingsReducerImpl @Inject constructor(
-    state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
+class ResetSettingsReducer @Inject constructor(
+    private val state: MutableStateFlow<SettingsState>,
     private val settingsRepository: SettingsRepository
-) : BaseReducer(state, effect, scope), ResetSettingsReducer {
+) : Reducer.Blocking<ResetSettings> {
 
-    override fun invoke() {
+    override fun invoke(action: ResetSettings) {
         val categoriesWithScreenElements = settingsRepository.loadCategoriesWithScreenElements()
-        pushState {
+        state.update {
             val selectedCategory = if (categoriesWithScreenElements.isNotEmpty()) 0 else null
-            copy(
+            it.copy(
                 selectedElementIndex = null,
                 fileNameRendered = "",
                 sampleCode = "",

@@ -1,29 +1,26 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import model.CategoryScreenElements
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.MoveUpCustomVariable
+import ui.settings.SettingsAction.SelectCustomVariable
 import ui.settings.SettingsState
 import util.swap
 import javax.inject.Inject
 
-interface MoveUpCustomVariableReducer {
-    operator fun invoke(index: Int)
-}
-
-class MoveUpCustomVariableReducerImpl @Inject constructor(
+class MoveUpCustomVariableReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val selectCustomVariableReducer: SelectCustomVariableReducer
-) : BaseReducer(state, effect, scope), MoveUpCustomVariableReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<MoveUpCustomVariable> {
 
-    override fun invoke(index: Int) {
+    override suspend fun invoke(action: MoveUpCustomVariable) {
         state.value.selectedCategoryScreenElements?.let { selectedCategoryScreenElements ->
             val newVariables = selectedCategoryScreenElements.category.customVariables.toMutableList().apply {
-                swap(index, index - 1)
+                swap(action.index, action.index - 1)
             }
             val newCategories = state.value.categories.toMutableList()
                 .apply {
@@ -35,13 +32,13 @@ class MoveUpCustomVariableReducerImpl @Inject constructor(
                         )
                     )
                 }
-            pushState {
-                copy(
+            state.update {
+                it.copy(
                     isModified = true,
                     categories = newCategories
                 )
             }
-            selectCustomVariableReducer(index - 1)
+            actionFlow.emit(SelectCustomVariable(action.index - 1))
         }
     }
 }

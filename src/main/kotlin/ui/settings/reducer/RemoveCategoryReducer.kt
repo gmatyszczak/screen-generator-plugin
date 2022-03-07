@@ -1,34 +1,30 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import kotlinx.coroutines.flow.update
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.RemoveCategory
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface RemoveCategoryReducer {
-    operator fun invoke(index: Int)
-}
-
-class RemoveCategoryReducerImpl @Inject constructor(
+class RemoveCategoryReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val selectCategoryReducer: SelectCategoryReducer
-) : BaseReducer(state, effect, scope), RemoveCategoryReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<RemoveCategory> {
 
-    override fun invoke(index: Int) {
+    override suspend fun invoke(action: RemoveCategory) {
         val newCategories =
             state.value.categories
                 .toMutableList()
                 .apply { removeAt(state.value.selectedCategoryIndex!!) }
-        pushState {
-            copy(
+        state.update {
+            it.copy(
                 isModified = true,
                 categories = newCategories
             )
         }
-        selectCategoryReducer(index)
+        actionFlow.emit(SettingsAction.SelectCategory(action.index))
     }
 }

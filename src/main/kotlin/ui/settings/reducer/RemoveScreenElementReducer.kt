@@ -1,28 +1,25 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import model.CategoryScreenElements
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.RemoveScreenElement
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface RemoveScreenElementReducer {
-    operator fun invoke(index: Int)
-}
-
-class RemoveScreenElementReducerImpl @Inject constructor(
+class RemoveScreenElementReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val selectScreenElementReducer: SelectScreenElementReducer
-) : BaseReducer(state, effect, scope), RemoveScreenElementReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<RemoveScreenElement> {
 
-    override fun invoke(index: Int) {
+    override suspend fun invoke(action: RemoveScreenElement) {
         val categoryScreenElements = state.value.selectedCategoryScreenElements
         if (categoryScreenElements != null) {
-            val newScreenElements = categoryScreenElements.screenElements.toMutableList().apply { removeAt(index) }
+            val newScreenElements =
+                categoryScreenElements.screenElements.toMutableList().apply { removeAt(action.index) }
             val newCategories =
                 state.value.categories
                     .toMutableList()
@@ -32,13 +29,13 @@ class RemoveScreenElementReducerImpl @Inject constructor(
                             CategoryScreenElements(categoryScreenElements.category, newScreenElements)
                         )
                     }
-            pushState {
-                copy(
+            state.update {
+                it.copy(
                     isModified = true,
                     categories = newCategories
                 )
             }
-            selectScreenElementReducer(index)
+            actionFlow.emit(SettingsAction.SelectScreenElement(action.index))
         }
     }
 }

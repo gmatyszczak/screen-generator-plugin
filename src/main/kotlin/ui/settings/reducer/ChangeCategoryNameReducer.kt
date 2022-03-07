@@ -1,27 +1,21 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeCategoryName
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ChangeCategoryNameReducer {
-
-    operator fun invoke(text: String)
-}
-
-class ChangeCategoryNameReducerImpl @Inject constructor(
+class ChangeCategoryNameReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val updateCategoryReducer: UpdateCategoryReducer
-) : BaseReducer(state, effect, scope), ChangeCategoryNameReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<ChangeCategoryName> {
 
-    override fun invoke(text: String) {
+    override suspend fun invoke(action: ChangeCategoryName) {
         state.value.selectedCategoryScreenElements?.let {
-            updateCategoryReducer(it.category.copy(name = text))
+            actionFlow.emit(SettingsAction.UpdateCategory(it.category.copy(name = action.text)))
         }
     }
 }

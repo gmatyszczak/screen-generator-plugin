@@ -4,37 +4,33 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import data.file.CurrentPath
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import model.Category
 import model.Module
+import ui.newscreen.NewScreenAction.CategoryIndexChanged
+import ui.newscreen.NewScreenAction.OkClicked
 import ui.newscreen.dagger.DaggerNewScreenComponent
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
-class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true) {
-
-    @Inject
-    lateinit var scope: CoroutineScope
-
-    @Inject
-    lateinit var state: MutableStateFlow<NewScreenState>
-
-    @Inject
-    lateinit var effect: MutableSharedFlow<NewScreenEffect>
+class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapper(true), CoroutineScope {
 
     @Inject
     lateinit var viewModel: NewScreenViewModel
 
+    private val job = SupervisorJob()
     private val panel = NewScreenPanel()
+
+    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate + job
 
     init {
         DaggerNewScreenComponent.factory().create(project, currentPath).inject(this)
-        scope.launch { state.collect { it.render() } }
-        scope.launch { effect.collect { handleEffect(it) } }
-        panel.onCategoryIndexChanged = { viewModel.reduce(NewScreenAction.CategoryIndexChanged(it)) }
+        launch { viewModel.state.collect { it.render() } }
+        launch { viewModel.effect.collect { handleEffect(it) } }
+        panel.onCategoryIndexChanged = { launch { viewModel.actionFlow.emit(CategoryIndexChanged(it)) } }
         init()
     }
 
@@ -44,22 +40,26 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
 
     private fun NewScreenState.render() = panel.render(this)
 
-    override fun doOKAction() =
-        viewModel.reduce(
-            NewScreenAction.OkClicked(
-                panel.packageTextField.text,
-                panel.nameTextField.text,
-                panel.androidComponentComboBox.selectedIndex,
-                panel.moduleComboBox.selectedItem as Module,
-                panel.categoryComboBox.selectedItem as Category,
-                panel.customVariablesPanel.customVariablesMap
+    override fun doOKAction() {
+        launch {
+            viewModel.actionFlow.emit(
+                OkClicked(
+                    panel.packageTextField.text,
+                    panel.nameTextField.text,
+                    panel.androidComponentComboBox.selectedIndex,
+                    panel.moduleComboBox.selectedItem as Module,
+                    panel.categoryComboBox.selectedItem as Category,
+                    panel.customVariablesPanel.customVariablesMap
+                )
             )
-        )
+        }
+    }
 
     override fun createCenterPanel() = panel
 
     override fun dispose() {
-        scope.cancel()
+        job.cancel()
+        viewModel.clear()
         super.dispose()
     }
 }

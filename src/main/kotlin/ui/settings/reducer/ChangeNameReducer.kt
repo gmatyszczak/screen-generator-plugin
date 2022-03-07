@@ -1,27 +1,22 @@
 package ui.settings.reducer
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import ui.settings.SettingsEffect
+import ui.core.Reducer
+import ui.settings.SettingsAction
+import ui.settings.SettingsAction.ChangeName
+import ui.settings.SettingsAction.UpdateScreenElement
 import ui.settings.SettingsState
 import javax.inject.Inject
 
-interface ChangeNameReducer {
-
-    operator fun invoke(text: String)
-}
-
-class ChangeNameReducerImpl @Inject constructor(
+class ChangeNameReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    effect: MutableSharedFlow<SettingsEffect>,
-    scope: CoroutineScope,
-    private val updateScreenElementReducer: UpdateScreenElementReducer
-) : BaseReducer(state, effect, scope), ChangeNameReducer {
+    private val actionFlow: MutableSharedFlow<SettingsAction>,
+) : Reducer.Suspend<ChangeName> {
 
-    override fun invoke(text: String) {
-        state.value.selectedElement?.let {
-            updateScreenElementReducer(it.copy(name = text))
+    override suspend fun invoke(action: ChangeName) {
+        state.value.selectedElement?.let { screenElement ->
+            actionFlow.emit(UpdateScreenElement(screenElement.copy(name = action.text)))
         }
     }
 }
