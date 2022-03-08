@@ -6,12 +6,14 @@ import kotlinx.coroutines.flow.update
 import ui.core.Reducer
 import ui.settings.SettingsAction
 import ui.settings.SettingsAction.MoveDownCategory
+import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import util.swap
 import javax.inject.Inject
 
 class MoveDownCategoryReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
+    private val effect: MutableSharedFlow<SettingsEffect>,
     private val actionFlow: MutableSharedFlow<SettingsAction>,
 ) : Reducer.Suspend<MoveDownCategory> {
 
@@ -25,9 +27,12 @@ class MoveDownCategoryReducer @Inject constructor(
             state.update {
                 it.copy(
                     isModified = true,
-                    categories = newCategories
+                    categories = newCategories,
+                    selectedCategoryIndex = action.index + 1,
+                    selectedElementIndex = null,
                 )
             }
+            effect.emit(SettingsEffect.SelectScreenElement(-1))
             actionFlow.emit(SettingsAction.SelectCategory(action.index + 1))
         }
     }

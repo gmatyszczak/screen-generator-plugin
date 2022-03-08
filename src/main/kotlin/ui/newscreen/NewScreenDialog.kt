@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import model.Category
 import model.Module
+import ui.core.UI
 import ui.newscreen.NewScreenAction.CategoryIndexChanged
 import ui.newscreen.NewScreenAction.OkClicked
 import ui.newscreen.dagger.DaggerNewScreenComponent
@@ -24,7 +25,7 @@ class NewScreenDialog(project: Project, currentPath: CurrentPath?) : DialogWrapp
     private val job = SupervisorJob()
     private val panel = NewScreenPanel()
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate + job
+    override val coroutineContext: CoroutineContext = Dispatchers.UI + job
 
     init {
         DaggerNewScreenComponent.factory().create(project, currentPath).inject(this)

@@ -11,11 +11,13 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsAction
+import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 class RemoveCategoryReducerTest {
 
     val state = MutableStateFlow(SettingsState())
+    val effect = MutableSharedFlow<SettingsEffect>()
     val actionFlow = MutableSharedFlow<SettingsAction>()
     lateinit var reducer: RemoveCategoryReducer
 
@@ -25,24 +27,31 @@ class RemoveCategoryReducerTest {
     )
     val initialState = SettingsState(
         categories = listOf(categoryScreenElement.copy(category = Category(name = "test")), categoryScreenElement),
-        selectedCategoryIndex = 0
+        selectedCategoryIndex = 0,
+        selectedElementIndex = 0,
     )
 
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = RemoveCategoryReducer(state, actionFlow)
+        reducer = RemoveCategoryReducer(state, effect, actionFlow)
     }
 
     @Test
     fun `on invoke`() = runBlockingTest() {
         actionFlow.test {
-            reducer.invoke(SettingsAction.RemoveCategory(0))
+            effect.test {
+                reducer.invoke(SettingsAction.RemoveCategory(0))
 
-            state.value shouldBeEqualTo initialState.copy(
-                categories = listOf(categoryScreenElement),
-                isModified = true
-            )
+                state.value shouldBeEqualTo initialState.copy(
+                    categories = listOf(categoryScreenElement),
+                    selectedCategoryIndex = null,
+                    selectedElementIndex = null,
+                    isModified = true
+                )
+                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(-1)
+                cancelAndIgnoreRemainingEvents()
+            }
             awaitItem() shouldBeEqualTo SettingsAction.SelectCategory(0)
             cancelAndIgnoreRemainingEvents()
         }

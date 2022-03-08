@@ -7,11 +7,13 @@ import model.CategoryScreenElements
 import ui.core.Reducer
 import ui.settings.SettingsAction
 import ui.settings.SettingsAction.RemoveScreenElement
+import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import javax.inject.Inject
 
 class RemoveScreenElementReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
+    private val effect: MutableSharedFlow<SettingsEffect>,
     private val actionFlow: MutableSharedFlow<SettingsAction>,
 ) : Reducer.Suspend<RemoveScreenElement> {
 
@@ -32,9 +34,11 @@ class RemoveScreenElementReducer @Inject constructor(
             state.update {
                 it.copy(
                     isModified = true,
-                    categories = newCategories
+                    categories = newCategories,
+                    selectedElementIndex = null,
                 )
             }
+            effect.emit(SettingsEffect.SelectScreenElement(-1))
             actionFlow.emit(SettingsAction.SelectScreenElement(action.index))
         }
     }

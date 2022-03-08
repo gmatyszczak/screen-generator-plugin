@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ui.core.UI
 import ui.help.HelpDialog
 import ui.settings.dagger.DaggerSettingsComponent
 import ui.settings.widget.SettingsPanel
@@ -19,7 +20,7 @@ class SettingsConfigurable(private val project: Project) : Configurable, Corouti
     private lateinit var panel: SettingsPanel
     private val job = SupervisorJob()
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate + job
+    override val coroutineContext: CoroutineContext = Dispatchers.UI + job
 
     @Inject
     lateinit var viewModel: SettingsViewModel
