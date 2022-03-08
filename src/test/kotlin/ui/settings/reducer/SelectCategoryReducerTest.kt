@@ -45,7 +45,8 @@ class SelectCategoryReducerTest {
             reducer.invoke(SelectCategory(10))
 
             state.value shouldBeEqualTo initialState.copy(
-                selectedCategoryIndex = null
+                selectedCategoryIndex = null,
+                selectedElementIndex = null,
             )
             awaitItem() shouldBeEqualTo SettingsAction.SelectCustomVariable(-1)
             awaitItem() shouldBeEqualTo SettingsAction.SelectScreenElement(-1)
@@ -60,7 +61,8 @@ class SelectCategoryReducerTest {
                 reducer.invoke(SelectCategory(0))
 
                 state.value shouldBeEqualTo initialState.copy(
-                    selectedCategoryIndex = 0
+                    selectedCategoryIndex = 0,
+                    selectedElementIndex = 0,
                 )
                 awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(0)
                 cancelAndIgnoreRemainingEvents()

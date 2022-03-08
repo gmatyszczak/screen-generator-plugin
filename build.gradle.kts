@@ -18,7 +18,6 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.5.2")
     implementation("com.google.dagger:dagger:2.41")
     kapt("com.google.dagger:dagger-compiler:2.41")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
@@ -34,7 +33,7 @@ configurations {
 }
 
 intellij {
-    version.set("2021.1.1")
+    version.set("2021.1.3")
     plugins.set(listOf("org.jetbrains.kotlin"))
     intellij.updateSinceUntilBuild.set(false)
 }

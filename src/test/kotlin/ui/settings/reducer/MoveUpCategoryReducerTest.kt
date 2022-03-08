@@ -11,11 +11,13 @@ import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsAction
+import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 class MoveUpCategoryReducerTest {
 
     val state = MutableStateFlow(SettingsState())
+    val effect = MutableSharedFlow<SettingsEffect>()
     val actionFlow = MutableSharedFlow<SettingsAction>()
     lateinit var reducer: MoveUpCategoryReducer
 
@@ -31,24 +33,31 @@ class MoveUpCategoryReducerTest {
 
     val initialState = SettingsState(
         categories = listOf(categoryScreenElement1, categoryScreenElement2),
-        selectedCategoryIndex = 1
+        selectedCategoryIndex = 1,
+        selectedElementIndex = 0,
     )
 
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = MoveUpCategoryReducer(state, actionFlow)
+        reducer = MoveUpCategoryReducer(state, effect, actionFlow)
     }
 
     @Test
     fun `on invoke`() = runBlockingTest {
         actionFlow.test {
-            reducer.invoke(SettingsAction.MoveUpCategory(1))
+            effect.test {
+                reducer.invoke(SettingsAction.MoveUpCategory(1))
 
-            state.value shouldBeEqualTo initialState.copy(
-                categories = listOf(categoryScreenElement2, categoryScreenElement1),
-                isModified = true
-            )
+                state.value shouldBeEqualTo initialState.copy(
+                    categories = listOf(categoryScreenElement2, categoryScreenElement1),
+                    isModified = true,
+                    selectedCategoryIndex = 0,
+                    selectedElementIndex = null,
+                )
+                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(-1)
+                cancelAndIgnoreRemainingEvents()
+            }
             awaitItem() shouldBeEqualTo SettingsAction.SelectCategory(0)
             cancelAndIgnoreRemainingEvents()
         }

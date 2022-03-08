@@ -25,9 +25,11 @@ class SelectCategoryReducer @Inject constructor(
             }
         val selectedCategory = selectedIndex?.let { state.value.categories[selectedIndex] }
         val selectedElement = selectedCategory?.screenElements?.firstOrNull()
+        val selectedElementIndex = selectedElement?.let { 0 }
         state.update {
             it.copy(
-                selectedCategoryIndex = selectedIndex
+                selectedCategoryIndex = selectedIndex,
+                selectedElementIndex = selectedElementIndex,
             )
         }
         actionFlow.emit(SettingsAction.SelectCustomVariable(-1))

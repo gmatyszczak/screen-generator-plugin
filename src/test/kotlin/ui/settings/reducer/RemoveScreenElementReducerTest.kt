@@ -13,12 +13,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsAction
 import ui.settings.SettingsAction.RemoveScreenElement
+import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class RemoveScreenElementReducerTest {
 
     val state = MutableStateFlow(SettingsState())
+    val effect = MutableSharedFlow<SettingsEffect>()
     val actionFlow = MutableSharedFlow<SettingsAction>()
     lateinit var reducer: RemoveScreenElementReducer
 
@@ -32,33 +34,38 @@ class RemoveScreenElementReducerTest {
                 )
             )
         ),
-        selectedCategoryIndex = 0
+        selectedCategoryIndex = 0,
+        selectedElementIndex = 0,
     )
 
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = RemoveScreenElementReducer(state, actionFlow)
+        reducer = RemoveScreenElementReducer(state, effect, actionFlow)
     }
 
     @Test
     fun `on invoke`() = runBlockingTest {
         actionFlow.test {
-            reducer.invoke(RemoveScreenElement(0))
+            effect.test {
+                reducer.invoke(RemoveScreenElement(0))
 
-            state.value shouldBeEqualTo SettingsState(
-                isModified = true,
-                categories = listOf(
-                    CategoryScreenElements(
-                        Category(),
-                        listOf(
-                            ScreenElement(name = "test2")
+                state.value shouldBeEqualTo SettingsState(
+                    isModified = true,
+                    categories = listOf(
+                        CategoryScreenElements(
+                            Category(),
+                            listOf(
+                                ScreenElement(name = "test2")
+                            )
                         )
-                    )
-                ),
-                selectedCategoryIndex = 0
-            )
-
+                    ),
+                    selectedCategoryIndex = 0,
+                    selectedElementIndex = null,
+                )
+                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(-1)
+                cancelAndIgnoreRemainingEvents()
+            }
             awaitItem() shouldBeEqualTo SettingsAction.SelectScreenElement(0)
             cancelAndIgnoreRemainingEvents()
         }

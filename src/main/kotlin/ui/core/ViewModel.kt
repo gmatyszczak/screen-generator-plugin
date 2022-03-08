@@ -19,7 +19,7 @@ abstract class ViewModel<State : Any, Effect : Any, Action : Any>(
 ) : CoroutineScope {
 
     private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = Dispatchers.Main.immediate + job
+    override val coroutineContext: CoroutineContext = Dispatchers.UI + job
 
     init {
         observeAction()
