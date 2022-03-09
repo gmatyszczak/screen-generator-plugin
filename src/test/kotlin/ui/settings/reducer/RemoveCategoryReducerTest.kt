@@ -1,59 +1,37 @@
 package ui.settings.reducer
 
-import app.cash.turbine.test
-import kotlinx.coroutines.flow.MutableSharedFlow
+import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.test.runBlockingTest
-import model.Category
 import model.CategoryScreenElements
-import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsAction
-import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 class RemoveCategoryReducerTest {
 
+    val categoryScreenElement1: CategoryScreenElements = mockk()
+    val categoryScreenElement2: CategoryScreenElements = mockk()
     val state = MutableStateFlow(SettingsState())
-    val effect = MutableSharedFlow<SettingsEffect>()
-    val actionFlow = MutableSharedFlow<SettingsAction>()
-    lateinit var reducer: RemoveCategoryReducer
-
-    val categoryScreenElement = CategoryScreenElements(
-        Category(),
-        listOf(ScreenElement(name = "test"))
-    )
-    val initialState = SettingsState(
-        categories = listOf(categoryScreenElement.copy(category = Category(name = "test")), categoryScreenElement),
-        selectedCategoryIndex = 0,
-        selectedElementIndex = 0,
-    )
-
-    @BeforeEach
-    fun setup() {
-        state.value = initialState
-        reducer = RemoveCategoryReducer(state, effect, actionFlow)
-    }
+    val reducer = RemoveCategoryReducer(state)
 
     @Test
-    fun `on invoke`() = runBlockingTest() {
-        actionFlow.test {
-            effect.test {
-                reducer.invoke(SettingsAction.RemoveCategory(0))
+    fun `on invoke`() {
+        state.value = SettingsState(
+            categories = listOf(categoryScreenElement1, categoryScreenElement2),
+            selectedCategoryIndex = 0,
+            selectedElementIndex = 0,
+            selectedCustomVariableIndex = 0,
+        )
 
-                state.value shouldBeEqualTo initialState.copy(
-                    categories = listOf(categoryScreenElement),
-                    selectedCategoryIndex = null,
-                    selectedElementIndex = null,
-                    isModified = true
-                )
-                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(-1)
-                cancelAndIgnoreRemainingEvents()
-            }
-            awaitItem() shouldBeEqualTo SettingsAction.SelectCategory(0)
-            cancelAndIgnoreRemainingEvents()
-        }
+        reducer.invoke(SettingsAction.RemoveCategory(0))
+
+        state.value shouldBeEqualTo SettingsState(
+            isModified = true,
+            categories = listOf(categoryScreenElement2),
+            selectedCategoryIndex = null,
+            selectedElementIndex = null,
+            selectedCustomVariableIndex = null,
+        )
     }
 }

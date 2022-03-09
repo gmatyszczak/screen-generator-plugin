@@ -1,65 +1,48 @@
 package ui.settings.reducer
 
-import app.cash.turbine.test
-import kotlinx.coroutines.flow.MutableSharedFlow
+import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.test.runBlockingTest
-import model.Category
 import model.CategoryScreenElements
-import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.settings.SettingsAction
-import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 class MoveDownCategoryReducerTest {
 
+    val categoryScreenElement1: CategoryScreenElements = mockk()
+    val categoryScreenElement2: CategoryScreenElements = mockk()
     val state = MutableStateFlow(SettingsState())
-    val effect = MutableSharedFlow<SettingsEffect>()
-    val actionFlow = MutableSharedFlow<SettingsAction>()
-    lateinit var reducer: MoveDownCategoryReducer
+    val reducer: MoveDownCategoryReducer = MoveDownCategoryReducer(state)
 
-    val categoryScreenElement1 = CategoryScreenElements(
-        Category(name = "test1"),
-        listOf(ScreenElement(name = "test1"))
-    )
+    @Test
+    fun `when index is not last index on invoke`() {
+        state.value = SettingsState(
+            categories = listOf(categoryScreenElement1, categoryScreenElement2),
+            selectedCategoryIndex = 0,
+        )
 
-    val categoryScreenElement2 = CategoryScreenElements(
-        Category(name = "test2"),
-        listOf(ScreenElement(name = "test2"))
-    )
+        reducer.invoke(SettingsAction.MoveDownCategory(0))
 
-    val initialState = SettingsState(
-        categories = listOf(categoryScreenElement1, categoryScreenElement2),
-        selectedCategoryIndex = 0,
-        selectedElementIndex = 0,
-    )
-
-    @BeforeEach
-    fun setup() {
-        state.value = initialState
-        reducer = MoveDownCategoryReducer(state, effect, actionFlow)
+        state.value shouldBeEqualTo SettingsState(
+            categories = listOf(categoryScreenElement2, categoryScreenElement1),
+            isModified = true,
+            selectedCategoryIndex = 1,
+        )
     }
 
     @Test
-    fun `on invoke`() = runBlockingTest {
-        actionFlow.test {
-            effect.test {
-                reducer.invoke(SettingsAction.MoveDownCategory(0))
+    fun `when index is last index on invoke`() {
+        state.value = SettingsState(
+            categories = listOf(categoryScreenElement1, categoryScreenElement2),
+            selectedCategoryIndex = 1,
+        )
 
-                state.value shouldBeEqualTo initialState.copy(
-                    categories = listOf(categoryScreenElement2, categoryScreenElement1),
-                    isModified = true,
-                    selectedCategoryIndex = 1,
-                    selectedElementIndex = null,
-                )
-                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(-1)
-                cancelAndIgnoreRemainingEvents()
-            }
-            awaitItem() shouldBeEqualTo SettingsAction.SelectCategory(1)
-            cancelAndIgnoreRemainingEvents()
-        }
+        reducer.invoke(SettingsAction.MoveDownCategory(1))
+
+        state.value shouldBeEqualTo SettingsState(
+            categories = listOf(categoryScreenElement1, categoryScreenElement2),
+            selectedCategoryIndex = 1,
+        )
     }
 }

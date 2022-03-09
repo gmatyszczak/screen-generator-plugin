@@ -7,14 +7,12 @@ import model.CategoryScreenElements
 import ui.core.Reducer
 import ui.settings.SettingsAction
 import ui.settings.SettingsAction.MoveUpScreenElement
-import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import util.swap
 import javax.inject.Inject
 
 class MoveUpScreenElementReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    private val effect: MutableSharedFlow<SettingsEffect>,
     private val actionFlow: MutableSharedFlow<SettingsAction>,
 ) : Reducer.Suspend<MoveUpScreenElement> {
 
@@ -38,7 +36,6 @@ class MoveUpScreenElementReducer @Inject constructor(
                     categories = newCategories
                 )
             }
-            effect.emit(SettingsEffect.SelectScreenElement(action.index - 1))
             actionFlow.emit(SettingsAction.SelectScreenElement(action.index - 1))
         }
     }
