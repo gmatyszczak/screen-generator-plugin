@@ -48,16 +48,15 @@ class ScreenElementsPanel : JPanel() {
                 listModel.add(screenElement)
             }
         }
-        if (listModel.size > state.selectedCategoryScreenElements?.screenElements?.size ?: 0) {
+        if (listModel.size > (state.selectedCategoryScreenElements?.screenElements?.size ?: 0)) {
             listModel.removeRange(state.selectedCategoryScreenElements?.screenElements?.size ?: 0, listModel.size - 1)
         }
-        listenersBlocked = false
-    }
-
-    fun updateSelectedIndex(index: Int) {
-        listenersBlocked = true
-        if (list.selectedIndex != index) {
-            list.selectedIndex = index
+        if (list.selectedIndex != (state.selectedElementIndex ?: -1)) {
+            if (state.selectedElementIndex != null) {
+                list.selectedIndex = state.selectedElementIndex
+            } else {
+                list.clearSelection()
+            }
         }
         listenersBlocked = false
     }

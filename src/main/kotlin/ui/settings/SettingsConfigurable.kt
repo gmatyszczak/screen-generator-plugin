@@ -108,7 +108,6 @@ class SettingsConfigurable(private val project: Project) : Configurable, Corouti
     }
 
     private fun SettingsEffect.handle() = when (this) {
-        is SettingsEffect.SelectScreenElement -> panel.screenElementsPanel.updateSelectedIndex(index)
         SettingsEffect.ShowHelp -> HelpDialog().show()
     }
 }

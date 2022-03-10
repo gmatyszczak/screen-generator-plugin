@@ -1,8 +1,6 @@
 package ui.settings.reducer
 
-import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runBlockingTest
 import model.Category
@@ -11,17 +9,13 @@ import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.settings.SettingsAction
 import ui.settings.SettingsAction.SelectCategory
-import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 
 @ExperimentalCoroutinesApi
 class SelectCategoryReducerTest {
 
     val state = MutableStateFlow(SettingsState())
-    val effect = MutableSharedFlow<SettingsEffect>()
-    val actionFlow = MutableSharedFlow<SettingsAction>()
 
     lateinit var reducer: SelectCategoryReducer
 
@@ -36,40 +30,26 @@ class SelectCategoryReducerTest {
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = SelectCategoryReducer(state, effect, actionFlow)
+        reducer = SelectCategoryReducer(state)
     }
 
     @Test
     fun `when index out of bounds on invoke`() = runBlockingTest {
-        actionFlow.test {
-            reducer.invoke(SelectCategory(10))
+        reducer.invoke(SelectCategory(10))
 
-            state.value shouldBeEqualTo initialState.copy(
-                selectedCategoryIndex = null,
-                selectedElementIndex = null,
-            )
-            awaitItem() shouldBeEqualTo SettingsAction.SelectCustomVariable(-1)
-            awaitItem() shouldBeEqualTo SettingsAction.SelectScreenElement(-1)
-            cancelAndIgnoreRemainingEvents()
-        }
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCategoryIndex = null,
+            selectedElementIndex = null,
+        )
     }
 
     @Test
     fun `when index in bounds on invoke`() = runBlockingTest {
-        actionFlow.test {
-            effect.test {
-                reducer.invoke(SelectCategory(0))
+        reducer.invoke(SelectCategory(0))
 
-                state.value shouldBeEqualTo initialState.copy(
-                    selectedCategoryIndex = 0,
-                    selectedElementIndex = 0,
-                )
-                awaitItem() shouldBeEqualTo SettingsEffect.SelectScreenElement(0)
-                cancelAndIgnoreRemainingEvents()
-            }
-            awaitItem() shouldBeEqualTo SettingsAction.SelectCustomVariable(-1)
-            awaitItem() shouldBeEqualTo SettingsAction.SelectScreenElement(0)
-            cancelAndIgnoreRemainingEvents()
-        }
+        state.value shouldBeEqualTo initialState.copy(
+            selectedCategoryIndex = 0,
+            selectedElementIndex = 0,
+        )
     }
 }

@@ -8,13 +8,11 @@ import model.ScreenElement
 import ui.core.Reducer
 import ui.settings.SettingsAction
 import ui.settings.SettingsAction.AddScreenElement
-import ui.settings.SettingsEffect
 import ui.settings.SettingsState
 import javax.inject.Inject
 
 class AddScreenElementReducer @Inject constructor(
     private val state: MutableStateFlow<SettingsState>,
-    private val effect: MutableSharedFlow<SettingsEffect>,
     private val actionFlow: MutableSharedFlow<SettingsAction>,
 ) : Reducer.Suspend<AddScreenElement> {
 
@@ -36,7 +34,6 @@ class AddScreenElementReducer @Inject constructor(
                     categories = newCategories
                 )
             }
-            effect.emit(SettingsEffect.SelectScreenElement(newList.size - 1))
             actionFlow.emit(SettingsAction.SelectScreenElement(newList.size - 1))
         }
     }

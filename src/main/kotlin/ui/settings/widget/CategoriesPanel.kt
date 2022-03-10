@@ -51,8 +51,12 @@ class CategoriesPanel : JPanel() {
         if (listModel.size > state.categories.size) {
             listModel.removeRange(state.categories.size, listModel.size - 1)
         }
-        if (state.selectedCategoryIndex != null && list.selectedIndex != state.selectedCategoryIndex) {
-            list.selectedIndex = state.selectedCategoryIndex
+        if (list.selectedIndex != (state.selectedCategoryIndex ?: -1)) {
+            if (state.selectedCategoryIndex != null) {
+                list.selectedIndex = state.selectedCategoryIndex
+            } else {
+                list.clearSelection()
+            }
         }
         listenersBlocked = false
     }

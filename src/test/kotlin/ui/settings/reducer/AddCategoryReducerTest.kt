@@ -1,17 +1,14 @@
 package ui.settings.reducer
 
-import app.cash.turbine.test
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runBlockingTest
 import model.Category
 import model.CategoryScreenElements
-import model.ScreenElement
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.settings.SettingsAction
 import ui.settings.SettingsAction.AddCategory
 import ui.settings.SettingsState
 
@@ -19,38 +16,39 @@ import ui.settings.SettingsState
 class AddCategoryReducerTest {
 
     val state = MutableStateFlow(SettingsState())
-    val actionFlow = MutableSharedFlow<SettingsAction>()
     lateinit var reducer: AddCategoryReducer
 
-    val categoryScreenElement = CategoryScreenElements(
-        Category(),
-        listOf(ScreenElement(name = "test"))
-    )
+    val categoryScreenElement: CategoryScreenElements = mockk()
     val initialState = SettingsState(
-        categories = listOf(categoryScreenElement)
+        isModified = false,
+        categories = listOf(categoryScreenElement),
+        selectedCategoryIndex = 0,
+        selectedElementIndex = 0,
+        selectedCustomVariableIndex = 0,
     )
 
     @BeforeEach
     fun setup() {
         state.value = initialState
-        reducer = AddCategoryReducer(state, actionFlow)
+        reducer = AddCategoryReducer(state)
     }
 
     @Test
     fun `on invoke`() = runBlockingTest {
-        actionFlow.test {
-            reducer.invoke(AddCategory)
+        reducer.invoke(AddCategory)
 
-            state.value shouldBeEqualTo SettingsState(
-                isModified = true,
-                categories = listOf(
-                    categoryScreenElement, CategoryScreenElements(Category.getDefault(1), emptyList())
+        state.value shouldBeEqualTo SettingsState(
+            isModified = true,
+            categories = listOf(
+                categoryScreenElement,
+                CategoryScreenElements(
+                    Category.getDefault(1),
+                    emptyList()
                 ),
-                selectedElementIndex = null,
-                selectedCategoryIndex = 1
-            )
-            awaitItem() shouldBeEqualTo SettingsAction.SelectScreenElement(-1)
-            cancelAndIgnoreRemainingEvents()
-        }
+            ),
+            selectedCategoryIndex = 1,
+            selectedElementIndex = null,
+            selectedCustomVariableIndex = null,
+        )
     }
 }
