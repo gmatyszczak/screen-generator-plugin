@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.IdeBorderFactory
 import model.AndroidComponent
 import model.FileType
+import model.ScreenElementType
 import ui.settings.SettingsState
 import util.addTextChangeListener
 import util.selectIndex
@@ -22,6 +23,7 @@ class ScreenElementDetailsPanel : JPanel() {
     var onSourceSetTextChanged: ((String) -> Unit)? = null
     var onFileTypeIndexChanged: ((Int) -> Unit)? = null
     var onAndroidComponentIndexChanged: ((Int) -> Unit)? = null
+    var onTypeIndexChanged: ((Int) -> Unit)? = null
 
     private val nameTextField = JTextField()
     private val fileTypeComboBox = ComboBox(FileType.values())
@@ -30,6 +32,8 @@ class ScreenElementDetailsPanel : JPanel() {
     private val screenElementNameLabel = JLabel("Screen Element Name:")
     private val fileNameLabel = JLabel("File Name:")
     private val fileTypeLabel = JLabel("File Type:")
+    private val typeLabel = JLabel("Type:")
+    private val typeComboBox = ComboBox(ScreenElementType.values())
     private val androidComponentLabel = JLabel("Related Android Component:")
     private val androidComponentComboBox = ComboBox(AndroidComponent.values())
 
@@ -46,12 +50,20 @@ class ScreenElementDetailsPanel : JPanel() {
         layout = GridBagLayout()
         add(screenElementNameLabel, constraintsLeft(0, 0))
         add(nameTextField, constraintsRight(1, 0))
-        add(fileNameLabel, constraintsLeft(0, 1))
-        add(fileNameTextField, constraintsRight(1, 1))
-        add(fileTypeLabel, constraintsLeft(0, 2))
+        add(typeLabel, constraintsLeft(0, 1))
+        add(
+            typeComboBox,
+            constraintsRight(1, 1).apply {
+                fill = GridBagConstraints.NONE
+                anchor = GridBagConstraints.LINE_START
+            }
+        )
+        add(fileNameLabel, constraintsLeft(0, 2))
+        add(fileNameTextField, constraintsRight(1, 2))
+        add(fileTypeLabel, constraintsLeft(0, 3))
         add(
             fileTypeComboBox,
-            constraintsRight(1, 2).apply {
+            constraintsRight(1, 3).apply {
                 gridwidth = 1
                 fill = GridBagConstraints.NONE
                 anchor = GridBagConstraints.LINE_START
@@ -59,25 +71,25 @@ class ScreenElementDetailsPanel : JPanel() {
         )
         add(
             fileNameSampleLabel,
-            constraintsRight(2, 2).apply {
+            constraintsRight(2, 3).apply {
                 gridwidth = 1
                 weightx /= 2
                 anchor = GridBagConstraints.LINE_END
                 fill = GridBagConstraints.NONE
             }
         )
-        add(androidComponentLabel, constraintsLeft(0, 3))
+        add(androidComponentLabel, constraintsLeft(0, 4))
         add(
             androidComponentComboBox,
-            constraintsRight(1, 3).apply {
+            constraintsRight(1, 4).apply {
                 fill = GridBagConstraints.NONE
                 anchor = GridBagConstraints.LINE_START
             }
         )
-        add(subdirectoryLabel, constraintsLeft(0, 4))
-        add(subdirectoryTextField, constraintsRight(1, 4))
-        add(sourceSetLabel, constraintsLeft(0, 5))
-        add(sourceSetTextField, constraintsRight(1, 5))
+        add(subdirectoryLabel, constraintsLeft(0, 5))
+        add(subdirectoryTextField, constraintsRight(1, 5))
+        add(sourceSetLabel, constraintsLeft(0, 6))
+        add(sourceSetTextField, constraintsRight(1, 6))
 
         nameTextField.addTextChangeListener { if (!listenersBlocked) onNameTextChanged?.invoke(it) }
         fileNameTextField.addTextChangeListener { if (!listenersBlocked) onFileNameTextChanged?.invoke(it) }
@@ -85,9 +97,10 @@ class ScreenElementDetailsPanel : JPanel() {
         sourceSetTextField.addTextChangeListener { if (!listenersBlocked) onSourceSetTextChanged?.invoke(it) }
         fileTypeComboBox.addActionListener { if (!listenersBlocked) onFileTypeIndexChanged?.invoke(fileTypeComboBox.selectedIndex) }
         androidComponentComboBox.addActionListener {
-            if (!listenersBlocked) onAndroidComponentIndexChanged?.invoke(
-                androidComponentComboBox.selectedIndex
-            )
+            if (!listenersBlocked) onAndroidComponentIndexChanged?.invoke(androidComponentComboBox.selectedIndex)
+        }
+        typeComboBox.addActionListener {
+            if (!listenersBlocked) onTypeIndexChanged?.invoke(typeComboBox.selectedIndex)
         }
     }
 
@@ -103,6 +116,7 @@ class ScreenElementDetailsPanel : JPanel() {
         )
         subdirectoryTextField.updateText(selectedElement?.subdirectory ?: "")
         sourceSetTextField.updateText(selectedElement?.sourceSet ?: "")
+        typeComboBox.selectIndex(selectedElement?.type?.ordinal ?: ScreenElementType.NEW_FILE.ordinal)
 
         isEnabled = selectedElement != null
         components.filter { it != fileNameSampleLabel }.forEach { it.isEnabled = selectedElement != null }

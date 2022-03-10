@@ -31,6 +31,7 @@ sealed class SettingsAction {
     data class ChangeCustomVariableName(val text: String) : SettingsAction()
     data class UpdateScreenElement(val element: ScreenElement) : SettingsAction()
     data class UpdateCategory(val category: Category) : SettingsAction()
+    data class ChangeScreenElementType(val index: Int) : SettingsAction()
 
     object ClickHelp : SettingsAction()
     object AddCategory : SettingsAction()

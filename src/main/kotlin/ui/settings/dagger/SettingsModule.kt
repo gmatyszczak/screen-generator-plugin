@@ -18,6 +18,7 @@ import ui.settings.SettingsAction.ChangeCustomVariableName
 import ui.settings.SettingsAction.ChangeFileName
 import ui.settings.SettingsAction.ChangeFileType
 import ui.settings.SettingsAction.ChangeName
+import ui.settings.SettingsAction.ChangeScreenElementType
 import ui.settings.SettingsAction.ChangeSourceSet
 import ui.settings.SettingsAction.ChangeSubdirectory
 import ui.settings.SettingsAction.ChangeTemplate
@@ -49,6 +50,7 @@ import ui.settings.reducer.ChangeCustomVariableNameReducer
 import ui.settings.reducer.ChangeFileNameReducer
 import ui.settings.reducer.ChangeFileTypeReducer
 import ui.settings.reducer.ChangeNameReducer
+import ui.settings.reducer.ChangeScreenElementTypeReducer
 import ui.settings.reducer.ChangeSourceSetReducer
 import ui.settings.reducer.ChangeSubdirectoryReducer
 import ui.settings.reducer.ChangeTemplateReducer
@@ -217,6 +219,11 @@ abstract class SettingsModule {
     @IntoMap
     @SettingsActionKey(ChangeCustomVariableName::class)
     abstract fun bindChangeCustomVariableNameReducer(reducer: ChangeCustomVariableNameReducer): Reducer
+
+    @Binds
+    @IntoMap
+    @SettingsActionKey(ChangeScreenElementType::class)
+    abstract fun bindChangeScreenElementTypeReducer(reducer: ChangeScreenElementTypeReducer): Reducer
 
     companion object {
 

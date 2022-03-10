@@ -14,7 +14,8 @@ data class ScreenElement(
     var relatedAndroidComponent: AndroidComponent = AndroidComponent.NONE,
     var categoryId: Int = 0,
     var subdirectory: String = "",
-    var sourceSet: String = DEFAULT_SOURCE_SET
+    var sourceSet: String = DEFAULT_SOURCE_SET,
+    var type: ScreenElementType = ScreenElementType.NEW_FILE,
 ) : Serializable {
 
     override fun toString() = name
