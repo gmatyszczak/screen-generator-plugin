@@ -40,10 +40,16 @@ fun JLabel.updateText(newText: String) {
 }
 
 fun <E> ComboBox<E>.selectIndex(newIndex: Int) {
-    if (selectedIndex != newIndex) {
+    if (selectedIndex != newIndex && itemCount > 0) {
         selectedIndex = newIndex
     }
 }
+
+fun <E> ComboBox<E>.updateItems(items: List<E>) {
+    removeAllItems()
+    items.forEach { addItem(it) }
+}
+
 fun LanguageTextField.updateText(newText: String) {
     if (text != newText) {
         text = newText

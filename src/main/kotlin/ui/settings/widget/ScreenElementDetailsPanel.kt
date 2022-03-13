@@ -2,12 +2,15 @@ package ui.settings.widget
 
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.IdeBorderFactory
+import model.Anchor
+import model.AnchorPosition
 import model.AndroidComponent
 import model.FileType
 import model.ScreenElementType
 import ui.settings.SettingsState
 import util.addTextChangeListener
 import util.selectIndex
+import util.updateItems
 import util.updateText
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
@@ -24,6 +27,9 @@ class ScreenElementDetailsPanel : JPanel() {
     var onFileTypeIndexChanged: ((Int) -> Unit)? = null
     var onAndroidComponentIndexChanged: ((Int) -> Unit)? = null
     var onTypeIndexChanged: ((Int) -> Unit)? = null
+    var onAnchorIndexChanged: ((Int) -> Unit)? = null
+    var onAnchorPositionIndexChanged: ((Int) -> Unit)? = null
+    var onAnchorNameTextChanged: ((String) -> Unit)? = null
 
     private val nameTextField = JTextField()
     private val fileTypeComboBox = ComboBox(FileType.values())
@@ -36,6 +42,12 @@ class ScreenElementDetailsPanel : JPanel() {
     private val typeComboBox = ComboBox(ScreenElementType.values())
     private val androidComponentLabel = JLabel("Related Android Component:")
     private val androidComponentComboBox = ComboBox(AndroidComponent.values())
+    private val anchorLabel = JLabel("Anchor:")
+    private val anchorComboBox = ComboBox(emptyArray<Anchor>())
+    private val anchorPositionLabel = JLabel("Anchor Position:")
+    private val anchorPositionComboBox = ComboBox(AnchorPosition.values())
+    private val anchorNameLabel = JLabel("Anchor Name:")
+    private val anchorNameTextField = JTextField()
 
     private val subdirectoryLabel = JLabel("Subdirectory:")
     private val subdirectoryTextField = JTextField()
@@ -90,6 +102,24 @@ class ScreenElementDetailsPanel : JPanel() {
         add(subdirectoryTextField, constraintsRight(1, 5))
         add(sourceSetLabel, constraintsLeft(0, 6))
         add(sourceSetTextField, constraintsRight(1, 6))
+        add(anchorLabel, constraintsLeft(0, 7))
+        add(
+            anchorComboBox,
+            constraintsRight(1, 7).apply {
+                fill = GridBagConstraints.NONE
+                anchor = GridBagConstraints.LINE_START
+            }
+        )
+        add(anchorPositionLabel, constraintsLeft(0, 8))
+        add(
+            anchorPositionComboBox,
+            constraintsRight(1, 8).apply {
+                fill = GridBagConstraints.NONE
+                anchor = GridBagConstraints.LINE_START
+            }
+        )
+        add(anchorNameLabel, constraintsLeft(0, 9))
+        add(anchorNameTextField, constraintsRight(1, 9))
 
         nameTextField.addTextChangeListener { if (!listenersBlocked) onNameTextChanged?.invoke(it) }
         fileNameTextField.addTextChangeListener { if (!listenersBlocked) onFileNameTextChanged?.invoke(it) }
@@ -102,11 +132,19 @@ class ScreenElementDetailsPanel : JPanel() {
         typeComboBox.addActionListener {
             if (!listenersBlocked) onTypeIndexChanged?.invoke(typeComboBox.selectedIndex)
         }
+        anchorComboBox.addActionListener {
+            if (!listenersBlocked) onAnchorIndexChanged?.invoke(anchorComboBox.selectedIndex)
+        }
+        anchorPositionComboBox.addActionListener {
+            if (!listenersBlocked) onAnchorPositionIndexChanged?.invoke(anchorPositionComboBox.selectedIndex)
+        }
+        anchorNameTextField.addTextChangeListener { if (!listenersBlocked) onAnchorNameTextChanged?.invoke(it) }
     }
 
     fun render(state: SettingsState) {
         listenersBlocked = true
         val selectedElement = state.selectedElement
+        val isFileModification = selectedElement?.type == ScreenElementType.FILE_MODIFICATION
         nameTextField.updateText(selectedElement?.name ?: "")
         fileTypeComboBox.selectIndex(selectedElement?.fileType?.ordinal ?: FileType.KOTLIN.ordinal)
         fileNameTextField.updateText(selectedElement?.fileNameTemplate ?: "")
@@ -117,6 +155,16 @@ class ScreenElementDetailsPanel : JPanel() {
         subdirectoryTextField.updateText(selectedElement?.subdirectory ?: "")
         sourceSetTextField.updateText(selectedElement?.sourceSet ?: "")
         typeComboBox.selectIndex(selectedElement?.type?.ordinal ?: ScreenElementType.NEW_FILE.ordinal)
+        anchorComboBox.isVisible = isFileModification
+        anchorLabel.isVisible = isFileModification
+        anchorComboBox.updateItems(selectedElement?.fileType?.anchors ?: emptyList())
+        anchorComboBox.selectIndex(selectedElement?.anchor?.ordinal ?: Anchor.FILE.ordinal)
+        anchorPositionComboBox.isVisible = isFileModification
+        anchorPositionLabel.isVisible = isFileModification
+        anchorPositionComboBox.selectIndex(selectedElement?.anchorPosition?.ordinal ?: AnchorPosition.TOP.ordinal)
+        anchorNameLabel.isVisible = isFileModification
+        anchorNameTextField.isVisible = isFileModification
+        anchorNameTextField.updateText(selectedElement?.anchorName ?: "")
 
         isEnabled = selectedElement != null
         components.filter { it != fileNameSampleLabel }.forEach { it.isEnabled = selectedElement != null }

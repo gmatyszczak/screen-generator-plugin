@@ -93,6 +93,12 @@ class SettingsConfigurable(private val project: Project) : Configurable, Corouti
             { launch { viewModel.actionFlow.emit(SettingsAction.ChangeAndroidComponent(it)) } }
         panel.screenElementDetailsPanel.onTypeIndexChanged =
             { launch { viewModel.actionFlow.emit(SettingsAction.ChangeScreenElementType(it)) } }
+        panel.screenElementDetailsPanel.onAnchorIndexChanged =
+            { launch { viewModel.actionFlow.emit(SettingsAction.ChangeAnchor(it)) } }
+        panel.screenElementDetailsPanel.onAnchorPositionIndexChanged =
+            { launch { viewModel.actionFlow.emit(SettingsAction.ChangeAnchorPosition(it)) } }
+        panel.screenElementDetailsPanel.onAnchorNameTextChanged =
+            { launch { viewModel.actionFlow.emit(SettingsAction.ChangeAnchorName(it)) } }
 
         panel.onTemplateTextChanged = { launch { viewModel.actionFlow.emit(SettingsAction.ChangeTemplate(it)) } }
         panel.onHelpClicked = { launch { viewModel.actionFlow.emit(SettingsAction.ClickHelp) } }

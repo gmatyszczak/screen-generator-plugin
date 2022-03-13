@@ -32,6 +32,9 @@ sealed class SettingsAction {
     data class UpdateScreenElement(val element: ScreenElement) : SettingsAction()
     data class UpdateCategory(val category: Category) : SettingsAction()
     data class ChangeScreenElementType(val index: Int) : SettingsAction()
+    data class ChangeAnchor(val index: Int) : SettingsAction()
+    data class ChangeAnchorPosition(val index: Int) : SettingsAction()
+    data class ChangeAnchorName(val name: String) : SettingsAction()
 
     object ClickHelp : SettingsAction()
     object AddCategory : SettingsAction()

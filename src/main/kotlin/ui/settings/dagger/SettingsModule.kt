@@ -12,6 +12,9 @@ import ui.settings.SettingsAction.AddCategory
 import ui.settings.SettingsAction.AddCustomVariable
 import ui.settings.SettingsAction.AddScreenElement
 import ui.settings.SettingsAction.ApplySettings
+import ui.settings.SettingsAction.ChangeAnchor
+import ui.settings.SettingsAction.ChangeAnchorName
+import ui.settings.SettingsAction.ChangeAnchorPosition
 import ui.settings.SettingsAction.ChangeAndroidComponent
 import ui.settings.SettingsAction.ChangeCategoryName
 import ui.settings.SettingsAction.ChangeCustomVariableName
@@ -44,6 +47,9 @@ import ui.settings.reducer.AddCategoryReducer
 import ui.settings.reducer.AddCustomVariableReducer
 import ui.settings.reducer.AddScreenElementReducer
 import ui.settings.reducer.ApplySettingsReducer
+import ui.settings.reducer.ChangeAnchorNameReducer
+import ui.settings.reducer.ChangeAnchorPositionReducer
+import ui.settings.reducer.ChangeAnchorReducer
 import ui.settings.reducer.ChangeAndroidComponentReducer
 import ui.settings.reducer.ChangeCategoryNameReducer
 import ui.settings.reducer.ChangeCustomVariableNameReducer
@@ -224,6 +230,21 @@ abstract class SettingsModule {
     @IntoMap
     @SettingsActionKey(ChangeScreenElementType::class)
     abstract fun bindChangeScreenElementTypeReducer(reducer: ChangeScreenElementTypeReducer): Reducer
+
+    @Binds
+    @IntoMap
+    @SettingsActionKey(ChangeAnchor::class)
+    abstract fun bindChangeAnchorReducer(reducer: ChangeAnchorReducer): Reducer
+
+    @Binds
+    @IntoMap
+    @SettingsActionKey(ChangeAnchorPosition::class)
+    abstract fun bindChangeAnchorPositionReducer(reducer: ChangeAnchorPositionReducer): Reducer
+
+    @Binds
+    @IntoMap
+    @SettingsActionKey(ChangeAnchorName::class)
+    abstract fun bindChangeAnchorNameReducer(reducer: ChangeAnchorNameReducer): Reducer
 
     companion object {
 

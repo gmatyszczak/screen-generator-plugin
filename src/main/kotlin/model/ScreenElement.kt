@@ -16,6 +16,9 @@ data class ScreenElement(
     var subdirectory: String = "",
     var sourceSet: String = DEFAULT_SOURCE_SET,
     var type: ScreenElementType = ScreenElementType.NEW_FILE,
+    var anchor: Anchor = Anchor.FILE,
+    var anchorPosition: AnchorPosition = AnchorPosition.TOP,
+    var anchorName: String = "",
 ) : Serializable {
 
     override fun toString() = name
