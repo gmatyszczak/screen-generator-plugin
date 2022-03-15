@@ -1,3 +1,4 @@
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,7 +35,7 @@ configurations {
 
 intellij {
     version.set("2021.1.3")
-    plugins.set(listOf("org.jetbrains.kotlin"))
+    plugins.set(listOf("java", "org.jetbrains.kotlin"))
     intellij.updateSinceUntilBuild.set(false)
 }
 

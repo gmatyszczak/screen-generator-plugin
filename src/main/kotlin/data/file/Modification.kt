@@ -1,22 +1,27 @@
 package data.file
 
+import model.Anchor
+import model.AnchorPosition
 import model.AndroidComponent
 import model.CustomVariable
 import model.FileType
 import model.ScreenElement
 
-data class File(
+data class Modification(
     val name: String,
     val content: String,
-    val fileType: FileType
+    val fileType: FileType,
+    val anchor: Anchor,
+    val anchorPosition: AnchorPosition,
+    val anchorName: String,
 )
 
-fun ScreenElement.toFile(
+fun ScreenElement.toModification(
     screenName: String,
     packageName: String,
     androidComponent: AndroidComponent,
     customVariablesMap: Map<CustomVariable, String>
-) = File(
+) = Modification(
     fileName(
         screenName,
         packageName,
@@ -30,4 +35,7 @@ fun ScreenElement.toFile(
         customVariablesMap
     ),
     fileType,
+    anchor,
+    anchorPosition,
+    anchorName,
 )

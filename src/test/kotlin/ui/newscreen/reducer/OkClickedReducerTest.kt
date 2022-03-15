@@ -1,7 +1,7 @@
 package ui.newscreen.reducer
 
 import app.cash.turbine.test
-import data.file.FileCreator
+import data.file.ScreenElementCreator
 import data.file.WriteActionDispatcher
 import io.mockk.every
 import io.mockk.invoke
@@ -23,7 +23,7 @@ class OkClickedReducerTest {
     val moduleName = "domain"
     val moduleDomain = Module("MyApplication.$moduleName", moduleName)
     val category = Category()
-    val fileCreator: FileCreator = mockk(relaxUnitFun = true)
+    val screenElementCreator: ScreenElementCreator = mockk(relaxUnitFun = true)
     val effect = MutableSharedFlow<NewScreenEffect>()
     val writeActionDispatcher: WriteActionDispatcher = mockk()
 
@@ -33,7 +33,7 @@ class OkClickedReducerTest {
     fun setUp() {
         reducer = OkClickedReducer(
             effect,
-            fileCreator,
+            screenElementCreator,
             writeActionDispatcher
         )
     }
@@ -58,7 +58,7 @@ class OkClickedReducerTest {
             reducer(action)
 
             verify {
-                fileCreator.createScreenFiles(
+                screenElementCreator.create(
                     packageName,
                     screenName,
                     AndroidComponent.ACTIVITY,
