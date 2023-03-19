@@ -2,6 +2,7 @@ package ui.settings.widget
 
 import com.intellij.lang.Language
 import com.intellij.openapi.project.Project
+import com.intellij.ui.EditorTextField
 import com.intellij.ui.IdeBorderFactory
 import com.intellij.ui.LanguageTextField
 import com.intellij.ui.components.JBScrollPane
@@ -22,10 +23,8 @@ class CodePanel(
 ) : JPanel() {
 
     var onTemplateTextChanged: ((String) -> Unit)? = null
-
-    private val templateTextField = createLanguageTextField(language)
-    private val sampleTextField = createLanguageTextField(language, isEnabled = false)
-
+    private val templateTextField = createTemplateTextField(language)
+    private val sampleTextField = createSampleTextField()
     private var listenersBlocked = false
 
     init {
@@ -51,10 +50,11 @@ class CodePanel(
             add(JBScrollPane(sampleTextField))
         }
 
-    private fun createLanguageTextField(language: Language, isEnabled: Boolean = true) =
-        LanguageTextField(language, project, "", false).apply {
-            this.isEnabled = isEnabled
-        }
+    private fun createTemplateTextField(language: Language) =
+        LanguageTextField(language, project, "", false)
+
+    private fun createSampleTextField() =
+        EditorTextField().apply { isEnabled = false }
 
     fun render(state: SettingsState) {
         listenersBlocked = true
