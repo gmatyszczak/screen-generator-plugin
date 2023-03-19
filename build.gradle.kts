@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("org.jetbrains.intellij") version "1.4.0"
+    id("org.jetbrains.intellij") version "1.13.2"
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     kotlin("kapt") version "1.6.10"
 }
@@ -33,7 +33,7 @@ configurations {
 }
 
 intellij {
-    version.set("2021.1.3")
+    version.set("2022.1.4")
     plugins.set(listOf("org.jetbrains.kotlin"))
     intellij.updateSinceUntilBuild.set(false)
 }
@@ -47,9 +47,9 @@ tasks {
         kotlinOptions.jvmTarget = "11"
     }
 
-    runIde {
-        ideDir.set(file("/Applications/Android Studio.app/Contents"))
-    }
+//    runIde {
+//        ideDir.set(file("/Applications/Android Studio.app/Contents"))
+//    }
 
     runPluginVerifier {
         ideVersions.set(listOf("IU-182.5262.2"))

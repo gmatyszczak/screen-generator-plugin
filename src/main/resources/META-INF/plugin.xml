@@ -2,7 +2,7 @@
     <id>pl.gmat.screengenerator</id>
     <name>Screen Generator</name>
     <vendor email="grzesiek.matyszczak@gmail.com">Grzegorz Matyszczak</vendor>
-    <idea-version since-build="182"/>
+    <idea-version since-build="221"/>
 
     <description><![CDATA[
     This plugin helps you automate your everyday development by generating all necessary files for your project's architecture

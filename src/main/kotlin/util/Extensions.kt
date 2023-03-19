@@ -1,6 +1,7 @@
 package util
 
 import com.intellij.openapi.ui.ComboBox
+import com.intellij.ui.EditorTextField
 import com.intellij.ui.LanguageTextField
 import javax.swing.JLabel
 import javax.swing.JTextField
@@ -44,7 +45,14 @@ fun <E> ComboBox<E>.selectIndex(newIndex: Int) {
         selectedIndex = newIndex
     }
 }
+
 fun LanguageTextField.updateText(newText: String) {
+    if (text != newText) {
+        text = newText
+    }
+}
+
+fun EditorTextField.updateText(newText: String) {
     if (text != newText) {
         text = newText
     }
