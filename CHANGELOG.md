@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.2] - 2021-04-28
+### Fixed
+- Infinite loading in settings
+
 ## [1.2.1] - 2021-04-28
 ### Fixed
 - Issue with nested modules ([Issue #17](https://github.com/gmatyszczak/screen-generator-plugin/issues/17))
