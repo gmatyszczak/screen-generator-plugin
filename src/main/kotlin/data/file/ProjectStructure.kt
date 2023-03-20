@@ -10,12 +10,16 @@ class ProjectStructure @Inject constructor(private val project: Project) {
 
     fun findSourceRoots(module: Module): List<SourceRoot> =
         ModuleManager.getInstance(project)
-            .findModuleByName(module.name)
-            ?.sourceRoots
-            ?.map { SourceRoot(project, it) }
-            ?: throw IllegalStateException("${module.name} module doesn't exist!")
+            .modules
+            .filter { it.name.startsWith(module.name) }
+            .flatMap { it.sourceRoots.toList() }
+            .map { SourceRoot(project, it) }
 
-    fun getAllModules() = ModuleManager.getInstance(project).modules.map { it.name }
+    fun getAllModules() =
+        ModuleManager.getInstance(project)
+            .modules
+            .filter { it.sourceRoots.isEmpty() }
+            .map { it.name }
 
     fun getProjectName() = project.name
 
