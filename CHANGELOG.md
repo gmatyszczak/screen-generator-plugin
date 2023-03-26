@@ -1,6 +1,10 @@
 # Changelog
 
-## [1.2.2] - 2021-04-28
+## [1.2.3] - 2023-03-26
+### Fixed
+- Extracting modules
+
+## [1.2.2] - 2023-03-19
 ### Fixed
 - Infinite loading in settings
 
