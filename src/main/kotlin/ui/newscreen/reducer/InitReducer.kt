@@ -19,14 +19,16 @@ class InitReducer @Inject constructor(
     private val settingsRepository: SettingsRepository,
 ) : Reducer.Blocking<Init> {
 
-    override fun invoke(action: Init) =
-        state.update {
-            it.copy(
+    override fun invoke(action: Init) {
+        val allModules = moduleRepository.getAllModules()
+        state.update { currentState ->
+            currentState.copy(
                 packageName = packageExtractor.extractFromCurrentPath(),
                 modules = moduleRepository.getAllModules(),
-                selectedModule = currentPath?.module,
+                selectedModule = allModules.find { it == currentPath?.module },
                 categories = settingsRepository.loadCategories(),
                 selectedCategory = settingsRepository.loadCategories().first()
             )
         }
+    }
 }

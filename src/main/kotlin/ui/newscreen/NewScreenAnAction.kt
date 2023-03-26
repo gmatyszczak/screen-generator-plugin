@@ -11,10 +11,16 @@ class NewScreenAnAction : AnAction() {
 
     override fun actionPerformed(event: AnActionEvent) {
         val currentPath = event.getData(PlatformDataKeys.VIRTUAL_FILE)?.let {
-            val moduleName = ModuleUtil.findModuleForFile(it, event.project!!)?.name ?: ""
+            val moduleName =
+                ModuleUtil.findModuleForFile(it, event.project!!)?.name?.replaceAfterLastInclusive(".", "") ?: ""
             val module = Module(moduleName, moduleName.replace("${event.project!!.name}.", ""))
             CurrentPath(it.path, it.isDirectory, module)
         }
         NewScreenDialog(event.project!!, currentPath).show()
     }
+}
+
+private fun String.replaceAfterLastInclusive(delimiter: String, replacement: String): String {
+    val index = lastIndexOf(delimiter)
+    return if (index == -1) this else replaceRange(index, length, replacement)
 }
