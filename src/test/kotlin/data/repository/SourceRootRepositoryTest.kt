@@ -8,48 +8,75 @@ import model.Module
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SourceRootRepositoryTest {
 
     val projectStructureMock: ProjectStructure = mockk()
     val sourceRootBuildMock: SourceRoot = mockk()
-    val sourceRootTestMock: SourceRoot = mockk()
+    val sourceRootTestJavaMock: SourceRoot = mockk()
+    val sourceRootTestKotlinMock: SourceRoot = mockk()
     val sourceRootAndroidTestMock: SourceRoot = mockk()
     val sourceRootResMock: SourceRoot = mockk()
-    val sourceRootSrcMock: SourceRoot = mockk()
+    val sourceRootSrcJavaMock: SourceRoot = mockk()
+    val sourceRootSrcKotlinMock: SourceRoot = mockk()
     val sourceRootAssetsMock: SourceRoot = mockk()
     val sourceRootDebugResMock: SourceRoot = mockk()
+    val sourceRootBaselineProfilesMock: SourceRoot = mockk()
     val moduleName = "presentation"
     val module = Module("MyApplication.$moduleName", moduleName)
-    lateinit var sourceRoots: List<SourceRoot>
+    val baseSourceRoots = listOf(
+        sourceRootBuildMock,
+        sourceRootAndroidTestMock,
+        sourceRootResMock,
+        sourceRootDebugResMock,
+        sourceRootAssetsMock,
+        sourceRootBaselineProfilesMock,
+    )
+    val javaSourceRoots = baseSourceRoots + listOf(sourceRootSrcJavaMock, sourceRootTestJavaMock)
+    val kotlinSourceRoots = baseSourceRoots + listOf(sourceRootSrcKotlinMock, sourceRootTestKotlinMock)
     val sourceRootRepository = SourceRootRepository(projectStructureMock)
 
     @BeforeEach
     fun setUp() {
         every { sourceRootBuildMock.path } returns "/User/MyApplication/$moduleName/build/"
-        every { sourceRootTestMock.path } returns "/User/MyApplication/$moduleName/src/test"
+        every { sourceRootTestJavaMock.path } returns "/User/MyApplication/$moduleName/src/test/java"
+        every { sourceRootTestKotlinMock.path } returns "/User/MyApplication/$moduleName/src/test/kotlin"
         every { sourceRootAndroidTestMock.path } returns "/User/MyApplication/$moduleName/src/androidTest"
         every { sourceRootResMock.path } returns "/User/MyApplication/$moduleName/src/main/res"
         every { sourceRootDebugResMock.path } returns "/User/MyApplication/$moduleName/src/debug/res"
         every { sourceRootAssetsMock.path } returns "/User/MyApplication/$moduleName/src/main/assets"
-        every { sourceRootSrcMock.path } returns "/User/MyApplication/$moduleName/src/main/java"
+        every { sourceRootBaselineProfilesMock.path } returns "/User/MyApplication/$moduleName/src/main/baselineProfiles"
+        every { sourceRootSrcJavaMock.path } returns "/User/MyApplication/$moduleName/src/main/java"
+        every { sourceRootSrcKotlinMock.path } returns "/User/MyApplication/$moduleName/src/main/kotlin"
         every { projectStructureMock.getProjectPath() } returns "/User/MyApplication"
-        sourceRoots = listOf(
-            sourceRootBuildMock,
-            sourceRootTestMock,
-            sourceRootAndroidTestMock,
-            sourceRootResMock,
-            sourceRootDebugResMock,
-            sourceRootAssetsMock,
-            sourceRootSrcMock
-        )
     }
 
-    @Test
-    fun `when source roots not empty on find code source root`() {
+    fun sourceRootsParameters() =
+        listOf(
+            arguments(javaSourceRoots, sourceRootSrcJavaMock),
+            arguments(kotlinSourceRoots, sourceRootSrcKotlinMock),
+        )
+
+    fun testSourceRootsParameters() =
+        listOf(
+            arguments(javaSourceRoots, sourceRootTestJavaMock),
+            arguments(kotlinSourceRoots, sourceRootTestKotlinMock),
+        )
+
+    @MethodSource("sourceRootsParameters")
+    @ParameterizedTest
+    fun `when source roots not empty on find code source root`(
+        sourceRoots: List<SourceRoot>,
+        codeSourceRoot: SourceRoot,
+    ) {
         every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
-        sourceRootRepository.findCodeSourceRoot(module) shouldBeEqualTo sourceRootSrcMock
+        sourceRootRepository.findCodeSourceRoot(module) shouldBeEqualTo codeSourceRoot
     }
 
     @Test
@@ -61,7 +88,7 @@ class SourceRootRepositoryTest {
 
     @Test
     fun `when source roots not empty on find resources source root`() {
-        every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
+        every { projectStructureMock.findSourceRoots(module) } returns javaSourceRoots
 
         sourceRootRepository.findResourcesSourceRoot(module) shouldBeEqualTo sourceRootResMock
     }
@@ -73,11 +100,15 @@ class SourceRootRepositoryTest {
         sourceRootRepository.findResourcesSourceRoot(module) shouldBeEqualTo null
     }
 
-    @Test
-    fun `on find test code source root`() {
+    @MethodSource("testSourceRootsParameters")
+    @ParameterizedTest
+    fun `on find test code source root`(
+        sourceRoots: List<SourceRoot>,
+        codeSourceRoot: SourceRoot,
+    ) {
         every { projectStructureMock.findSourceRoots(module) } returns sourceRoots
 
-        sourceRootRepository.findCodeSourceRoot(module, "test") shouldBeEqualTo sourceRootTestMock
+        sourceRootRepository.findCodeSourceRoot(module, "test") shouldBeEqualTo codeSourceRoot
     }
 
     @Test
