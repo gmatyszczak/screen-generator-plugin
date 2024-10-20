@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.4] - 2024-10-20
+### Fixed
+- Finding code source root ([Issue #34](https://github.com/gmatyszczak/screen-generator-plugin/issues/34))
+
 ## [1.2.3] - 2023-03-26
 ### Fixed
 - Extracting modules
